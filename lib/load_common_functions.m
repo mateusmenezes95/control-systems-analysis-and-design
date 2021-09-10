@@ -49,7 +49,7 @@ end
 %     u = get_step_signal (sim_time, param.start_time, param.end_time, param.amplitude)
 % end
 
-function input_signal = get_input_signal (sim_time, start_time, end_time, amplitude)
+function input_signal = get_signal (sim_time, start_time, end_time, amplitude)
     input_signal.start_time = start_time;
     input_signal.end_time = end_time;
     input_signal.amplitude = amplitude;

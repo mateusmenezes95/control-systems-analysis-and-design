@@ -13,9 +13,9 @@ sim = get_sim_time (dt = 0.01, end_time = 50);
 % Input signals
 % ===============================================================================
 
-unit_step = get_input_signal (sim.time, start_time = 2, end_time = inf, amplitude = 1);
-input_disturbance = get_input_signal (sim.time, start_time = 15, end_time = inf, amplitude = -0.2);
-output_disturbance = get_input_signal (sim.time, start_time = 25, end_time = inf, amplitude = -0.2);
+unit_step = get_signal (sim.time, start_time = 2, end_time = inf, amplitude = 1);
+input_disturbance = get_signal (sim.time, start_time = 15, end_time = inf, amplitude = -0.2);
+output_disturbance = get_signal (sim.time, start_time = 25, end_time = inf, amplitude = -0.2);
 
 % ===============================================================================
 % Transfer Functions Definions
