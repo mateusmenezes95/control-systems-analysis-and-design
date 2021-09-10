@@ -7,29 +7,15 @@ load_common_functions
 % Simulation parameters
 % ===============================================================================
 
-sim.time_step = 0.01;
-sim.time = 50;
-sim.sim_time = get_sim_time (sim.time_step, sim.time);
+sim = get_sim_time (dt = 0.01, end_time = 50);
 
 % ===============================================================================
-% Reference parameters
+% Input signals
 % ===============================================================================
 
-reference.start_time = 2;
-reference.end_time = inf;
-reference.amplitude = 1;
-
-% ===============================================================================
-% Disturbance parameters
-% ===============================================================================
-
-input_disturbance.start_time = 15;
-input_disturbance.end_time = inf;
-input_disturbance.amplitude = -0.2;
-
-output_disturbance.start_time = 25;
-output_disturbance.end_time = inf;
-output_disturbance.amplitude = -0.2;
+unit_step = get_input_signal (sim.time, start_time = 2, end_time = inf, amplitude = 1);
+input_disturbance = get_input_signal (sim.time, start_time = 15, end_time = inf, amplitude = -0.2);
+output_disturbance = get_input_signal (sim.time, start_time = 25, end_time = inf, amplitude = -0.2);
 
 % ===============================================================================
 % Transfer Functions Definions
@@ -39,32 +25,35 @@ K = 0.5;
 G = 2 / s;
 C = K;
 
-T = minreal((K * C * G) / (1 + (K * C * G)))
-input_disturbance.tf = minreal(1 / (1 + (C * G)))
-output_disturbance.tf = minreal(G / (1 + (C * G)))
+Y_R = minreal((K * C * G) / (1 + (K * C * G)));  % Y(s)/R(s)
+Y_R.inname = 'R(s)';
+Y_R.outname = 'Y(s)'
 
-reference.signal = get_step_signal(sim.sim_time, reference.start_time, reference.end_time, reference.amplitude);
-input_disturbance.signal = get_step_signal(sim.sim_time, input_disturbance.start_time, input_disturbance.end_time, input_disturbance.amplitude);
-output_disturbance.signal = get_step_signal(sim.sim_time, output_disturbance.start_time, output_disturbance.end_time, output_disturbance.amplitude);
+Y_Qu = minreal(1 / (1 + (C * G)));               % Y(s)/Qu(s)
+Y_Qu.inname = 'Qu(s)';
+Y_Qu.outname = 'Y(s)'
 
-[reference.y, reference.t, reference.x] = lsim(T, reference.signal, sim.time);
-[input_disturbance.y, input_disturbance.t, input_disturbance.x] = lsim(input_disturbance.tf, input_disturbance.signal, sim.time);
-[output_disturbance.y, output_disturbance.t, output_disturbance.x] = lsim(output_disturbance.tf, output_disturbance.signal, sim.time);
+Y_Qy = minreal(G / (1 + (C * G)));               % Y(s)/Qy(s)
+Y_Qy.inname = 'Qy(s)';
+Y_Qy.outname = 'Y(s)'
 
-y = reference.y + input_disturbance.y + output_disturbance.y;
-t = reference.t;
+unit_step.response = lsim(Y_R, unit_step.signal, sim.time);
+input_disturbance.response = lsim(Y_Qu, input_disturbance.signal, sim.time);
+output_disturbance.response = lsim(Y_Qy, output_disturbance.signal, sim.time);
+
+control_loop_response = unit_step.response + input_disturbance.response + output_disturbance.response;
 
 nfont=15;   % define tamanho da fonte de texto
-nlinha=3;   % define espessura da linha
+nlinha=2;   % define espessura da linha
 
 figure(1)
 
 subplot(2,1,1)
-plot(t,reference.signal,'--r','linewidth',nlinha-0.5)
+plot(sim.time, unit_step.signal, '--r', 'linewidth', nlinha-0.5)
 hold on
-plot(t,y,'b','linewidth',nlinha)
+plot(sim.time, control_loop_response, 'b', 'linewidth', nlinha)
 grid on
-axis([0 t(end) min(y)-0.2  max(y)+0.2])
+axis([0 sim.time(end) min(control_loop_response)-0.2  max(control_loop_response)+0.2])
 set(gca,'fontsize',nfont)
 
 % Define as entradas de texto e ajusta o tamanho da fonte

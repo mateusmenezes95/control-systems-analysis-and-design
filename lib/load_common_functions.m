@@ -23,8 +23,9 @@ s = tf("s");
 default.dt = 0.01;
 default.sim_time = 50;
 
-function time = get_sim_time (dt = default.dt, sim_end_time = default.sim_time)
-    time = 0:dt:sim_end_time;
+function sim = get_sim_time (dt = default.dt, end_time = default.sim_time)
+    sim.time_step = dt;
+    sim.time = 0:dt:end_time;
     if (nargin == 0)
         printf("No arguments passed. Using default values instead\n")
     end
@@ -48,6 +49,11 @@ end
 %     u = get_step_signal (sim_time, param.start_time, param.end_time, param.amplitude)
 % end
 
-printf("Loaded successfuly common functions \n");
+function input_signal = get_input_signal (sim_time, start_time, end_time, amplitude)
+    input_signal.start_time = start_time;
+    input_signal.end_time = end_time;
+    input_signal.amplitude = amplitude;
+    input_signal.signal = get_step_signal(sim_time, start_time, end_time, amplitude);
+end
 
-Control Systems Analysis And Design
+printf("Loaded successfuly common functions \n");
