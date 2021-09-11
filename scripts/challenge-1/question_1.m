@@ -14,34 +14,31 @@ sim = get_sim_time (dt = 0.01, end_time = 50);
 % ===============================================================================
 
 unit_step = get_signal (sim.time, start_time = 2, end_time = inf, amplitude = 1);
-input_disturbance = get_signal (sim.time, start_time = 15, end_time = inf, amplitude = -0.2);
-output_disturbance = get_signal (sim.time, start_time = 25, end_time = inf, amplitude = -0.2);
+output_disturbance = get_signal (sim.time, start_time = 15, end_time = inf, amplitude = -0.2);
+input_disturbance = get_signal (sim.time, start_time = 25, end_time = inf, amplitude = -0.2);
 
 % ===============================================================================
 % Transfer Functions Definions
 % ===============================================================================
 
+F = 1;
 K = 0.5;
 G = 2 / s;
 C = K;
 
-Y_R = minreal((K * C * G) / (1 + (K * C * G)));  % Y(s)/R(s)
-Y_R.inname = 'R(s)';
-Y_R.outname = 'Y(s)'
+% ===============================================================================
+% Main of the script
+% ===============================================================================
 
-Y_Qu = minreal(1 / (1 + (C * G)));               % Y(s)/Qu(s)
-Y_Qu.inname = 'Qu(s)';
-Y_Qu.outname = 'Y(s)'
+y_to_r = get_output_to_reference_tf (G, C, F)
+y_to_qy = get_output_to_output_disturbance_tf (G, C, F)
+y_to_qu = get_output_to_input_disturbance_tf (G, C, F)
 
-Y_Qy = minreal(G / (1 + (C * G)));               % Y(s)/Qy(s)
-Y_Qy.inname = 'Qy(s)';
-Y_Qy.outname = 'Y(s)'
+unit_step.response = lsim(y_to_r, unit_step.signal, sim.time);
+output_disturbance.response = lsim(y_to_qy, output_disturbance.signal, sim.time);
+input_disturbance.response = lsim(y_to_qu, input_disturbance.signal, sim.time);
 
-unit_step.response = lsim(Y_R, unit_step.signal, sim.time);
-input_disturbance.response = lsim(Y_Qu, input_disturbance.signal, sim.time);
-output_disturbance.response = lsim(Y_Qy, output_disturbance.signal, sim.time);
-
-control_loop_response = unit_step.response + input_disturbance.response + output_disturbance.response;
+control_loop_response = unit_step.response + output_disturbance.response + input_disturbance.response;
 
 nfont=15;   % define tamanho da fonte de texto
 nlinha=2;   % define espessura da linha

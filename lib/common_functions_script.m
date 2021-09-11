@@ -56,4 +56,22 @@ function input_signal = get_signal (sim_time, start_time, end_time, amplitude)
     input_signal.signal = get_step_signal(sim_time, start_time, end_time, amplitude);
 end
 
+function y_to_r_tf = get_output_to_reference_tf (G, C, F)
+    y_to_r_tf = minreal(F * ((C * G) / (1 + (C * G))));  % Y(s)/R(s)
+    y_to_r_tf.inname = 'R(s)';
+    y_to_r_tf.outname = 'Y(s)';
+end
+
+function y_to_qu_tf = get_output_to_input_disturbance_tf (G, C, F)
+    y_to_qu_tf = minreal(F * (G / (1 + (C * G))));               % Y(s)/Qu(s)
+    y_to_qu_tf.inname = 'Qu(s)';
+    y_to_qu_tf.outname = 'Y(s)';
+end
+
+function y_to_qy_tf = get_output_to_output_disturbance_tf (G, C, F)
+    y_to_qy_tf = minreal(F * (1 / (1 + (C * G))));               % Y(s)/Qy(s)
+    y_to_qy_tf.inname = 'Qy(s)';
+    y_to_qy_tf.outname = 'Y(s)';
+end
+
 printf("Loaded successfuly common functions \n");
