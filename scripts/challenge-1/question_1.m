@@ -1,7 +1,7 @@
 clear all, close all, clc
 addpath(genpath("../../lib")) % Add lib path to Octave script file search paths
 
-load_common_functions
+run common_functions_script
 
 % ===============================================================================
 % Simulation parameters
