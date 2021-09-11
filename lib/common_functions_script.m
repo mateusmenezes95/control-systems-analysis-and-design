@@ -16,11 +16,12 @@ function sim = get_sim_time (dt = default.dt, end_time = default.sim_time)
     end
 end
 
-function u = get_step_signal (sim_time, start_time, end_time, amplitude)
+function u = get_step_signal (sim_time, amplitude, start_time, end_time)
     sim_end_time = sim_time(length(sim_time));
 
     if end_time > sim_end_time
-        disp(cstrcat(num2str(end_time), " > ", num2str(sim_end_time), ". Then, end_time = ", num2str(sim_end_time)))
+        disp(cstrcat(num2str(end_time), " > ", num2str(sim_end_time),
+                     ". Then, end_time = ", num2str(sim_end_time)))
         end_time = sim_end_time;
     end
 
@@ -31,14 +32,15 @@ function u = get_step_signal (sim_time, start_time, end_time, amplitude)
 end
 
 % function u = get_step_signal (sim_time, param = struct)
-%     u = get_step_signal (sim_time, param.start_time, param.end_time, param.amplitude)
+%     u = get_step_signal (sim_time, param.start_time,
+%      param.end_time, param.amplitude)
 % end
 
-function input_signal = get_signal (sim_time, start_time, end_time, amplitude)
+function input_signal = get_signal (sim_time, amplitude, start_time, end_time)
     input_signal.start_time = start_time;
     input_signal.end_time = end_time;
     input_signal.amplitude = amplitude;
-    input_signal.signal = get_step_signal(sim_time, start_time, end_time, amplitude);
+    input_signal.signal = get_step_signal(sim_time, amplitude, start_time, end_time);
 end
 
 % Y(s)/R(s)
