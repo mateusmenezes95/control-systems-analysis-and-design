@@ -2,6 +2,7 @@ clear all, close all, clc
 addpath(genpath("../../lib")) % Add lib path to Octave script file search paths
 
 run common_functions_script
+run graphs_functions_script
 
 % ===============================================================================
 % Simulation parameters
@@ -54,12 +55,12 @@ controller_output_signal = (reference.controller_output +
                             output_disturbance.controller_output +
                             input_disturbance.controller_output);
 
-% Define as entradas de texto e ajusta o tamanho da fonte
-hx=xlabel('Tempo (s)');
-hy=ylabel('Saída');
-%hl=legend('r(t)', 'y(t)');
-%set(hl,'fontsize',nfont)
-%set(hl,'location','southeast')
-set(hx,'fontsize',nfont)
-set(hy,'fontsize',nfont)
+% ===============================================================================
+% Plot Graphs
+% ===============================================================================
 
+plot_responses_of_disturbances_signals (sim.time, reference.signal,
+                                        control_loop_response,
+                                        controller_output_signal,
+                                        input_disturbance.signal,
+                                        output_disturbance.signal)
