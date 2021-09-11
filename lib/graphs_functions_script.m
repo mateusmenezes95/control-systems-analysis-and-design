@@ -1,18 +1,28 @@
 printf("Loading graphs plot functions...\n");
 
-% ===============================================================================
+% =============================================================================
 % Defaul parameters
-% ===============================================================================
+% =============================================================================
 
 global font_size = 15
 global line_thickness = 2;
+global y_axis_limits_offset = 0.2;
 
-% ===============================================================================
+% =============================================================================
 % Functions
-% ===============================================================================
+% =============================================================================
 
-function plot_responses_of_disturbances_signals (sim_time, reference, control_loop_response,
-                                                 controller_output, input_disturbance, output_disturbance)
+function [y_min, y_max] = get_y_axis_limits (signal)
+    global y_axis_limits_offset;
+    y_min = min(signal) - y_axis_limits_offset;
+    y_max = max(signal) + y_axis_limits_offset;
+end
+
+function plot_responses_of_disturbances_signals (sim_time, reference,
+                                                 control_loop_response,
+                                                 controller_output,
+                                                 input_disturbance,
+                                                 output_disturbance)
     global font_size;
     global line_thickness;
     
@@ -23,7 +33,8 @@ function plot_responses_of_disturbances_signals (sim_time, reference, control_lo
     hold on
     plot(sim_time, control_loop_response, 'b', 'linewidth', line_thickness)
     grid on
-    axis([0 sim_time(end) (min(control_loop_response) - 0.2)  (max(control_loop_response) + 0.2)])
+    [y_min, y_max] = get_y_axis_limits(control_loop_response);
+    axis([0 sim_time(end) y_min y_max])
     set(gca,'fontsize',font_size)
 
     hx = xlabel('Tempo (s)');
@@ -37,7 +48,8 @@ function plot_responses_of_disturbances_signals (sim_time, reference, control_lo
     subplot(2, 2, 3)
     plot(sim_time, controller_output, 'b', 'linewidth', line_thickness)
     grid on
-    axis([0 sim_time(end) (min(controller_output) - 0.2) (max(controller_output) + 0.2)])
+    [y_min, y_max] = get_y_axis_limits(controller_output);
+    axis([0 sim_time(end) y_min y_max])
     set(gca,'fontsize',font_size)
 
     hx = xlabel('Tempo (s)');
@@ -48,7 +60,8 @@ function plot_responses_of_disturbances_signals (sim_time, reference, control_lo
     subplot(2, 2, 2)
     plot(sim_time, output_disturbance, 'b', 'linewidth', line_thickness)
     grid on
-    axis([0 sim_time(end) min(output_disturbance)-0.2  max(output_disturbance)+0.2])
+    [y_min, y_max] = get_y_axis_limits(output_disturbance);
+    axis([0 sim_time(end) y_min  y_max])
     set(gca,'fontsize', font_size)
 
     hx = xlabel('Tempo (s)');
@@ -59,7 +72,8 @@ function plot_responses_of_disturbances_signals (sim_time, reference, control_lo
     subplot(2, 2, 4)
     plot(sim_time, input_disturbance,'b','linewidth',line_thickness)
     grid on
-    axis([0 sim_time(end) min(input_disturbance)-0.2 max(input_disturbance)+0.2])
+    [y_min, y_max] = get_y_axis_limits(input_disturbance);
+    axis([0 sim_time(end) y_min y_max])
     set(gca, 'fontsize', font_size)
 
     hx = xlabel('Tempo (s)');
