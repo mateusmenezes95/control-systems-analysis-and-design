@@ -1,0 +1,181 @@
+\section{Desafio I - Princípio do Modelo Interno}
+
+\subsection{Motivação}
+O presente desafio visa analisar como a resposta em regime estacionário de um
+sistema de controle em malha fechada se comporta a partir de peturbações
+persistentes aplicadas na entrada e na saída da planta em questão. A análise foi
+realizada utilizando o Princípio do Modelo Interno que é uma proposição
+conceitual, a qual permite concluir sobre as condições para seguimento de
+referência em sistema de controle realimentados sujeito a perturbações
+persistentes (referenciar documento do professor).
+
+A análise de seguimento de referência via Princípio do Modelo Interno permite
+concluir sobre o comportamento da planta controlada para uma dada entrada
+inspecionando somente as funções de transferência em malha aberta do sistema.
+Dessa forma, pode se inferir mais facilmente o comportamento de uma planta sem
+preciso memorizar regras como "modelos de tipo x ou y" e até mesmo sem precisar
+realizar cálculos algébricos extensivos.
+
+\subsection{Simulações realizadas}
+\label{sec:simulacao-realizadas}
+As simulações realizadas utiliziram como base o sistema em malha fechada
+representado na Figura \ref{fig:diagrama-de-blocos-malha-fechada} em que:
+\begin{itemize}
+    \item $R(s)$ é a tranformada de Laplace do sinal de referência $r(t)$;
+    \item $E(s)$ é a tranformada de Laplace do erro $e(t)$;
+    \item $C(s)$ é a função de transferência do controlador;
+    \item $U(s)$ é a tranformada de Laplace do sinal de controle $u(t)$;
+    \item $Q_{u}(s)$ é a tranformada de Laplace da perturbação de entrada;
+    \item $G(s)$ é a função de transferência da planta;
+    \item $Q_{y}(s)$ é a tranformada de Laplace da perturbação na saída; e,
+    por fim
+    \item $Y(s)$ é a transformada de Laplace da saída do sistema $y(t)$.
+\end{itemize}
+
+\begin{figure}[htp]
+	\centering
+    \captionsetup{justification=centering}
+	\caption{Sistema em malha fechada com realimentação unitária e perturbações
+    persistentes}
+	\label{fig:diagrama-de-blocos-malha-fechada}
+	\includegraphics[width=\textwidth]{images/diagrama-de-blocos-malha-fechada.png}
+\end{figure}
+
+A partir da Figura \ref{fig:diagrama-de-blocos-malha-fechada}, da álgebra de
+diagramas de blocos e do princípio da superposição, chegou-se nas funções de
+transferência abaixo. Estas funções serão utilizadas ao longo deste desafio.
+
+\begin{equation}
+    \label{eq:y2r-tf}
+    \frac{Y(s)}{R(s)} = F(s)\frac{C(s)G(s)}{1 + C(s)G(s)}
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qy-tf}
+    \frac{Y(s)}{Q_{y}(s)} = \frac{1}{1 + C(s)G(s)}
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qu-tf}
+    \frac{Y(s)}{Q_{u}(s)} = \frac{G(s)}{1 + C(s)G(s)}
+\end{equation}
+
+\begin{equation}
+    \label{eq:e2t-tf}
+    \frac{E(s)}{R(s)} = F(s)\frac{1}{1 + C(s)G(s)}
+\end{equation}
+
+\begin{equation}
+    \label{eq:u2r-tf}
+    \frac{U(s)}{R(s)} = F(s)\frac{C(s)}{1 + C(s)G(s)}
+\end{equation}
+
+\begin{equation}
+    \label{eq:u2qy-tf}
+    \frac{U(s)}{Q_{y}(s)} = \frac{-C(s)G(s)}{1 + C(s)G(s)}
+\end{equation}
+
+\begin{equation}
+    \label{eq:u2qu-tf}
+    \frac{U(s)}{Q_{u}(s)} = \frac{-C(s)}{1 + C(s)G(s)}
+\end{equation}
+
+As simulações foram realizadas considerandos 4 cenários:
+\begin{enumerate}
+    \item Simulação do sistema para $R(s) = \frac{e^{-2s}}{s}$,
+    $Q_{y}(s) = -0,2\frac{e^{-15s}}{s}$ e $Q_{u}(s) = -0,2\frac{e^{-25s}}{s}$
+    dado $G(s) = \frac{2}{s}$, $C(s) = K$ e $F(s) = 1$ para um $K$ tal que o
+    tempo de acomodação de 2\% para mudança de referência ao degrau seja igual
+    a 4s;
+
+    \item Simulação do sistema para $R(s) = \frac{e^{-2s}}{s}$,
+    $R(s) = \frac{e^{-2s}}{s^{2}}$, $Q_{y}(s) = -0,2\frac{e^{-15s}}{s}$,
+    $Q_{y}(s) = -0,2\frac{e^{-15s}}{s^{2}}$, $Q_{u}(s) = -0,2\frac{e^{-25s}}{s}$
+    e $Q_{u}(s) = -0,2\frac{e^{-25s}}{s^{2}}$ dado $G(s) = \frac{2}{s}$, 
+    $C(s) = K\frac{s + z}{s}$ e $F(s) = \frac{\tau_{n}s + 1}{\tau_{d}s + 1}$ 
+    para um $K$ e $z$ tal que $P(s) = 1 + C(s)G(s)$ possua duas raízes dadas 
+    por $s^{*} = -1$ e também $\tau_{n}$ e $\tau_{d}$ tal que o tempo de
+    acomodação de 2\% para mudança de referência ao degrau seja igual a 6s
+    dados os valores $K$ e $z$ obtidos;
+
+    \item Simulação do sistema para $R(s) = \frac{e^{-2s}}{s}$,
+    $Q_{y}(s) = -0,2\frac{e^{-15s}}{s^{2}}$ e
+    $Q_{u}(s) = -0,2\frac{e^{-25s}}{s^{2}}$ dado $G(s) = \frac{2}{s}$,
+    $C(s) = K\frac{s + z}{s}$ e $F(s) = \frac{\tau_{n}s + 1}{\tau_{d}s + 1}$ 
+    para um $K$, $z$, $\tau_{n}$ e $\tau_{d}$ tal que o tempo de acomodação de
+    2\% para mudança de referência ao degrau seja igual a 3s;
+
+    \item Simulação do sistema para as mesmas entradas $R(s)$ do cenário 1 mas 
+    também para $q_{y}(t) = 0,2sen(2t)\mathds{1}(t - 20)$ e 
+    $q_{u}(t) = 0,2sen(2t)\mathds{1}(t - 40)$ dado $G(s) = \frac{2}{s + 1,5}$, 
+    $C(s) = K\frac{s + z}{s}$, 
+    $C(s) = K\left(\frac{s + z}{s}\right)\left(\frac{s^2 + 0,5s + 1.8^2}{s^2 + 2^2}\right)$ 
+    e $F(s) = 1$ para um $K$, e $z$ tal que o tempo de acomodação de 2\% para 
+    mudança de referência ao degrau seja igual a 2s.
+\end{enumerate}
+
+\subsection{Resultados obtidos}
+As seguintes subseções irão descrever os resultados obtidos para os cenários
+listados no tópico \ref{sec:simulacao-realizadas}.
+
+\subsubsection{Cenário 1}
+Para $G(s)$, $C(s)$ e $F(s)$ dados, temos que
+
+\begin{equation}
+    \label{eq:y2r-comk-cenario1}
+    \frac{Y(s)}{R(s)} = \frac{2K}{s + 2K}
+\end{equation}
+
+Como trata-se de um sistema de primeira ordem, temos também que $t_{s_{2\%}} =
+4\tau$. Aplicando esta equação em \ref{eq:y2r-comk-cenario1}, obtemos $K = 0.5$.
+Assim chegamos as seguintes funções de transferência:
+
+\begin{equation}
+    \label{eq:y2r-cenario1}
+    \frac{Y(s)}{R(s)} = \frac{1}{s + 1},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qy-cenario1}
+    \frac{Y(s)}{Q_{y}(s)} = \frac{s}{s + 1},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qu-cenario1}
+    \frac{Y(s)}{Q_{u}(s)} = \frac{2}{s + 1}.
+\end{equation}
+
+A partir do princípio da superposição e da propriedade de linearidade pode se
+obter a saída total do sistema através das somas das respostas individuais da
+referência e das perturbações, isto é,
+
+\begin{equation}
+    \label{eq:saida-do-sistema}
+    y(t) = y_{r}(t) + y_{q_{y}}(t) + y_{q_{u}}(t).
+\end{equation}
+
+Partindo da equação \ref{eq:saida-do-sistema} obteve-se a saída $y(t)$ para as
+entradas $r(t) = \mathds{1}(t - 2)$, $q_{y}(t) = -0,2\mathds{1}(t - 15)$
+$q_{u}(t) = -0,2\mathds{1}(t - 25)$. O mesmo princípio foi usado para obter o
+sinal de controle $u(t)$ dadas as entradas deslocadas no tempo. O resultado
+obtido da simulação para o cenário 1 pode ser visualizado na Figura.
+
+\begin{figure}[!ht]
+    \label{fig:resultado-desafio1-cenario1}
+    % \centering    
+    \caption{Saída $y(t)$ e sinal de controle $u(t)$ para entradas $r(t)$,
+    $q_{y}(t)$ e $q_{u}(t)$.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \begin{minipage}{\linewidth}
+        \input{images/resultado-desafio1-cenario1.tex}
+    \end{minipage}
+\end{figure}
+
+\subsubsection{Cenário 2}
+\subsubsection{Cenário 3}
+\subsubsection{Cenário 4}
+
+\subsection{Conclusões}
+(Concluir em que medida os resultados apresentam relação com a motivação.
+Permitem ilustratar ou concluir algo sobre a motivação? )
