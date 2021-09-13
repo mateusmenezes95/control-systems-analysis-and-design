@@ -62,7 +62,8 @@ controller_output_signal = (reference.controller_output +
 % Plot Graphs
 % =============================================================================
 
-plot_responses_of_disturbances_signals (sim.time, reference.signal,
+plot_responses_of_disturbances_signals (sim.time, figure_num = 1,
+                                        reference.signal,
                                         control_loop_response,
                                         controller_output_signal,
                                         input_disturbance.signal,
