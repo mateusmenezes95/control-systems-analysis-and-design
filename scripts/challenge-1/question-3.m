@@ -16,19 +16,25 @@ sim = get_sim_time (dt = 0.01, end_time = 50);
 
 reference = get_signal (sim.time, amplitude = 1,
                         start_time = 2, end_time = inf);
-output_disturbance = get_signal (sim.time, amplitude = -0.2,
-                                 start_time = 15, end_time = inf);
-input_disturbance = get_signal (sim.time, amplitude = -0.2,
-                                start_time = 25, end_time = inf);
+
+ramp_output_disturbance = get_signal (sim.time, slope = -0.2,
+                                      start_time = 15, end_time = inf,
+                                      signal = 'ramp');
+ramp_input_disturbance = get_signal (sim.time, slope = -0.2,
+                                     start_time = 25, end_time = inf,
+                                     signal = 'ramp');
 
 % =============================================================================
 % Transfer Functions Definions
 % =============================================================================
 
-F = 1;
-K = 0.5;
+tau_n = 0;
+tau_d = 1;
+F = ((tau_n * s) + 1)/((tau_d * s) + 1);
+K = 2;
+z = 1;
 G = 2 / s;
-C = K;
+C = K * ((s + z) / s);
 
 % =============================================================================
 % Main of the script
@@ -43,27 +49,28 @@ u_to_qy = get_controller_output_to_output_disturbance_tf (G, C, F)
 u_to_qu = get_controller_output_to_input_disturbance_tf (G, C, F)
 
 reference.response = lsim(y_to_r, reference.signal, sim.time);
-output_disturbance.response = lsim(y_to_qy, output_disturbance.signal, sim.time);
-input_disturbance.response = lsim(y_to_qu, input_disturbance.signal, sim.time);
+ramp_output_disturbance.response = lsim(y_to_qy, ramp_output_disturbance.signal, sim.time);
+ramp_input_disturbance.response = lsim(y_to_qu, ramp_input_disturbance.signal, sim.time);
 
 reference.controller_output = lsim(u_to_r, reference.signal, sim.time);
-output_disturbance.controller_output = lsim(u_to_qy, output_disturbance.signal, sim.time);
-input_disturbance.controller_output = lsim(u_to_qu, input_disturbance.signal, sim.time);
+ramp_output_disturbance.controller_output = lsim(u_to_qy, ramp_output_disturbance.signal, sim.time);
+ramp_input_disturbance.controller_output = lsim(u_to_qu, ramp_input_disturbance.signal, sim.time);
 
-control_loop_response = (reference.response +
-                         output_disturbance.response +
-                         input_disturbance.response);
+control_loop_response_to_ramps = (reference.response +
+                                  ramp_output_disturbance.response +
+                                  ramp_input_disturbance.response);
 
-controller_output_signal = (reference.controller_output +
-                            output_disturbance.controller_output +
-                            input_disturbance.controller_output);
+controller_output_signal_to_ramps = (reference.controller_output +
+                                     ramp_output_disturbance.controller_output +
+                                     ramp_input_disturbance.controller_output);
 
 % =============================================================================
 % Plot Graphs
 % =============================================================================
 
-plot_responses_of_disturbances_signals (sim.time, reference.signal,
-                                        control_loop_response,
-                                        controller_output_signal,
-                                        input_disturbance.signal,
-                                        output_disturbance.signal)
+plot_responses_of_disturbances_signals (sim.time, figure_num = 1,
+                                        reference.signal,
+                                        control_loop_response_to_ramps,
+                                        controller_output_signal_to_ramps,
+                                        ramp_input_disturbance.signal,
+                                        ramp_output_disturbance.signal)
