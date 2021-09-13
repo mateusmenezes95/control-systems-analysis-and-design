@@ -4,8 +4,8 @@ printf("Loading graphs plot functions...\n");
 % Defaul parameters
 % =============================================================================
 
-global font_size = 15
-global line_thickness = 2;
+global font_size = 10;
+global line_thickness = 1;
 global y_axis_limits_offset = 0.2;
 
 % =============================================================================
@@ -18,7 +18,8 @@ function [y_min, y_max] = get_y_axis_limits (signal)
     y_max = max(signal) + y_axis_limits_offset;
 end
 
-function plot_responses_of_disturbances_signals (sim_time, reference,
+function plot_responses_of_disturbances_signals (sim_time, figure_num = 1,
+                                                 reference,
                                                  control_loop_response,
                                                  controller_output,
                                                  input_disturbance,
@@ -26,7 +27,7 @@ function plot_responses_of_disturbances_signals (sim_time, reference,
     global font_size;
     global line_thickness;
     
-    figure(1)
+    figure(figure_num)
 
     subplot(2, 2, 1)
     plot(sim_time, reference, '--r', 'linewidth', (line_thickness-0.5))
@@ -38,7 +39,7 @@ function plot_responses_of_disturbances_signals (sim_time, reference,
     set(gca,'fontsize',font_size)
 
     hx = xlabel('Tempo (s)');
-    hy = ylabel('Saída');
+    hy = ylabel('Saída $y(t)$');
     hl = legend('r(t)', 'y(t)');
     set(hl, 'fontsize', font_size)
     set(hl, 'location', 'southeast')
@@ -53,7 +54,7 @@ function plot_responses_of_disturbances_signals (sim_time, reference,
     set(gca,'fontsize',font_size)
 
     hx = xlabel('Tempo (s)');
-    hy = ylabel('Sinal de Controle');
+    hy = ylabel('Sinal de Controle $u(t)$');
     set(hx,'fontsize', font_size)
     set(hy,'fontsize', font_size)
 
@@ -65,7 +66,7 @@ function plot_responses_of_disturbances_signals (sim_time, reference,
     set(gca,'fontsize', font_size)
 
     hx = xlabel('Tempo (s)');
-    hy = ylabel('Perturbação - Saída');
+    hy = ylabel('Perturbação na Saída $q_{y}(t)$');
     set(hx, 'fontsize', font_size)
     set(hy, 'fontsize', font_size)
 
@@ -77,7 +78,7 @@ function plot_responses_of_disturbances_signals (sim_time, reference,
     set(gca, 'fontsize', font_size)
 
     hx = xlabel('Tempo (s)');
-    hy = ylabel('Perturbação - Entrada');
+    hy = ylabel('Perturbação na Entrada $q_{u}(t)$');
     set(hx, 'fontsize', font_size)
     set(hy, 'fontsize', font_size)
 end
