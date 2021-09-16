@@ -323,6 +323,20 @@ era que $y(\infty) = r(\infty) = 1$.
 
 \subsubsection{Cenário 3}
 \subsubsection{Cenário 4}
+Para a definição do ganho $K$ foi utilizado o traçado \textit{Root Locus}. Após
+alguns traçados realizados com a ajuda da função \textit{rlocus} do Octave,
+percebeu-se que os polos $s = 0$ e $s = 1.5$ em malha aberta convergem
+rapidamente para os zeros complexos conjugados do controlador $C$ a medida que o
+ganho $K$ aumenta. Partindo desse ponto, escolheu-se $z$ tal que a convergência
+mencionada fosse rápida, mas também que a resposta do sistema em malha fechada
+ao degrau não tivesse um \textit{overshoot} tão alto. Depois de alguns testes,
+verificou-se que alocar $z$ 10 vezes mais afastado que o polo da planta oferecia
+uma resposta ao degrau satisfatória para um valor de ganho tal que satisfizesse
+o critério de tempo de acomodação $t_{s_{2\%}} = 2s$. Este ganho foi obtido
+considerando o cancelamento dos zeros complexos conjugados do controlador. Desta
+forma, foi feita uma aproximação da função em malha fechada para uma função de
+segunda ordem e, então, utilizou-se a fórmula $t_{s_{2\%}} = \frac{4}{\xi
+w_{n}}$ para chegar a um valor de ganho $K = 1,8$.
 
 \subsection{Conclusões}
 (Concluir em que medida os resultados apresentam relação com a motivação.
