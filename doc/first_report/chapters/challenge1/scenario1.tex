@@ -1,0 +1,75 @@
+Para $G(s)$, $C(s)$ e $F(s)$ dados, temos que
+
+\begin{equation}
+    \label{eq:y2r-comk-cenario1}
+    \frac{Y(s)}{R(s)} = \frac{2K}{s + 2K}
+\end{equation}
+
+Como trata-se de um sistema de primeira ordem, temos também que $t_{s_{2\%}} =
+4\tau$. Aplicando esta equação em \ref{eq:y2r-comk-cenario1}, obtemos $K = 0.5$.
+Assim chegamos as seguintes funções de transferência:
+
+\begin{equation}
+    \label{eq:y2r-cenario1}
+    \frac{Y(s)}{R(s)} = \frac{1}{s + 1},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qy-cenario1}
+    \frac{Y(s)}{Q_{y}(s)} = \frac{s}{s + 1},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qu-cenario1}
+    \frac{Y(s)}{Q_{u}(s)} = \frac{2}{s + 1}.
+\end{equation}
+
+A partir do princípio da superposição e da propriedade de linearidade pode se
+obter a saída total do sistema através das somas das respostas individuais da
+referência e das perturbações, isto é,
+
+\begin{equation}
+    \label{eq:saida-do-sistema}
+    y(t) = y_{r}(t) + y_{q_{y}}(t) + y_{q_{u}}(t).
+\end{equation}
+
+Partindo da equação \ref{eq:saida-do-sistema} obteve-se a saída $y(t)$ para as
+entradas $r(t) = \mathds{1}(t - 2)$, $q_{y}(t) = -0,2\mathds{1}(t - 15)$
+$q_{u}(t) = -0,2\mathds{1}(t - 25)$. O mesmo princípio e propriedade foi usado
+para obter o sinal de controle $u(t)$ dadas as entradas deslocadas no tempo. O
+resultado obtido da simulação para o cenário 1 pode ser visualizado na Figura 
+\ref{fig:resultado-desafio1-cenario1}.
+
+\begin{figure}[!ht]
+    \caption{Simulação do sistema de controle em malhada fechada para condições
+    impostas no Cenário 1.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-desafio1-cenario1}
+    \begin{minipage}{\linewidth}
+        \input{images/resultado-desafio1-cenario1.tex}
+    \end{minipage}
+\end{figure}
+
+É possível concluir pela Figura \ref{fig:resultado-desafio1-cenario1} que o
+controlador permitiu que a saída seguisse a referência. Observa-se também que o
+sistema rejeitou a perturbação na saída da malha de controle, o que é coerente
+já que seguimento de referência é equivalente a rejeição na saída como é
+demonstrado nas Equações \ref{eq:y2r-tf} e \ref{eq:e2r-tf}. Entretanto, o
+sistema não conseguiu rejeitar uma perturbação na entrada. Essas conclusões
+podem ser analisadas de forma conceitual pelo princípio do modelo interno. Como
+a planta possui um polo na origem, que é o mesmo da perturbação de saída, a
+perturbação é rejeitada. Porém, para a rejeição da perturbação na entrada é
+preciso que ou o zero da planta ou o polo do controlador coincidam com o(s)
+polo(s) da perturbações de entrada, o que não acontece para este cenário e,
+portanto, não é possível rejeitar a perturbação de entrada.
+
+Para enfatizar a conclusão acima, é aplicado o teorema do valor final para a
+Equação \ref{eq:y2qu-cenario1} conforme Equação \ref{eq:limite-y2qu}.
+Constata-se então um valor não nulo na saída $y(t)$ dado uma perturbação na
+entrada $q_{u}(t) = -0,2\mathds{1}(t - 25)$.
+
+\begin{equation}
+    \label{eq:limite-y2qu}
+    \lim_{s \rightarrow 0}s\left ( \frac{2}{s + 1}\frac{-0,2e^{-25s}}{s} \right ) = -0,4
+\end{equation}

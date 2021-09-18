@@ -1,0 +1,123 @@
+Partindo de uma uma abordagem similar a realizada para o Cenário 1 conforme
+subseção \ref{subsub:cenario1}, para $G(s)$, $C(s)$ e $F(s)$ dados, temos que
+
+\begin{equation}
+    \label{eq:y2r-comkz-cenario2}
+    \frac{Y(s)}{R(s)} = F(s)\frac{2Ks + 2z}{s^2 + 2Ks + 2Kz}.
+\end{equation}
+
+Como requisito do problema de controle, foi imposto que as raízes em malha
+fechada sejam dadas por $s^* = -1$. Igualando o denominador da Equação
+\ref{eq:y2r-comkz-cenario2} ao polinônio $s^2 + 2s + 1$, chega-se aos valores
+$K = 1$ e $z = 0,5$. Assim, a Equação \ref{eq:y2r-comkz-cenario2} torna-se 
+a equação
+
+\begin{equation}
+    \label{eq:y2r-semkz-cenario2}
+    \frac{Y(s)}{R(s)} = F(s)\frac{2s + 1}{s^2 + 2s + 1}
+    = F(s)\frac{2s + 1}{(s+1)^2}.
+\end{equation}
+
+Observa-se na Equação \ref{eq:y2r-semkz-cenario2} que ela possui um zero em
+$-0,5$, enquanto os dois polos estão localizados em $-1$. Este zero está na
+região dominante irá interferir significativamente na resposta transitória do
+sistema em malha fechada. Portanto, para $F(s) = \frac{\tau_{n}s + 1}{\tau_{d}s
++ 1}$ e um requisito de $t_{s_{2\%}} = 6s$, definiu-se os zeros e polos do
+filtro de referência $F(s)$ de modo que o zero dominante seja eliminado do
+sistema em malha fechada e também que o requisito de acomodação seja satisfeito.
+Assim, $\tau_{n} = 0$ e $\tau_{d} = 2$, resultando na Equação
+\ref{eq:y2r-comfiltro-cenario2}.
+
+\begin{equation}
+    \label{eq:y2r-comfiltro-cenario2}
+    \frac{Y(s)}{R(s)} = \frac{1}{(s+1)^2}.
+\end{equation}
+
+Constata-se na Equação \ref{eq:y2r-comfiltro-cenario2} que $\tau = 1$. Para um
+sistema com duas raízes no SPE iguais, $t_{s_{2\%}} \approx 6\tau$ e, portanto,
+o requisito de tempo de acomodação foi satisfeito.
+
+Com $C(s)$ e $F(s)$ definidos, as funções de transferência das perturbações foram
+calculadas conforme equações:
+
+\begin{equation}
+    \label{eq:y2qy-cenario2}
+    \frac{Y(s)}{Q_{y}(s)} = \frac{s^2}{(s + 1)^2},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qu-cenario2}
+    \frac{Y(s)}{Q_{u}(s)} = \frac{2s}{(s + 1)^2}.
+\end{equation}
+
+A partir do mesmo princípio e propriedade apresentado no Cenário 1, chegou-se a
+saída do sistema em malha fechada $y(t)$ dadas as entradas
+$r(t) = \mathds{1}(t - 2)$, $q_{y}(t) = -0,2\mathds{1}(t - 15)$ e
+$q_{u}(t) = -0,2\mathds{1}(t - 25)$, iguais as usadas no Cenário 1. O resultado
+da simulação pode ser analisado na Figura \ref{fig:resultado-desafio1-cenario2-a}.
+
+\begin{figure}[!ht]
+    \caption{Simulação do sistema de controle em malhada fechada para condições
+    impostas no Cenário 2 para perturbações do tipo degrau.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-desafio1-cenario2-a}
+    \begin{minipage}{\linewidth}
+        \input{images/resultado-desafio1-cenario2-a.tex}
+    \end{minipage}
+\end{figure}
+
+Conclui-se na Figura \ref{fig:resultado-desafio1-cenario2-a} que igualmente ao
+Cenário 1, o sistema em malha fechada seguiu referência e rejeitou a perturbação
+de saída. Isso é evidente já que avaliando conceitualmente a partir do Princípio
+do Modelo Interno, observa-se que o polo de $R(s)$ e de $Q_{y}(s)$ aparecem
+tanto em $C(s)$ quanto $G(s)$. Entretanto, diferente do primeiro cenário, o
+sistema também foi capaz de rejeitar a perturbação na entrada. Esta rejeição
+aconteceu pois o polo de $Q_{u}(s)$ aparece no caminho de realimentação da saída
+para a perturbação de entrada, sendo nesse caso o cancelamento dos polos
+realizados pelo polo de $C(s)$. Cabe ainda uma observação para o sistema em
+malha fechada em questão. Nota-se uma suavidade no sinal de controle $u(t)$. Em
+problemas de controle de motores elétricos com cargas de alta inércia acopladas
+ao seu eixo, a suavidade resulta em menor esforço da máquina, tendo como
+consequência redução de manutenções corretivas.
+
+Afim de avaliar também a saída do sistema em malha fechada em regime
+estacionário, foi considerada perturbações do tipo rampa conforme as equações
+a seguir:
+
+\begin{equation}
+    \label{eq:qys-rampa-cenario2}
+    Q_{y}(s) = -0,2\frac{e^{-15s}}{s^2},
+\end{equation}
+
+\begin{equation}
+    \label{eq:qus-rampa-cenario2}
+    Q_{u}(s) = -0,2\frac{e^{-25s}}{s^{2}}
+\end{equation}
+
+Observa-se nas Equações \ref{eq:qys-rampa-cenario2} e
+\ref{eq:qus-rampa-cenario2} a presença de dois polos na origem. Utilizando o
+Princípio do Modelo Interno pode se prever que a perturbação na saída $q_{y}(t)$
+será rejeitada já que a junção dos polos do controlador e da planta aparecem no
+caminho de realimentação da função de transferência $\frac{Y(s)}{Q_{y}(s)}$.
+Entretanto, o mesmo não acontece para a perturbação na entrada, pois apenas o
+polo de $C(s)$ na origem aparece no caminho de realimentados da função de
+transferência $\frac{Y(s)}{Q_{u}(s)}$. Assim, espera-se um valor diferente da
+referência $r(t)$ em regime estacionário para $y(t)$ dado uma perturbação na
+entrada do tipo rampa.
+
+A Figura \ref{fig:resultado-desafio1-cenario2-b} apresenta os resultados para as
+perturbações em rampa. Conforme esperado, o sistema em malha fechada não
+rejeitou a perturbação na entrada. A saída $y(\infty) = 0,6$, sendo que o correto
+era que $y(\infty) = r(\infty) = 1$.
+
+\begin{figure}[!ht]
+    \caption{Simulação do sistema de controle em malhada fechada para condições
+    impostas no Cenário 2 para perturbações do tipo rampa.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-desafio1-cenario2-b}
+    \begin{minipage}{\linewidth}
+        \input{images/resultado-desafio1-cenario2-b.tex}
+    \end{minipage}
+\end{figure}
