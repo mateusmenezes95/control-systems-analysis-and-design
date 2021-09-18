@@ -1,1 +1,70 @@
-Cenário 3 comentários
+Este cenário utiliza os mesmos parâmetros do controlador, planta e filtro de
+referência definidos no Cenário 2 (subseção \ref{subsub:cenario2}). Portanto, a
+função de transferência $\frac{Y(s)}{R(s)}$ está definida na Equação
+\ref{eq:y2r-comkz-cenario2}, que reescrita se torna 
+
+\begin{equation}
+    \label{eq:y2r-comkz-cenario3}
+    \frac{Y(s)}{R(s)} = F(s)\frac{2K(s + z)}{s^2 + 2K(s + z)}.
+\end{equation}
+
+Considerando
+
+\begin{equation}
+    \label{eq:y2r-com-polos-iguais-cenario3}
+    \frac{Y'(s)}{R'(s)} = \frac{1}{(\tau s + 1)^2}
+\end{equation}
+temos que para o tempo de acomodação $t_{s_{2\%}} \approx 6\tau$. Para
+$t_{s_{2\%}} = 2s$, isto resulta em $\tau = 0.5$. Desta forma, a função de
+transferência em malha fechada se torna
+
+\begin{equation}
+    \label{eq:y2r-semkz-cenario3}
+    \frac{Y'(s)}{R'(s)} = \frac{1}{s^2 + 4s + 4}.
+\end{equation}
+
+Igualando \ref{eq:y2r-semkz-cenario3} a \ref{eq:y2r-comkz-cenario3}, obtém-se $K
+= 2$ e $z = 1$. Para eliminar o zero da Equação \ref{eq:y2r-comkz-cenario3}, e
+garantir que ele não interfira na resposta transitória do sistema em malha
+fechada, opta-se se por definir $\tau_{d} = 1$ e $\tau_{n} = 0$ em $F(s)$. Assim,
+temos que
+
+\begin{equation}
+    \label{eq:y2r-solucionado-cenario3}
+    \frac{Y(s)}{R(s)} = \frac{4}{(s + 2)^2},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qy-solucionado-cenario3}
+    \frac{Y(s)}{Q_{y}(s)} = \frac{s^2}{(s + 2)^2},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qu-solucionado-cenario3}
+    \frac{Y(s)}{Q_{u}(s)} = \frac{2s}{(s + 2)^2}.
+\end{equation}
+
+A partir das equações acima, chegou-se ao resultado demonstrado no gráfico
+superior esquerdo da Figura \ref{fig:resultado-desafio1-cenario3}.
+
+\begin{figure}[!ht]
+    \caption{Simulação do sistema de controle em malhada fechada para condições
+    impostas no Cenário 2 para perturbações do tipo rampa.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-desafio1-cenario3}
+    \begin{minipage}{\linewidth}
+        \input{images/resultado-desafio1-cenario3.tex}
+    \end{minipage}
+\end{figure}
+
+Observa-se um comportamento semelhante ao exposto na subseção
+\ref{subsub:cenario2} para entradas do tipo rampa. Como esperado, não houve
+rejeição de perturbação na entrada da planta. Isto continua pois no caminho de
+realimentação da função de transferência $\frac{Y(s)}{Q_{u}(s)}$ não há um
+duplo integrador para eliminar a perturbação do tipo rampa. Isto é evidente já
+que o controlador do Cenaŕio 2 para o Cenário 3 não foi modificado. Entretanto,
+vale salientar que o erro em regime permanente diminuiu por um fator igual a
+$4$ se comparado ao cenário anterior. A dimimuição se deu pois os valores de $K$
+e $z$ dobraram em relação ao Cenário 2. Tal conclusão só pode ser evidenciada
+através de simulação e/ou usando o Teorema do Valor Final.
