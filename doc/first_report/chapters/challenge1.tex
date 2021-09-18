@@ -25,10 +25,11 @@ representado na Figura \ref{fig:diagrama-de-blocos-malha-fechada} em que:
     \item $E(s)$ é a tranformada de Laplace do erro $e(t)$;
     \item $C(s)$ é a função de transferência do controlador;
     \item $U(s)$ é a tranformada de Laplace do sinal de controle $u(t)$;
-    \item $Q_{u}(s)$ é a tranformada de Laplace da perturbação de entrada;
+    \item $Q_{u}(s)$ é a tranformada de Laplace da perturbação de entrada
+    $q_{u}(t)$;
     \item $G(s)$ é a função de transferência da planta;
-    \item $Q_{y}(s)$ é a tranformada de Laplace da perturbação na saída; e,
-    por fim
+    \item $Q_{y}(s)$ é a tranformada de Laplace da perturbação na saída
+    $q_{y}(t)$; e, por fim
     \item $Y(s)$ é a transformada de Laplace da saída do sistema $y(t)$.
 \end{itemize}
 
@@ -80,7 +81,24 @@ transferência abaixo. Estas funções serão utilizadas ao longo deste desafio.
     \frac{U(s)}{Q_{u}(s)} = \frac{-C(s)}{1 + C(s)G(s)}
 \end{equation}
 
-As simulações foram realizadas considerandos 4 cenários:
+A partir do princípio da superposição e da propriedade de linearidade pode se
+obter a saída total do sistema através das somas das respostas individuais da
+referência e das perturbações, isto é,
+
+\begin{equation}
+    \label{eq:saida-do-sistema}
+    y(t) = y_{r}(t) + y_{q_{y}}(t) + y_{q_{u}}(t).
+\end{equation}
+
+O mesmo princípio e propriedade é válido para o sinal de controle em que
+
+\begin{equation}
+    \label{eq:sinal-de-controle}
+    u(t) = u_{r}(t) + u_{q_{y}}(t) + u_{q_{u}}(t).
+\end{equation}
+
+Estas equações foram utilizadas ao longo das simulaçoes realizadas para o
+desafio em questão. As simulações foram realizadas considerandos 4 cenários:
 \begin{enumerate}
     \item Simulação do sistema para $R(s) = \frac{e^{-2s}}{s}$,
     $Q_{y}(s) = -0,2\frac{e^{-15s}}{s}$ e $Q_{u}(s) = -0,2\frac{e^{-25s}}{s}$

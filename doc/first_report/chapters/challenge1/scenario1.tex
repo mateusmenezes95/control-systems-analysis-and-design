@@ -24,21 +24,12 @@ Assim chegamos as seguintes funções de transferência:
     \frac{Y(s)}{Q_{u}(s)} = \frac{2}{s + 1}.
 \end{equation}
 
-A partir do princípio da superposição e da propriedade de linearidade pode se
-obter a saída total do sistema através das somas das respostas individuais da
-referência e das perturbações, isto é,
-
-\begin{equation}
-    \label{eq:saida-do-sistema}
-    y(t) = y_{r}(t) + y_{q_{y}}(t) + y_{q_{u}}(t).
-\end{equation}
-
 Partindo da equação \ref{eq:saida-do-sistema} obteve-se a saída $y(t)$ para as
 entradas $r(t) = \mathds{1}(t - 2)$, $q_{y}(t) = -0,2\mathds{1}(t - 15)$
-$q_{u}(t) = -0,2\mathds{1}(t - 25)$. O mesmo princípio e propriedade foi usado
-para obter o sinal de controle $u(t)$ dadas as entradas deslocadas no tempo. O
-resultado obtido da simulação para o cenário 1 pode ser visualizado na Figura 
-\ref{fig:resultado-desafio1-cenario1}.
+$q_{u}(t) = -0,2\mathds{1}(t - 25)$. O mesmo princípio e propriedade, Equação
+\ref{eq:sinal-de-controle}, foi usado para obter o sinal de controle $u(t)$
+dadas as entradas deslocadas no tempo. O resultado obtido da simulação para o
+cenário 1 pode ser visualizado na Figura \ref{fig:resultado-desafio1-cenario1}.
 
 \begin{figure}[!ht]
     \caption{Simulação do sistema de controle em malhada fechada para condições
@@ -56,7 +47,7 @@ controlador permitiu que a saída seguisse a referência. Observa-se também que
 sistema rejeitou a perturbação na saída da malha de controle, o que é coerente
 já que seguimento de referência é equivalente a rejeição na saída como é
 demonstrado nas Equações \ref{eq:y2r-tf} e \ref{eq:e2r-tf}. Entretanto, o
-sistema não conseguiu rejeitar uma perturbação na entrada. Essas conclusões
+sistema não conseguiu rejeitar a perturbação na entrada. Estas conclusões
 podem ser analisadas de forma conceitual pelo princípio do modelo interno. Como
 a planta possui um polo na origem, que é o mesmo da perturbação de saída, a
 perturbação é rejeitada. Porém, para a rejeição da perturbação na entrada é
