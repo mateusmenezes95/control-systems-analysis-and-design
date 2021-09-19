@@ -54,20 +54,20 @@ A partir do mesmo princípio e propriedade apresentado no Cenário 1, chegou-se 
 saída do sistema em malha fechada $y(t)$ dadas as entradas
 $r(t) = \mathds{1}(t - 2)$, $q_{y}(t) = -0,2\mathds{1}(t - 15)$ e
 $q_{u}(t) = -0,2\mathds{1}(t - 25)$, iguais as usadas no Cenário 1. O resultado
-da simulação pode ser analisado na Figura \ref{fig:resultado-desafio1-cenario2-a}.
+da simulação pode ser analisado na Figura \ref{fig:resultado-cenario2-a}.
 
 \begin{figure}[!ht]
     \caption{Simulação do sistema de controle em malhada fechada para condições
     impostas no Cenário 2 para perturbações do tipo degrau.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:resultado-desafio1-cenario2-a}
+    \label{fig:resultado-cenario2-a}
     \begin{minipage}{\linewidth}
-        \input{images/resultado-desafio1-cenario2-a.tex}
+        \input{images/challenge1/resultado-cenario2-a.tex}
     \end{minipage}
 \end{figure}
 
-Conclui-se na Figura \ref{fig:resultado-desafio1-cenario2-a} que igualmente ao
+Conclui-se na Figura \ref{fig:resultado-cenario2-a} que igualmente ao
 Cenário 1, o sistema em malha fechada seguiu referência e rejeitou a perturbação
 de saída. Isso é evidente já que avaliando conceitualmente a partir do Princípio
 do Modelo Interno, observa-se que o polo de $R(s)$ e de $Q_{y}(s)$ aparecem
@@ -106,7 +106,7 @@ transferência $\frac{Y(s)}{Q_{u}(s)}$. Assim, espera-se um valor diferente da
 referência $r(t)$ em regime estacionário para $y(t)$ dado uma perturbação na
 entrada do tipo rampa.
 
-A Figura \ref{fig:resultado-desafio1-cenario2-b} apresenta os resultados para as
+A Figura \ref{fig:resultado-cenario2-b} apresenta os resultados para as
 perturbações em rampa. Conforme esperado, o sistema em malha fechada não
 rejeitou a perturbação na entrada. A saída $y(\infty) = 0,6$, sendo que o correto
 era que $y(\infty) = r(\infty) = 1$.
@@ -116,8 +116,8 @@ era que $y(\infty) = r(\infty) = 1$.
     impostas no Cenário 2 para perturbações do tipo rampa.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:resultado-desafio1-cenario2-b}
+    \label{fig:resultado-cenario2-b}
     \begin{minipage}{\linewidth}
-        \input{images/resultado-desafio1-cenario2-b.tex}
+        \input{images/challenge1/resultado-cenario2-b.tex}
     \end{minipage}
 \end{figure}

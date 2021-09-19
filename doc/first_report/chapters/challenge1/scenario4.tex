@@ -60,7 +60,7 @@ Aplicando as entradas $r(t) = \mathds{1}(t - 2)$, $q_{y}(t) = -0,2\mathds{1}(t -
 caracterizado pelas funções de transferência das Equações
 \ref{eq:y2r-solucionado-cenario4-a-b}, \ref{eq:y2qy-solucionado-cenario4-a-b} e
 \ref{eq:y2qu-solucionado-cenario4-a-b}, obtemos os resultados conforme Figura
-\ref{fig:resultado-desafio1-cenario4-a}.
+\ref{fig:resultado-cenario4-a}.
 
 \begin{figure}[!ht]
     \caption{Simulação do sistema de controle em malha fechada dada as funções
@@ -69,17 +69,17 @@ caracterizado pelas funções de transferência das Equações
     \ref{eq:y2qu-solucionado-cenario4-a-b} para perturbações do tipo degrau.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:resultado-desafio1-cenario4-a}
+    \label{fig:resultado-cenario4-a}
     \begin{minipage}{\linewidth}
-        \input{images/resultado-desafio1-cenario4-a.tex}
+        \input{images/challenge1/resultado-cenario4-a.tex}
     \end{minipage}
 \end{figure}
 
-Como esperado, nota-se na Figura \ref{fig:resultado-desafio1-cenario4-a} que
+Como esperado, nota-se na Figura \ref{fig:resultado-cenario4-a} que
 houve rejeição de perturbações e seguimento de referência. Simulou-se também o
 mesmo sistema em malha fechada para as perturbações $q_{y}(t) =
 0,2sen(2t)\mathds{1}(t - 20)$ e $q_{u}(t) = 0,2sen(2t)\mathds{1}(t - 40)$. O
-resultado obtido é ilustrado na Figura \ref{fig:resultado-desafio1-cenario4-b}.
+resultado obtido é ilustrado na Figura \ref{fig:resultado-cenario4-b}.
 Como também esperado, já que nem o controlador nem a planta possuem polos em $s
 = \pm j2$, o sistema não rejeita perturbações do tipo senoidal.
 
@@ -90,9 +90,9 @@ Como também esperado, já que nem o controlador nem a planta possuem polos em $
     \ref{eq:y2qu-solucionado-cenario4-a-b} para perturbações do tipo senoidal.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:resultado-desafio1-cenario4-b}
+    \label{fig:resultado-cenario4-b}
     \begin{minipage}{\linewidth}
-        \input{images/resultado-desafio1-cenario4-b.tex}
+        \input{images/challenge1/resultado-cenario4-b.tex}
     \end{minipage}
 \end{figure}
 
@@ -150,7 +150,7 @@ as seguintes funções de transferência:
 \end{equation}
 
 O resultado da simulação é demonstrado na Figura
-\ref{fig:resultado-desafio1-cenario4-c}. Observa-se que o resultado obtido está
+\ref{fig:resultado-cenario4-c}. Observa-se que o resultado obtido está
 de acordo com o Princípio do Modelo Interno, pois os polos complexos inseridos
 no controlador com a mesma frequência dos sinais periódicos das perturbações
 foram responsáveis por as rejeitarem e, então, o erro em regime estacionário
@@ -170,8 +170,8 @@ se for o caso.
     \ref{eq:y2qu-solucionado-cenario4-c} para perturbações do tipo senoidal.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:resultado-desafio1-cenario4-c}
+    \label{fig:resultado-cenario4-c}
     \begin{minipage}{\linewidth}
-        \input{images/resultado-desafio1-cenario4-c.tex}
+        \input{images/challenge1/resultado-cenario4-c.tex}
     \end{minipage}
 \end{figure}
