@@ -119,7 +119,20 @@ Para a definição do ganho $K$ foi utilizado o traçado \textit{Root Locus}. Ap
 alguns traçados realizados com a ajuda da função \textit{rlocus} do Octave,
 percebeu-se que os polos $s = 0$ e $s = 1.5$ em malha aberta convergem
 rapidamente para os zeros complexos conjugados do controlador $C(s)$ a medida
-que o ganho $K$ aumenta. Partindo desse ponto, escolheu-se $z$ tal que a
+que o ganho $K$ aumenta, como mostra Figura \ref{fig:root-locus}. 
+
+\begin{figure}[!ht]
+    \caption{Traçado do Lugar das Raízes para função de transferência em malha
+    aberta da Equação \ref{eq:ft-malha-aberta-com-controlador-complexo}.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:root-locus}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge1/rlocus-question4.tex}
+    \end{minipage}
+\end{figure}
+
+Partindo desse ponto, escolheu-se $z$ tal que a
 convergência mencionada fosse rápida, mas também que a resposta do sistema em
 malha fechada ao degrau não tivesse um \textit{overshoot} tão alto. Depois de
 alguns testes, verificou-se que alocar $z$ 10 vezes mais afastado que o polo da

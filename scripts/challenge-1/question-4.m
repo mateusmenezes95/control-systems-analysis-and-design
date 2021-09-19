@@ -50,7 +50,11 @@ which_figure = [1 2; 3 4];
 
 for i = 1:2
     current_C = tf(C.num(i), C.den(i));
+    
+    figure(10)
     cg = current_C * G;
+    rlocus(cg, 0.1, 0, 50)
+
     y_to_r = get_output_to_reference_tf (G, current_C, F)
     y_to_qy = get_output_to_output_disturbance_tf (G, current_C, F)
     y_to_qu = get_output_to_input_disturbance_tf (G, current_C, F)
