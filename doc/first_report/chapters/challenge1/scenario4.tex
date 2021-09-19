@@ -1,14 +1,177 @@
+Neste cenário a função de transferência $G(s)$ da planta difere dos três
+anteriores e não mais possui um integrador. Este cenário também não impõe
+dinâmica para o filtro de referência $F(s)$. Entretanto, ainda é mantido um
+integrador no controlador $C(s)$. Desta forma, devido ao Princípio do Modelo
+Interno, já é possível concluir que haverá seguimento de referência e rejeição a
+perturbações na entrada e saída para sinais do tipo degrau, já que aparece um
+polo na origem no caminho de realimentação para todas as 3 funções de
+transferência. Partindo desta conclusão, para entradas do tipo degrau, basta
+definir os parâmetros do controlador para que os requisitos de regime
+transitório sejam satisfeitos.
+
+Todavia, este cenário apresenta um novo tipo de perturbação: senoidal. Também
+com ajuda do Princípio do Modelo Interno pode-se concluir que o controlador
+utilizado nos dois últimos cenários não será suficiente para rejeitar
+perturbações deste tipo. Assim, neste cenário é analisado a resposta do sistema
+em malha fechada para perturbações do tipo senoidal dado um controlador cuja os
+polos da função de transferência são iguais aos dos sinais de perturbação. Pelo
+princípio do modelo interno já se conclui que as perturbações senoidais tanto na
+entrada quanto na saída serão rejeitadas.
+
+Começa-se a análise do cenário considerando
+
+\begin{equation}
+    \label{eq:gdes-cenario4}
+    G(s) = \frac{2}{s + 1,5}, 
+\end{equation}
+e
+\begin{equation}
+    \label{eq:cdes-cenario4}
+    C(s) = K\frac{s + z}{s}.
+\end{equation}
+
+Definindo $z = 1,5$, temos que
+
+\begin{equation}
+    \label{eq:y2r-comk-cenario4}
+    \frac{Y(s)}{R(s)} = \frac{2K}{s + 2K}.
+\end{equation}
+que trata-se de uma função de transferência de primeira ordem em que $\tau =
+\frac{1}{2K}$. Assim, para $t_{s_{2\%}} = 4\tau = 2s$, chega-se a $K = 1$.
+Portanto
+
+\begin{equation}
+    \label{eq:y2r-solucionado-cenario4-a-b}
+    \frac{Y(s)}{R(s)} = \frac{2}{s + 2},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qy-solucionado-cenario4-a-b}
+    \frac{Y(s)}{Q_{y}(s)} = \frac{s}{s + 2},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qu-solucionado-cenario4-a-b}
+    \frac{Y(s)}{Q_{u}(s)} = \frac{2s}{s^2 + 3,5s + 3}.
+\end{equation}
+
+Aplicando as entradas $r(t) = \mathds{1}(t - 2)$, $q_{y}(t) = -0,2\mathds{1}(t -
+15)$ e $q_{u}(t) = -0,2\mathds{1}(t - 25)$ ao sistema de malha fechada
+caracterizado pelas funções de transferência das Equações
+\ref{eq:y2r-solucionado-cenario4-a-b}, \ref{eq:y2qy-solucionado-cenario4-a-b} e
+\ref{eq:y2qu-solucionado-cenario4-a-b}, obtemos os resultados conforme Figura
+\ref{fig:resultado-desafio1-cenario4-a}.
+
+\begin{figure}[!ht]
+    \caption{Simulação do sistema de controle em malha fechada dada as funções
+    de transferência das Equações
+    \ref{eq:y2r-solucionado-cenario4-a-b}, \ref{eq:y2qy-solucionado-cenario4-a-b} e
+    \ref{eq:y2qu-solucionado-cenario4-a-b} para perturbações do tipo degrau.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-desafio1-cenario4-a}
+    \begin{minipage}{\linewidth}
+        \input{images/resultado-desafio1-cenario4-a.tex}
+    \end{minipage}
+\end{figure}
+
+Como esperado, nota-se na Figura \ref{fig:resultado-desafio1-cenario4-a} que
+houve rejeição de perturbações e seguimento de referência. Simulou-se também o
+mesmo sistema em malha fechada para as perturbações $q_{y}(t) =
+0,2sen(2t)\mathds{1}(t - 20)$ e $q_{u}(t) = 0,2sen(2t)\mathds{1}(t - 40)$. O
+resultado obtido é ilustrado na Figura \ref{fig:resultado-desafio1-cenario4-b}.
+Como também esperado, já que nem o controlador nem a planta possuem polos em $s
+= \pm j2$, o sistema não rejeita perturbações do tipo senoidal.
+
+\begin{figure}[!ht]
+    \caption{Simulação do sistema de controle em malha fechada dada as funções
+    de transferência das Equações
+    \ref{eq:y2r-solucionado-cenario4-a-b}, \ref{eq:y2qy-solucionado-cenario4-a-b} e
+    \ref{eq:y2qu-solucionado-cenario4-a-b} para perturbações do tipo senoidal.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-desafio1-cenario4-b}
+    \begin{minipage}{\linewidth}
+        \input{images/resultado-desafio1-cenario4-b.tex}
+    \end{minipage}
+\end{figure}
+
+Com o objetivo então de fazer com que o sistema com realimentação negativa
+rejeite perturbações persistentes do tipo senoidal, modificou-se o tal que a
+função de transferência dele é dada pela Equação
+\ref{eq:controlador-com-polos-imaginarios} e função de transferência em malha
+aberta do sistema dada pela Equação
+\ref{eq:ft-malha-aberta-com-controlador-complexo}.
+
+\begin{equation}
+    \label{eq:controlador-com-polos-imaginarios}
+    C(s) = K\left(\frac{s + z}{s}\right)\left(\frac{s^2 + 0,5s + 1.8^2}{s^2 + 2^2}\right).
+\end{equation}
+
+\begin{equation}
+    \label{eq:ft-malha-aberta-com-controlador-complexo}
+    C(s)G(s) = K\left(\frac{s + z}{s}\right)
+    \left(\frac{s^2 + 0,5s + 1.8^2}{s^2 + 2^2}\right)
+    \left(\frac{2}{s+1,5}\right).
+\end{equation}
+
 Para a definição do ganho $K$ foi utilizado o traçado \textit{Root Locus}. Após
 alguns traçados realizados com a ajuda da função \textit{rlocus} do Octave,
 percebeu-se que os polos $s = 0$ e $s = 1.5$ em malha aberta convergem
-rapidamente para os zeros complexos conjugados do controlador $C$ a medida que o
-ganho $K$ aumenta. Partindo desse ponto, escolheu-se $z$ tal que a convergência
-mencionada fosse rápida, mas também que a resposta do sistema em malha fechada
-ao degrau não tivesse um \textit{overshoot} tão alto. Depois de alguns testes,
-verificou-se que alocar $z$ 10 vezes mais afastado que o polo da planta oferecia
-uma resposta ao degrau satisfatória para um valor de ganho tal que satisfizesse
-o critério de tempo de acomodação $t_{s_{2\%}} = 2s$. Este ganho foi obtido
-considerando o cancelamento dos zeros complexos conjugados do controlador. Desta
-forma, foi feita uma aproximação da função em malha fechada para uma função de
-segunda ordem e, então, utilizou-se a fórmula $t_{s_{2\%}} = \frac{4}{\xi
-w_{n}}$ para chegar a um valor de ganho $K = 1,8$.
+rapidamente para os zeros complexos conjugados do controlador $C(s)$ a medida
+que o ganho $K$ aumenta. Partindo desse ponto, escolheu-se $z$ tal que a
+convergência mencionada fosse rápida, mas também que a resposta do sistema em
+malha fechada ao degrau não tivesse um \textit{overshoot} tão alto. Depois de
+alguns testes, verificou-se que alocar $z$ 10 vezes mais afastado que o polo da
+planta oferecia uma resposta ao degrau satisfatória para um valor de ganho tal
+que satisfizesse o critério de tempo de acomodação $t_{s_{2\%}} = 2s$. Este
+ganho foi obtido considerando o cancelamento dos zeros complexos conjugados do
+controlador. Desta forma, foi feita uma aproximação da função em malha fechada
+para uma função de segunda ordem e, então, utilizou-se a fórmula $t_{s_{2\%}} =
+\frac{4}{\xi w_{n}}$ para chegar a um valor de ganho $K = 1,8$. Assim chegou-se
+as seguintes funções de transferência:
+
+\begin{equation}
+    \label{eq:y2r-solucionado-cenario4-c}
+    \frac{Y(s)}{R(s)} = \frac{3,6s^3 + 55,8s^2 + 38,66s + 175}
+    {s^4 + 5,1s^3 + 59,8s^2 + 44,66s + 175},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qy-solucionado-cenario4-c}
+    \frac{Y(s)}{Q_{y}(s)} = \frac{s(s^3 + 1.5s^2 + 4s + 6)}
+    {s^4 + 5,1s^3 + 59,8s^2 + 44,66s + 175},
+\end{equation}
+
+\begin{equation}
+    \label{eq:y2qu-solucionado-cenario4-c}
+    \frac{Y(s)}{Q_{u}(s)} = \frac{ 2s(s^2 + 4)}
+    {s^4 + 5,1s^3 + 59,8s^2 + 44,66s + 175}.
+\end{equation}
+
+O resultado da simulação é demonstrado na Figura
+\ref{fig:resultado-desafio1-cenario4-c}. Observa-se que o resultado obtido está
+de acordo com o Princípio do Modelo Interno, pois os polos complexos inseridos
+no controlador com a mesma frequência dos sinais periódicos das perturbações
+foram responsáveis por as rejeitarem e, então, o erro em regime estacionário
+para $y(t)$ em relação a $r(t)$ foi nulo. Entretanto, vale salientar que a
+sintonia do controlador impôs uma outra característica na resposta do sistema de
+malha fechada. Os zeros inseridos fizeram aumentar o \textit{overshoot} do sistema
+impondo uma resposta muito agressiva ao sinal de controle $u(t)$. Para alguns
+cenários, como o controle de vazão de um processo industrial por uma válvula
+servo atuada, este tipo de sinal de controle pode trazer danos mecânicos ao
+longo prazo, decorrendo em maior custos com manunenteções e paradas do processo
+se for o caso.
+
+\begin{figure}[!ht]
+    \caption{Simulação do sistema de controle em malha fechada dada as funções
+    de transferência das Equações
+    \ref{eq:y2r-solucionado-cenario4-c}, \ref{eq:y2qy-solucionado-cenario4-c} e
+    \ref{eq:y2qu-solucionado-cenario4-c} para perturbações do tipo senoidal.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-desafio1-cenario4-c}
+    \begin{minipage}{\linewidth}
+        \input{images/resultado-desafio1-cenario4-c.tex}
+    \end{minipage}
+\end{figure}
