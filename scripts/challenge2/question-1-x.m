@@ -9,8 +9,8 @@ clear s;
 % =============================================================================
 % Simulation parameters
 % =============================================================================
-
-sim = get_sim_time (dt = 0.01, end_time = 60);
+dt = 0.01;
+sim = get_sim_time (dt, end_time = 60);
 
 % =============================================================================
 % Input signals
@@ -44,13 +44,15 @@ l = [0.9 0.7 0.6 0.4];
 k = [1.3 0.9 1.2 0.8];
 tau = [1.2 1.1 0.8 0.9];
 
+num_plants = length(l);
+
 ln = mean(l);
 kn = mean(k);
 taun = mean(tau);
 
 gn = kn .* exp(-s * ln) ./ (taun * s + 1);
-g = zeros(length(l), length(gn));
-delta = zeros(length(l), length(gn));
+g = zeros(num_plants, length(gn));
+delta = zeros(num_plants, length(gn));
 
 tauc = 0.5;
 kc = taun/(kn * (tauc + ln));
@@ -58,24 +60,58 @@ ti = min(taun, 4 * (tauc + ln))
 
 c = kc * ((s*ti + 1) ./ s*ti);
 
+f = 1;
+
 % =============================================================================
 % Main of the script
 % =============================================================================
 
-for i = 1:length(l)
+axs = zeros(1,num_plants);
+
+for i = 1:num_plants
     g(i, :) = k(i) .* exp(-s * l(i)) ./ (tau(i) * s + 1);
-    delta(i, :) = (abs(gn) - abs(g(i, :))) ./ abs(gn);
-    % delta(i, :) = abs((gn - g(i, :)) ./ gn);
-    figure(i);
+    delta(i, :) = abs((g(i, :) - gn) ./ gn);
+    axs(i) = subplot(num_plants,1,i);
     semilogx(w, delta(i, :));
 endfor
 
-figure(i+1)
-delta_th = max(delta);
-semilogx(w, delta_th)
 
-figure(i+2)
+lm = max(delta);
+linkaxes(axs);
+ylim([min(lm) 2.5])
+
+figure("name", "Análise da Incerteza Multiplicativa")
+subplot(3,1,1)
+semilogx(w, lm)
 
 comp_sensibility = (c .* gn) ./ (1 + c .* gn);
-cdelta_th = abs(comp_sensibility) .* delta_th;
-semilogx(w, 20*log10(cdelta_th))
+subplot(3,1,2)
+semilogx(w, abs(comp_sensibility))
+
+comp_sensibility_x_lm = abs(comp_sensibility) .* lm;
+subplot(3,1,3)
+semilogx(w, comp_sensibility_x_lm)
+
+s = tf('s');
+sampling_period = 1 / 100;
+
+c = kc * ((s*ti + 1) / s*ti);
+
+for i = 1:num_plants
+    g = k(i) / (tau(i) * s + 1)
+    comp_sensibility = (c * g)/(1 + (c * g));
+endfor
+
+[u, y, error_] = simulate_sys(sim.time, dt,
+                      g, 0.4, c, f,
+                      reference.signal,
+                      step_output_disturbance.signal,
+                      step_input_disturbance.signal);
+
+subplot(3,1,1)
+plot(sim.time, y)
+subplot(3,1,2)
+plot(sim.time, u)
+subplot(3,1,3)
+plot(sim.time, error_)
+

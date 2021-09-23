@@ -115,4 +115,50 @@ function u_to_qu_tf = get_controller_output_to_input_disturbance_tf (G, C, F)
     u_to_qu_tf.outname = 'U(s)';
 end
 
+function [xkplus1, y] = get_ss_output(x0, a, b, c, d, uk, dt) 
+    k = 1;
+    xk = x0;
+    xkplus1 = xk*(1+(dt*a)) + (dt*b*uk);
+    y=c*xkplus1 + (d*uk);
+end
+
+% Discrete simulation based in SANTOS, T. L. M. code example 
+function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r, qu = 0, qy = 0)
+    if !isscalar(f)
+        f = ss(f);
+        xf = [zeros(size(f.a,1),1)];
+    end
+
+    p = ss(p);
+    c = ss(c);
+
+    ld = round(delay/dt);
+    control_signal_delay = zeros(1,ld+1);
+
+    xc = [zeros(size(c.a,1),1)];
+    xp = [zeros(size(p.a,1),1)];
+    y = p.c * xp;
+
+    for k=1:length(sim_time)
+        if isscalar(f)
+            error = r(k) - y;
+        else
+            [xf, ref_filtered] = get_ss_output(xf, f.a, f.b, f.c, f.d, r(k), dt);
+            err = ref_filtered - y;
+        end
+
+        [xc, u] = get_ss_output(xc, c.a, c.b, c.c, c.d, err, dt);
+
+        control_signal_delay = [u control_signal_delay(1:ld)];
+        control_signal = control_signal_delay(ld+1);
+
+        [xp, y_aux] = get_ss_output(xp, p.a, p.b, p.c, p.d, (control_signal + qu(k)), dt);
+        y = y_aux + qy(k);
+
+        U(k) = u_atraso;
+        Y(k) = y;
+        E(k) = err;
+    end
+end
+
 printf("Loaded successfuly common functions \n");
