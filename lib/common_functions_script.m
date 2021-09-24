@@ -115,22 +115,29 @@ function u_to_qu_tf = get_controller_output_to_input_disturbance_tf (G, C, F)
     u_to_qu_tf.outname = 'U(s)';
 end
 
-function [xkplus1, y] = get_ss_output(x0, a, b, c, d, uk, dt) 
+function [xkplus1, y] = get_ss_output(x0, ss_matrix = ss(0,0,0,0), uk, dt) 
     k = 1;
     xk = x0;
-    xkplus1 = xk*(1+(dt*a)) + (dt*b*uk);
-    y=c*xkplus1 + (d*uk);
+    xkplus1 = xk*(1+ss_matrix.a) + (ss_matrix.b*uk);
+    y = ss_matrix.c*xkplus1 + (ss_matrix.d*uk);
 end
 
 % Discrete simulation based in SANTOS, T. L. M. code example 
 function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r, qu = 0, qy = 0)
     if !isscalar(f)
         f = ss(f);
+        f.a = dt*f.a;
+        f.b = dt*f.b;
         xf = [zeros(size(f.a,1),1)];
     end
 
     p = ss(p);
+    p.a = dt*p.a;
+    p.b = dt*p.b;
+    
     c = ss(c);
+    c.a = dt*c.a;
+    c.b = dt*c.b;
 
     ld = round(delay/dt);
     control_signal_delay = zeros(1,ld+1);
@@ -141,21 +148,21 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r, qu = 0, qy = 
 
     for k=1:length(sim_time)
         if isscalar(f)
-            error = r(k) - y;
+            err = r(k) - y;
         else
-            [xf, ref_filtered] = get_ss_output(xf, f.a, f.b, f.c, f.d, r(k), dt);
+            [xf, ref_filtered] = get_ss_output(xf,f, r(k), dt);
             err = ref_filtered - y;
         end
 
-        [xc, u] = get_ss_output(xc, c.a, c.b, c.c, c.d, err, dt);
+        [xc, u] = get_ss_output(xc, c, err, dt);
 
         control_signal_delay = [u control_signal_delay(1:ld)];
         control_signal = control_signal_delay(ld+1);
 
-        [xp, y_aux] = get_ss_output(xp, p.a, p.b, p.c, p.d, (control_signal + qu(k)), dt);
+        [xp, y_aux] = get_ss_output(xp, p, (control_signal + qu(k)), dt);
         y = y_aux + qy(k);
 
-        U(k) = u_atraso;
+        U(k) = control_signal;
         Y(k) = y;
         E(k) = err;
     end
