@@ -82,3 +82,30 @@ function plot_responses_of_disturbances_signals (sim_time, figure_num = 1,
     set(hx, 'fontsize', font_size)
     set(hy, 'fontsize', font_size)
 end
+
+function plot_signal (x, x_name,
+                      y, y_name,
+                      line_color)
+    global font_size;
+    global line_thickness;
+    
+    plot(x, y, line_color, 'linewidth', (line_thickness - 0.5))
+    grid on
+    [y_min, y_max] = get_y_axis_limits(y);
+    actual_y_lim = ylim();
+
+    if y_min < actual_y_lim(1)
+        axis([0 x(end) y_min actual_y_lim(2)]);
+    end
+    if y_max > actual_y_lim(2)
+        axis([0 x(end) actual_y_lim(1) y_max]);
+    end
+
+    set(gca, 'fontsize', font_size)
+
+    hx = xlabel(x_name);
+    hy = ylabel(y_name);
+    legend('fontsize', font_size, 'location', 'southeast');
+    set(hx, 'fontsize', font_size)
+    set(hy, 'fontsize', font_size)
+end
