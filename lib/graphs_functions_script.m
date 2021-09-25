@@ -40,7 +40,7 @@ function plot_responses_of_disturbances_signals (sim_time, figure_num = 1,
 
     hx = xlabel('Tempo (s)');
     hy = ylabel('Saída $y(t)$');
-    hl = legend('r(t)', 'y(t)');
+    hl = legend('$r(t)$', '$y(t)$');
     set(hl, 'fontsize', font_size)
     set(hl, 'location', 'southeast')
     set(hx, 'fontsize', font_size)
@@ -92,14 +92,8 @@ function plot_signal (x, x_name,
     plot(x, y, line_color, 'linewidth', (line_thickness - 0.5))
     grid on
     [y_min, y_max] = get_y_axis_limits(y);
-    actual_y_lim = ylim();
 
-    if y_min < actual_y_lim(1)
-        axis([0 x(end) y_min actual_y_lim(2)]);
-    end
-    if y_max > actual_y_lim(2)
-        axis([0 x(end) actual_y_lim(1) y_max]);
-    end
+    axis([0 x(end) min(ylim()(1), y_min) max(ylim()(2), y_max)]);
 
     set(gca, 'fontsize', font_size)
 
