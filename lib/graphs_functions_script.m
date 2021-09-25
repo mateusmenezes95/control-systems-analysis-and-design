@@ -85,11 +85,12 @@ end
 
 function plot_signal (x, x_name,
                       y, y_name,
-                      line_color)
+                      line_color,
+                      signal_legend)
     global font_size;
     global line_thickness;
     
-    plot(x, y, line_color, 'linewidth', (line_thickness - 0.5))
+    plot(x, y, [line_color ';' signal_legend ';'], 'linewidth', (line_thickness - 0.5))
     grid on
     [y_min, y_max] = get_y_axis_limits(y);
 
@@ -102,4 +103,32 @@ function plot_signal (x, x_name,
     legend('fontsize', font_size, 'location', 'southeast');
     set(hx, 'fontsize', font_size)
     set(hy, 'fontsize', font_size)
+end
+
+function plot_response_and_control_signals (sim_time, figure_num = 1,
+                                            reference = 'none',
+                                            y, y_legend, 
+                                            u, u_legend,
+                                            line_color)
+    global font_size;
+    global line_thickness;
+    
+    figure(figure_num)
+
+    subplot(2, 1, 1)
+
+    if !ischar(reference)
+        plot_signal(sim_time, '', reference, '', '--r', 'r(t)')
+    end
+
+    hold on
+
+    plot_signal(sim_time, 'Tempo (s)',
+                y, 'Saida $y(t)$',
+                line_color, y_legend)
+
+    subplot(2,1,2)
+    plot_signal(sim_time, 'Tempo (s)',
+                u, 'Sinal de Controle $u(t)$',
+                line_color, u_legend)
 end
