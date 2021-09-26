@@ -115,7 +115,7 @@ function plot_response_and_control_signals (sim_time, figure_num = 1,
     
     figure(figure_num)
 
-    subplot(2, 1, 1)
+    subplot(4, 1, 1)
 
     if !ischar(reference)
         plot_signal(sim_time, '', reference, '', '--r', 'r(t)')
@@ -127,7 +127,7 @@ function plot_response_and_control_signals (sim_time, figure_num = 1,
                 y, 'Saida $y(t)$',
                 line_color, y_legend)
 
-    subplot(2,1,2)
+    subplot(4,1,3)
     plot_signal(sim_time, 'Tempo (s)',
                 u, 'Sinal de Controle $u(t)$',
                 line_color, u_legend)

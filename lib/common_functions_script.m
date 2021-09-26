@@ -7,7 +7,7 @@ s = tf("s");
 
 function sim = get_sim_time (dt = 0.01, end_time = 100)
     sim.time_step = dt;
-    sim.time = 0:dt:end_time;
+    sim.time = 0:dt:(end_time-dt);
     sim.time = transpose(sim.time);
     if (nargin == 0)
         printf("No arguments passed. Using default values instead\n")
@@ -24,7 +24,7 @@ function [u, start_idx, end_idx]  = get_step_signal (sim_time, amplitude, start_
     end
 
     u = zeros(length(sim_time), 1);
-    start_idx = find(sim_time >= start_time)(1);
+    start_idx = find(sim_time >= start_time)(1) + 1;
     end_idx = find(sim_time >= end_time)(1);
     u(start_idx:end_idx) = amplitude;
 end
@@ -139,6 +139,7 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
     p.a = dt*p.a;
     p.b = dt*p.b;
     
+    kc = get(c, 'num'){1};
     c = ss(c);
     c.a = dt*c.a;
     c.b = dt*c.b;
@@ -151,6 +152,11 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
     y = p.c * xp;
 
     u_set = 0;
+    u_desirable = 0;
+    x = zeros(1, length(sim_time));
+    us = x;
+    ud = x;
+    aw = x;
 
     for k=1:length(sim_time)
         if isscalar(f)
@@ -159,31 +165,33 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
             [xf, ref_filtered] = get_ss_output(xf, f, r(k));
             err = ref_filtered - y;
         end
+        
 
-        if (k > 1) && abs(u_desirable - u_set) > anti_windup_tol
+        x(k) = abs(u_set - u_desirable);
+        us(k) = u_set;
+        ud(k) = u_desirable;
+        if k > 1 && abs(u_set - u_desirable) > anti_windup_tol
             [xc, u] = get_ss_output(xc, c, 0);
+            aw(k) = 1;
         else
             [xc, u] = get_ss_output(xc, c, err);
-            if strcmp(controller_type, 'I+P')
-                u = u - (c.d * err);  % Because u = c.c * x(k)
-            end
+            aw(k) = 0;
         end
-        
+
+        if strcmp(controller_type, 'I+P')
+            u = u - (kc * y);
+        end
 
         u_delay = [u u_delay(1:ld)];
         u_desirable = u_delay(ld+1);
 
-        if strcmp(controller_type, 'I+P')
-            u_desirable = u_desirable - (c.d * y);
-        end
+        u_set = u_desirable;
 
         if length(saturation) == 2
-            if u_desirable >= saturation(2)
-                u_set = saturation(2);
-            elseif u_desirable <= saturation(1)
+            if u_desirable <= saturation(1)
                 u_set = saturation(1);
-            else
-                u_set = u_desirable;
+            elseif u_desirable >= saturation(2)
+                u_set = saturation(2);
             end
         end
 
@@ -194,6 +202,14 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
         Y(k) = y;
         E(k) = err;
     end
+    hax = subplot(4,1,4);
+    plot_signal(sim_time, 'Tempo (s)', x, '', 'm', '$|u_{d}(t) - u(t)|$')
+    hold on
+    plot_signal(sim_time, 'Tempo (s)', ud, '', 'r', '$u_{d}(t)$')
+    plot_signal(sim_time, 'Tempo (s)', us, '', 'b', '$u(t)$')
+    plot_signal(sim_time, 'Tempo (s)', aw, 'Valor no instante $t$', 'g', 'anti-windup habilitado')
+    set(hax, 'ytick', -0.2:0.2:1.4);
+    set(hax, 'ylim', [-0.2 1.4]);
 end
 
 printf("Loaded successfuly common functions \n");
