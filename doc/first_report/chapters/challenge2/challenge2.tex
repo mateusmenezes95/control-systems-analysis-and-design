@@ -1,7 +1,164 @@
-\section{Desafio II - ``título''} 
+\section{Desafio II - Teorema do Pequeno Ganho e Anti-Windup} 
  
 \subsection{Motivação}
-(Explicar o problema que motiva o desafio, relevância, possíveis aplicações...)
+Este dasafio foi dividido em duas partes. A primeira visa a análise de
+incertezas na modelagem de sistemas via Teorema do Pequeno Ganho e Teoria de
+Controle Robusto. Já a segunda, em série com o resultado da primeira parte,
+analisa o comportamento da saída de um modelo de planta, considerando um ponto
+de operação específico, e sinal de controle para um sistema em malha fechada na
+presença de saturação do sinal de controle.
+
+A análise de incertezas é de suma importância na avaliação de modelagem de plantas
+via alguma técnica específica, como resposta ao degrau ou resposta em
+frequência. Esta modelagem é realizada principalmente quando não se tem o modelo
+teórico. Desta forma é preciso realizar a modelagem com a planta real, obtendo
+assim um modelo nominal da planta. Assim, torna-se necessário analisar qual o
+efeito das incertezas de modelagem, para garantir a estabilidade do sistema em
+malha fechada sendo controlado por um controlador projetado utilizando o modelo
+nominal da planta. Esta análise de robustez é obtida via Teorema do Pequeno
+Ganho e Teoria da Instabilidade Interna (não contemplada neste desafio).
+
+Além da análise de robustez, é ainda necessário analisar o sistema em malha
+fechada obtido através do modelo nominal em um ponto específico de operação na
+presença de saturação do sinal de controle. Esta análise também é de extrema
+relevância na teoria  e aplicação de controle, pois os sistemas de controle
+reais tem limitações, como a energia finita de atuadores, que caso não analisado
+corretamente, podem surgir no sistema de controle implementado comportamentos
+indesejáveis. Um exemplo comum de saturação é nas malhas de controle de vazão,
+em que válvulas na linha do processo tem um limiar de abertura além da presença
+de zonas mortas de operação.
+
+\subsection{Simulações realizadas}
+O sistema de controle em malha fechada utilizado nas simulações do segundo
+desafio é o mesmo do desafio 1 e está descrito no tópico
+\ref{sec:desafio-1-simulacoes-realizadas} e ilustrado em diagrama de blocos na
+Figura \ref{fig:diagrama-de-blocos-malha-fechada}. O modelo $G(s)$ utilizado nas
+simulações é dado por
+
+\begin{equation}
+    \label{eq:modelo-g-de-s-utilizado-no-desafio-2}
+    G(s) = \frac{K_{i}e^{-sL_{i}}}{T_{i}s + 1}.
+\end{equation}
+
+O modelo descrito na Equação \ref{eq:modelo-g-de-s-utilizado-no-desafio-2} foi
+levantado a partir de 4 pontos de operação distintos, gerando 4 modelos: M1, M2,
+M3 e M4. Os parâmetros obtidos para cada modelo $i$ foram os seguintes: $L_{i} =
+[0,9; 0,7; 0,6; 0,4]$, $K_{i} = [1,3; 0,9; 1,2; 0,8]$ e $\tau_{i} = [0,9; 0,7;
+0,6; 0,4]$.
+
+Para o projeto do controlador utilizou o modelo nominal de $G(s)$ obtido
+através das médias $L_{n}$, $K_{n}$ e $\tau_{n}$ dos parâmetros $L_{i}$, $K_{i}$
+e $\tau_{i}$, respectivamente. Assim, obteve-se $G{n}(s)$ dado por
+
+\begin{equation}
+    \label{eq:modelo-gn-de-s-utilizado-no-desafio-2}
+    G_{n}(s) = \frac{1,05e^{-0,65s}}{s + 1}.
+\end{equation}
+
+O controlador utilizado nas simulações foi o PI de Skogestad para um sistema de
+primeira ordem com atraso, dado por
+
+\begin{equation}
+    \label{eq:modelo-c-de-s-utilizado-no-desafio-2}
+    C(s) = K_{c}\frac{sT_{i} + 1}{sT_{i}} = \frac{0,8282(s + 1)}{s}
+\end{equation}
+em que $K_{c} = \tau_{n}/[K_{n}(\tau_{c} + L_{n})]$, $T_{i} = min(\tau_{n},
+4(\tau_{c} + L_{n}))$ e $\tau_{c} = 0,5$. 
+
+A partir destes modelos foram realizadas 3 simulações:
+\begin{enumerate}
+    \item Geração das incertezas multiplicativas dos 4 modelos e análise de
+    robustez via Teorema do Pequeno Ganho;
+    \item Resposta em malha fechada dos 4 modelos, dado o controlador definido
+    na Equação \ref{eq:modelo-c-de-s-utilizado-no-desafio-2}, com uma entrada de
+    referência $r(t)$ em degrau unitário e uma perturbação na entrada $q_{u}(t)$
+    também em degrau;
+    \item Resposta do modelo M1 em malha fechada com diferentes configurações:
+    com filtro de referência $F(s)$, com controlador I+P, com controlador I+P e
+    saturação do sinal de controle e com os dois itens anteriores mais a ação de
+    anti-windup.
+\end{enumerate}
+
+O tópico seguinte irar descrever os resultados obtidos para os 3 itens acima.
+
+\subsection{Resultados obtidos}
+\subsubsection{Geração de incertezas multiplicativas}
+Para cada modelo $G_{i}(s)$ com $i \in [1,4]$, calculou-se o módulo da incerteza
+multiplicativa conforme Equação \ref{eq:desafio-2-calculo-das-incertezas}. O
+resultado obtido está ilustrado na Figura
+\ref{fig:desafio-2-resultado-questao-1}.
+
+\begin{equation}
+    \label{eq:desafio-2-calculo-das-incertezas}
+    \Delta_{i}(w) = \left | \frac{G_{n}(jw) - G_{i}(jw)}{G_{n}(jw)} \right |,
+    10^{-2} \leq w \leq 10^{4}.
+\end{equation}
+
+\begin{figure}[!ht]
+    \caption{Módulo das incertezas multiplicativas de cada modelo $i$ em
+    função da frequência $w$.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-2-resultado-questao-1}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge2/resultado-questao-1.tex}
+    \end{minipage}
+\end{figure}
+
+Para verificar se o sistema em malha fechada com o modelo nominal $G_{n}(s)$ é
+estável, calculou-se o módulo da complementar de sensibidade, Equação
+\ref{eq:desafio-2:modulo-da-complementar-de-sensibilidade}, que foi multiplicado
+pelo limitante superior das incertezas multiplicativas definido pela Equação
+\ref{eq:desafio-2:limitante-superior-das-incertezas-multiplicativas}.
+
+\begin{equation}
+    \label{eq:desafio-2:modulo-da-complementar-de-sensibilidade}
+    |\textit{C}(jw)| = \left | \frac{C(jw)G_{n}(jw)}{1 + C(jw)G_{n}(jw)} \right |
+\end{equation}
+
+\begin{equation}
+    \label{eq:desafio-2:limitante-superior-das-incertezas-multiplicativas}
+    \bar{\Delta}(w[k]) = min(\Delta_{1}(w[k]), \Delta_{2}(w[k]), \Delta_{3}(w[k]),
+    \Delta_{4}(w[k])). 
+\end{equation}
+em que $w[k]$ é um vetor de 10000 pontos em escala logarítimica com $10^{-2}
+\leq w \leq 10^{4}$ rad/s.
+
+O resultado obtido está ilustrado na Figura
+\ref{fig:desafio-2:resultado-questao-3-4}, em que é possível visualizar o
+limitante superior das incertezas multiplicativas $\bar{\Delta}(w)$, o módulo da
+função complementar de sensibidade $|\textit{C}(jw)|$ e o resultado da
+multiplicação dos dois valores.
+
+\begin{figure}[!ht]
+    \caption{Resultado da análise das incertezas multiplicativas.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-2:resultado-questao-3-4}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge2/resultado-questao-3-4.tex}
+    \end{minipage}
+\end{figure}
+
+Conclui-se a a partir do último gráfico da Figura
+\ref{fig:desafio-2:resultado-questao-3-4} que o sistema em malha fechada é
+estável, dentro de uma faixa de frequência, com a planta em diferentes pontos de
+operação dado as incertezas dos modelos M1, M2, M3 e M4 e o controlador $C(s)$
+projetado considerando o modelo nominal da planta $G_{n}(s)$. Esta conclusão
+pode ser obtida pois
+
+\begin{equation}
+    \label{eq:desafio-2:principio-do-modelo-interno}
+    \sup_{w}|\textit{C}(jw)|\bar{\Delta}(w) \le 1, \ 10^{-2} \leq \forall w \leq {10^{4}}.
+\end{equation}
+
+\subsubsection{Resposta em malha fechadas dos modelos M1, M2, M3 e M4}
+\subsubsection{Resposta em malha fechada do modelo M1 com diferentes configurações}
+
+\subsection{Conclusões}
+(Concluir em que medida os resultados apresentam relação com a motivação.
+Permitem ilustratar ou concluir algo sobre a motivação? )
+
 
 \begin{figure}[!ht]
     \caption{Simulação do sistema de controle em malhada fechada para condições
@@ -35,12 +192,3 @@
         \input{images/challenge2/resultado-extra-questao-6-9.tex}
     \end{minipage}
 \end{figure}
-
-\subsection{Simulações realizadas}
-(Explicar quais simulações foram realizadas de maneira descritiva e sequêncial.) 
-
-\subsection{Resultados obtidos}
-(Apresentar resultados, gráficos e analisar os resultados observados.) 
-
-\subsection{Conclusões}
-(Concluir em que medida os resultados apresentam relação com a motivação. Permitem ilustratar ou concluir algo sobre a motivação? )
