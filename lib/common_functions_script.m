@@ -153,10 +153,6 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
 
     u_set = 0;
     u_desirable = 0;
-    x = zeros(1, length(sim_time));
-    us = x;
-    ud = x;
-    aw = x;
 
     for k=1:length(sim_time)
         if isscalar(f)
@@ -165,17 +161,12 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
             [xf, ref_filtered] = get_ss_output(xf, f, r(k));
             err = ref_filtered - y;
         end
-        
 
-        x(k) = abs(u_set - u_desirable);
-        us(k) = u_set;
-        ud(k) = u_desirable;
+        % anti-windup action
         if k > 1 && abs(u_set - u_desirable) > anti_windup_tol
             [xc, u] = get_ss_output(xc, c, 0);
-            aw(k) = 1;
         else
             [xc, u] = get_ss_output(xc, c, err);
-            aw(k) = 0;
         end
 
         if strcmp(controller_type, 'I+P')
@@ -202,14 +193,6 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
         Y(k) = y;
         E(k) = err;
     end
-    hax = subplot(4,1,4);
-    plot_signal(sim_time, 'Tempo (s)', x, '', 'm', '$|u_{d}(t) - u(t)|$')
-    hold on
-    plot_signal(sim_time, 'Tempo (s)', ud, '', 'r', '$u_{d}(t)$')
-    plot_signal(sim_time, 'Tempo (s)', us, '', 'b', '$u(t)$')
-    plot_signal(sim_time, 'Tempo (s)', aw, 'Valor no instante $t$', 'g', 'anti-windup habilitado')
-    set(hax, 'ytick', -0.2:0.2:1.4);
-    set(hax, 'ylim', [-0.2 1.4]);
 end
 
 printf("Loaded successfuly common functions \n");

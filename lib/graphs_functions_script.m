@@ -107,7 +107,8 @@ end
 
 function plot_response_and_control_signals (sim_time, figure_num = 1,
                                             reference = 'none',
-                                            y, y_legend, 
+                                            y, y_legend,
+                                            err, err_legend, 
                                             u, u_legend,
                                             line_color)
     global font_size;
@@ -115,7 +116,7 @@ function plot_response_and_control_signals (sim_time, figure_num = 1,
     
     figure(figure_num)
 
-    subplot(4, 1, 1)
+    subplot(3,1,1)
 
     if !ischar(reference)
         plot_signal(sim_time, '', reference, '', '--r', 'r(t)')
@@ -127,7 +128,14 @@ function plot_response_and_control_signals (sim_time, figure_num = 1,
                 y, 'Saida $y(t)$',
                 line_color, y_legend)
 
-    subplot(4,1,3)
+    subplot(3,1,2)
+    plot_signal(sim_time, 'Tempo (s)',
+                err, 'Erro $e(t)$',
+                line_color, err_legend)
+
+    hold on
+
+    subplot(3,1,3)
     plot_signal(sim_time, 'Tempo (s)',
                 u, 'Sinal de Controle $u(t)$',
                 line_color, u_legend)
