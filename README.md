@@ -9,3 +9,11 @@ Inside octave-cli, run
 pkg install -forge control
 pkg install -forge signal
 ```
+## Tips
+
+### Command to save graphs images in `.tex` extension
+
+```console
+print -depslatex -S"<width>,<height>" <image-path>/<image-name>
+```
+> Change names inside '<>' accordingly
