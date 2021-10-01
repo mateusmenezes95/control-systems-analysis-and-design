@@ -43,8 +43,8 @@ simulações é dado por
 O modelo descrito na Equação \ref{eq:modelo-g-de-s-utilizado-no-desafio-2} foi
 levantado a partir de 4 pontos de operação distintos, gerando 4 modelos: M1, M2,
 M3 e M4. Os parâmetros obtidos para cada modelo $i$ foram os seguintes: $L_{i} =
-[0,9; 0,7; 0,6; 0,4]$, $K_{i} = [1,3; 0,9; 1,2; 0,8]$ e $\tau_{i} = [0,9; 0,7;
-0,6; 0,4]$.
+[0,9; 0,7; 0,6; 0,4]$, $K_{i} = [1,3; 0,9; 1,2; 0,8]$ e $\tau_{i} = [1,2; 1,1;
+0,8; 0,9]$.
 
 Para o projeto do controlador utilizou o modelo nominal de $G(s)$ obtido
 através das médias $L_{n}$, $K_{n}$ e $\tau_{n}$ dos parâmetros $L_{i}$, $K_{i}$
@@ -83,6 +83,7 @@ O tópico seguinte irar descrever os resultados obtidos para os 3 itens acima.
 
 \subsection{Resultados obtidos}
 \subsubsection{Geração de incertezas multiplicativas}
+\label{subsub:geracao-de-incertezas-multiplicativas}
 Para cada modelo $G_{i}(s)$ com $i \in [1,4]$, calculou-se o módulo da incerteza
 multiplicativa conforme Equação \ref{eq:desafio-2-calculo-das-incertezas}. O
 resultado obtido está ilustrado na Figura
@@ -153,34 +154,85 @@ pode ser obtida pois
 \end{equation}
 
 \subsubsection{Resposta em malha fechadas dos modelos M1, M2, M3 e M4}
-\subsubsection{Resposta em malha fechada do modelo M1 com diferentes configurações}
+\label{subsub:desafio2:resposta-em-malha-fechadas-dos-modelos-m1-m2-m3-e-m4}
+Para reforçar a conclusão de robustez obtida conforme discutida no tópico
+\ref{subsub:geracao-de-incertezas-multiplicativas}, simulou-se a resposta ao
+degrau dos 4 modelos M1, M2, M3 e M4, cuja as funções de transferência são as
+Equações \ref{eq:desafio2:modelo-g1}, \ref{eq:desafio2:modelo-g2},
+\ref{eq:desafio2:modelo-g3} e \ref{eq:desafio2:modelo-g4}, respectivamente.
 
-\subsection{Conclusões}
-(Concluir em que medida os resultados apresentam relação com a motivação.
-Permitem ilustratar ou concluir algo sobre a motivação? )
+\begin{equation}
+    \label{eq:desafio2:modelo-g1}
+    G_{1}(s) = \frac{1,3e^{-0,9s}}{1,2s + 1},
+\end{equation}
 
+\begin{equation}
+    \label{eq:desafio2:modelo-g2}
+    G_{2}(s) = \frac{0,9e^{-0,7s}}{1,1s + 1},
+\end{equation}
+
+\begin{equation}
+    \label{eq:desafio2:modelo-g3}
+    G_{3}(s) = \frac{1,2e^{-0,6s}}{0,8s + 1},
+\end{equation}
+
+\begin{equation}
+    \label{eq:desafio2:modelo-g4}
+    G_{4}(s) = \frac{0,8e^{-0,4s}}{0,9s + 1}.
+\end{equation}
+
+Como esperado, a Figura \ref{fig:desafio2:questao5} demonstra que todos os
+sistemas são estáveis quando a malha é fechada utilizando o controlador
+projetado com o modelo nominal $G_{n}(s)$ do processo.
 
 \begin{figure}[!ht]
-    \caption{Simulação do sistema de controle em malhada fechada para condições
-    impostas no Cenário 1.}
+    \caption{Resposta ao degrau para os modelos M1, M2, M3 e M4.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:resultado-desafio2-questao5}
+    \label{fig:desafio2:questao5}
     \begin{minipage}{\linewidth}
         \input{images/challenge2/resultado-questao-5.tex}
     \end{minipage}
 \end{figure}
 
+É possível observar também na Figura \ref{fig:desafio2:questao5} uma diferença
+das respostas ao degrau dos modelos M1 e M4. O primeiro responde com um alto
+overshoot e oscilação na resposta transitória. Já o segundo se comporta próximo
+a um sistema superamortecido. Com base na resposta em frequência, pode se
+analisar tal diferença entre os modelos. Na resposta em frequência, o atraso
+$e^{-sL_{i}}$ insere no sistema uma diminuição de fase de formar linear, pois
+$\arg\angle e^{-jwL_{i}} = L_{i}w$. Dessa forma, como $L_{1} > L_{4}$, a fase em
+altas frequência do sistema do modelo M1 é maior, consequentemente menor margem
+de fase e mais próximo do eixo $jw$ os polos do sistema em malha fechada estão.
+Como o degrau é rico em altas frequências, o modelo com menor margem de fase
+tende a ter maior oscilação e, consequentemente, um maior overshoot. O que é
+observado no modelo M1.
+
+\subsubsection{Resposta em malha fechada do modelo M1 com diferentes configurações}
+Conforme discutido no final do tópico
+\ref{subsub:desafio2:resposta-em-malha-fechadas-dos-modelos-m1-m2-m3-e-m4}, o
+modelo M1 apresenta uma resposta transitória ao degrau com alto overshoot e
+oscilação. Desta forma, este modelo foi simulado em diferentes configurações do
+sistema de controle em malha fechada. Simulou-se a resposta ao degrau e
+perturbação na entrada com filtro de referência $F(s)$ de primeira ordem;
+utilizando um controlador I+P, com controlador I+P e saturação do sinal de
+controle e, por fim, com os dois itens anteriores mais a ação de anti-windup. O
+resultado obtido pode ser visto na Figura \ref{fig:desafio2:resultado-questao6}
+
 \begin{figure}[!ht]
-    \caption{Simulação do sistema de controle em malhada fechada para condições
-    impostas no Cenário 1.}
+    \caption{Simulação do sistema de controle em malhada fechada para diferentes
+    configurações.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:resultado-desafio2-questao6}
+    \label{fig:desafio2:resultado-questao6}
     \begin{minipage}{\linewidth}
         \input{images/challenge2/resultado-questao-6-9.tex}
     \end{minipage}
 \end{figure}
+
+\subsection{Conclusões}
+(Concluir em que medida os resultados apresentam relação com a motivação.
+Permitem ilustratar ou concluir algo sobre a motivação? )
 
 \begin{figure}[!ht]
     \caption{Simulação do sistema de controle em malhada fechada para condições
