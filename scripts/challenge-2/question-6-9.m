@@ -35,7 +35,7 @@ disp('=======================================================================')
 disp('Simulating plant response with I+P controller')
 disp('=======================================================================')
 
-f = 1
+f = tf(1)
 c = kc / (s*ti)
 
 [u, y, err] = simulate_sys(sim.time, dt,

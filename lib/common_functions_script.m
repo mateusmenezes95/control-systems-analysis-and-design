@@ -128,7 +128,7 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
                                   controller_type = 'standard',
                                   saturation = [],
                                   anti_windup_tol = inf)
-    if !isscalar(f)
+    if length(pole(f)) > 0
         f = ss(f);
         f.a = dt*f.a;
         f.b = dt*f.b;
@@ -155,7 +155,7 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
     u_desirable = 0;
 
     for k=1:length(sim_time)
-        if isscalar(f)
+        if length(pole(f)) == 0
             err = r(k) - y;
         else
             [xf, ref_filtered] = get_ss_output(xf, f, r(k));
