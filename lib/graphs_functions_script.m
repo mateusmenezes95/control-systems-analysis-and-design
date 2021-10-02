@@ -119,7 +119,7 @@ function plot_response_and_control_signals (sim_time, figure_num = 1,
     subplot(3,1,1)
 
     if !ischar(reference)
-        plot_signal(sim_time, '', reference, '', '--r', 'r(t)')
+        plot_signal(sim_time, '', reference, '', '--r', '$r(t)$')
     end
 
     hold on
@@ -139,4 +139,17 @@ function plot_response_and_control_signals (sim_time, figure_num = 1,
     plot_signal(sim_time, 'Tempo (s)',
                 u, 'Sinal de Controle $u(t)$',
                 line_color, u_legend)
+end
+
+function plot_coordinates(x, y, which_subplot = [1 1 1], point_description = '')
+    global line_thickness;
+    subplot(which_subplot(1), which_subplot(2), which_subplot(3))
+    set(legend, 'autoupdate', 'off')
+    line([x x], [ylim()(1) y],
+        'color', 'k', 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+    line([0 x], [y y],
+        'color', 'k', 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+    hold on
+    plot(x, y, '.', 'color', 'k')
+    text(x-1.5, ylim()(1) + 0.08, point_description)
 end

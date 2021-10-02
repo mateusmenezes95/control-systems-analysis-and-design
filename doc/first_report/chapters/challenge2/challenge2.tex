@@ -8,20 +8,21 @@ analisa o comportamento da saída de um modelo de planta, considerando um ponto
 de operação específico, e sinal de controle para um sistema em malha fechada na
 presença de saturação do sinal de controle.
 
-A análise de incertezas é de suma importância na avaliação de modelagem de plantas
-via alguma técnica específica, como resposta ao degrau ou resposta em
+A análise de incertezas é de suma importância na avaliação de modelagem de
+plantas via alguma técnica específica, como resposta ao degrau ou resposta em
 frequência. Esta modelagem é realizada principalmente quando não se tem o modelo
 teórico. Desta forma é preciso realizar a modelagem com a planta real, obtendo
 assim um modelo nominal da planta. Assim, torna-se necessário analisar qual o
-efeito das incertezas de modelagem, para garantir a estabilidade do sistema em
-malha fechada sendo controlado por um controlador projetado utilizando o modelo
-nominal da planta. Esta análise de robustez é obtida via Teorema do Pequeno
-Ganho e Teoria da Instabilidade Interna (não contemplada neste desafio).
+efeito das incertezas oriundas da modelagem, para garantir a estabilidade do
+sistema em malha fechada sendo controlado por um controlador projetado
+utilizando o modelo nominal da planta. Esta análise de robustez é obtida via
+Teorema do Pequeno Ganho e Teoria da Instabilidade Interna (não contemplada
+neste desafio).
 
 Além da análise de robustez, é ainda necessário analisar o sistema em malha
 fechada obtido através do modelo nominal em um ponto específico de operação na
 presença de saturação do sinal de controle. Esta análise também é de extrema
-relevância na teoria  e aplicação de controle, pois os sistemas de controle
+relevância na teoria e aplicação de controle, pois os sistemas de controle
 reais tem limitações, como a energia finita de atuadores, que caso não analisado
 corretamente, podem surgir no sistema de controle implementado comportamentos
 indesejáveis. Um exemplo comum de saturação é nas malhas de controle de vazão,
@@ -59,7 +60,7 @@ O controlador utilizado nas simulações foi o PI de Skogestad para um sistema d
 primeira ordem com atraso, dado por
 
 \begin{equation}
-    \label{eq:modelo-c-de-s-utilizado-no-desafio-2}
+    \label{eq:desafio2:controlador-de-skogestad}
     C(s) = K_{c}\frac{sT_{i} + 1}{sT_{i}} = \frac{0,8282(s + 1)}{s}
 \end{equation}
 em que $K_{c} = \tau_{n}/[K_{n}(\tau_{c} + L_{n})]$, $T_{i} = min(\tau_{n},
@@ -70,7 +71,7 @@ A partir destes modelos foram realizadas 3 simulações:
     \item Geração das incertezas multiplicativas dos 4 modelos e análise de
     robustez via Teorema do Pequeno Ganho;
     \item Resposta em malha fechada dos 4 modelos, dado o controlador definido
-    na Equação \ref{eq:modelo-c-de-s-utilizado-no-desafio-2}, com uma entrada de
+    na Equação \ref{eq:desafio2:controlador-de-skogestad}, com uma entrada de
     referência $r(t)$ em degrau unitário e uma perturbação na entrada $q_{u}(t)$
     também em degrau;
     \item Resposta do modelo M1 em malha fechada com diferentes configurações:
@@ -211,36 +212,204 @@ observado no modelo M1.
 \subsubsection{Resposta em malha fechada do modelo M1 com diferentes configurações}
 Conforme discutido no final do tópico
 \ref{subsub:desafio2:resposta-em-malha-fechadas-dos-modelos-m1-m2-m3-e-m4}, o
-modelo M1 apresenta uma resposta transitória ao degrau com alto overshoot e
-oscilação. Desta forma, este modelo foi simulado em diferentes configurações do
-sistema de controle em malha fechada. Simulou-se a resposta ao degrau e
-perturbação na entrada com filtro de referência $F(s)$ de primeira ordem;
-utilizando um controlador I+P, com controlador I+P e saturação do sinal de
-controle e, por fim, com os dois itens anteriores mais a ação de anti-windup. O
-resultado obtido pode ser visto na Figura \ref{fig:desafio2:resultado-questao6}
+modelo M1 apresenta uma resposta transitória ao degrau com alto
+\textit{overshoot} e oscilação. Desta forma, este modelo foi simulado em
+diferentes configurações do sistema de controle em malha fechada. Simulou-se o
+sistema em malha fechada à resposta ao degrau e perturbação na entrada do tipo
+degrau com: filtro de referência $F(s)$ de primeira ordem; utilizando
+controlador I+P; com controlador I+P e saturação do sinal de controle; e, por
+fim, com os dois itens anteriores mais a ação de \textit{anti-windup}.
+
+O primeiro resultado a ser observado, Figura
+\ref{fig:desafio2:resultado-questao-6-7}, é a resposta do sistema em malha
+fechada com a utilização do filtro de referência comparado ao uso do controlador
+I+P.
+
+\begin{figure}[!ht]
+    \caption{Simulação do sistema de controle em malhada fechada com filtro de
+    referência e com controlador I+P.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio2:resultado-questao-6-7}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge2/resultado-questao-6-7.tex}
+    \end{minipage}
+\end{figure}
+
+Um resultado peculiar observado no primeiro gráfico da Figura
+\ref{fig:desafio2:resultado-questao-6-7} é que a resposta do sistema em malha
+fechada com o filtro de referência e com o controlador I+P são aproximadamente
+iguais. A mesma conclusão pode ser obtida do gráfico contendo os sinais de
+controle. De forma algébrica é possível provar que o sinal de controle $U(s)$ é
+igual dado as duas configurações. Temos que para o sistema em malha fechada com
+um filtro de referência de primeira ordem dado por $F(s) = 1/({T_{i}(s) + 1})$,
+
+\begin{equation}
+    \label{eq:desafio2:sinal-de-controle-com-filtro-de-referencia}
+    \begin{split}
+        U_{f}(s) &= C(s)E(s) \\
+                   &= C(s)[F(s)R(s) - Y(s)] \\
+                   &= \frac{K_{c}\cancel Z_{c}}{P_{c}}\frac{1}{\cancel P_{f}}R(s) - [K_{c} + C_{I}(s)]Y(s) \\
+                   &= C_{I}(s)R(s) - [K_{c} + C_{I}(s)]Y(s)
+    \end{split}
+\end{equation}
+onde:
+
+\begin{conditions*}
+    U_{f}(s) & o sinal de controle dado uma referência $R(s)$ filtrada por $F(s)$;  \\
+    C(s) & a função de transferência do controlador de Skogestad (Equação
+    \ref{eq:desafio2:controlador-de-skogestad});  \\
+    K_{c} & o ganho do controlador $C(s)$;  \\
+    Z_{c} & o zero do controlador $C(s)$;  \\
+    P_{c} & o polo do controlador $C(s)$;  \\
+    P_{f} & o polo do filtro de referência $F(s)$; e  \\
+    C_{I}(s) & a porção integradora de $C(s)$ dada por $\frac{K_{c}}{T_{i}s}$.
+\end{conditions*}
+
+Para o controlador I+P a análise é parecida e temos que
+
+\begin{equation}
+    \label{eq:desafio2:sinal-de-controle-com-controlador-i-mais-p}
+    \begin{split}
+        U_{I+P}(s) &= C_{I}(s)E(s) - K_{c}Y(s) \\
+                   &= C_{I}(s)[R(s) - Y(s)] - K_{c}Y(s) \\
+                   &= C_{I}(s)R(s) - [K_{c} + C_{I}(s)]Y(s)
+    \end{split}
+\end{equation}
+
+onde:
+
+\begin{conditions*}
+    U_{I+P}(s) & a Transformada de Laplace do sinal de controle do controlador I+P.
+\end{conditions*}
+
+Portanto, observa-se através das deduções realizadas nas Equações
+\ref{eq:desafio2:sinal-de-controle-com-filtro-de-referencia} e
+\ref{eq:desafio2:sinal-de-controle-com-controlador-i-mais-p} que o sinal de
+controle é equivalente para as duas configurações analisadas e, desta forma, é
+ratificado o que foi observado na Figura
+\ref{fig:desafio2:resultado-questao-6-7}.Entretanto, observa-se que o erro do
+sistema não se comporta da mesma forma. Fica notório no gráfico de erro a função
+do filtro de referência na suavização da referência. Percebe-se também uma
+diminuição do \textit{overshoot} e da oscilação na resposta do sistema. Esta
+diminuição pode ser analisada novamente com base na resposta em frequência, pois
+o uso de um filtro de referência remove significativamente as altas frequências
+do sinal de erro, o que inibe a amplificação de sinais mais próximos do eixo
+$jw$ pelo controlador $C(s)$.
+
+\begin{figure}[!ht]
+    \caption{Resposta, erro e sinal de controle do sistema em malha fechada com
+    controlador I+P na presença de saturação do sinal de controle.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio2:resultado-questao-8}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge2/resultado-questao-8.tex}
+    \end{minipage}
+\end{figure}
+
+A Figura \ref{fig:desafio2:resultado-questao-8} permite analisar o que acontece
+com o mesmo sistema em malha fechada quando existe uma não linearidade no sinal
+de controle devido ao efeito de saturação do sinal, como observado no último
+gráfico. Observa-se que a resposta do sistema não apresente um
+\textit{overshoot}, pelo contrário, ela se comporta próxima a resposta de um
+sistema de primeira ordem. Antes de analisar graficamemte a consequência da
+saturação do sinal, é necessário entender algebricamente o controlador I+P. No
+domínio $s$ temos que 
+
+\begin{equation}
+    U_{I+P}(s) = \frac{K_{c}}{sTi}E(s) - K_{c}Y(s),
+\end{equation}
+cuja sua versão no domínio do tempo é
+
+\begin{equation}
+    \label{eq:desafio2:sinal-de-controle-i-mais-p-no-tempo}
+    u_{I+P}(t) = \pounds( U_{I+P}(s)) = \frac{K_{c}}{T_{i}}\int_{0}^{\tau}e(\tau)d\tau - K_{c}y(t).
+\end{equation}
+
+Voltando então à Figura \ref{fig:desafio2:resultado-questao-8}, nota-se que o
+sinal de controle satura em $t = t_{1}$, pois a parcela da integração da Equação
+\ref{eq:desafio2:sinal-de-controle-i-mais-p-no-tempo} é maior que parcela
+proporcional neste intervalo de tempo. Vale salientar que o atraso no sistema
+contribui de maneira significativa com a saturação do sinal de controle, pois o
+erro permanece no seu valor máximo durante o período de atraso. A parcela da
+integração continua crescendo após $t = t_{1}$, pois $e(t) > 0$ para $t_{1} \le
+t < t_{2}$. Para $t_{2} \le t \le t_{3}$, $e(t) < 0$, desacumulando dessa forma
+a parcela da integração, sendo $t = t_{3}$ o momento que a integração da parcela
+negativa do erro juntamente com a parte proporcional do controlador faz o sinal
+de controle sair da zona de saturação. Percebe-se porém que a desacumulação
+acontece de forma muito mais lenta que a acumulação, fazendo com que o sistema
+leve um longo tempo ($t_{2} \le t \le t_{4}$) até chegar em erro em regime
+permanente nulo. A depender do processo, este longo intervalo de não seguimento
+de referência trás consequências para o processo e, consequentemente, torna-se
+necessário a sua mitigação. Uma das formas de mitigar o problema da saturação do
+sinal de controle é o uso da ação de \textit{anti-windup}. Portanto, para
+analisar o seu efeito no problema acima descrito, foi implementada a ação de
+\textit{anti-windup} e o resultado pode ser examinado na Figura
+\ref{fig:desafio2:resultado-questao-9}.
+
+\begin{figure}[!ht]
+    \caption{Resposta, erro e sinal de controle do sistema em malha fechada com
+    controlador I+P na presença de saturação do sinal de controle com ação
+    \textit{anti-windup}.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio2:resultado-questao-9}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge2/resultado-extra-questao-6-9.tex}
+    \end{minipage}
+\end{figure}
+
+Analisando o efeito \textit{anti-windup} na Figura
+\ref{fig:desafio2:resultado-questao-9}, percebe-se que a resposta do sistema
+alcança o erro nulo mais rápido que o sistema com saturação sem a ação
+\textit{anti-windup}. No último gráfico da figura é mostrado a depuração da ação
+\textit{anti-windup}. Verifica-se que a ação ocorre sempre que o sinal de
+controle é saturado. Para o controlador em questão foi imposto o valor zero a
+entrada da ação integradora do controlador sempre que $|u_{d}(t) - u(t)| >
+10^{-5}$ em que $u_{d}(t)$ é o sinal de controle na saída do controlador I+P e
+$u(t)$ é o sinal efeitvo aplicado a planta, que nesse caso pode estar saturado
+ou não. A ação de zerar a parcela integral, analisando algebricamente a Equação
+\ref{eq:desafio2:sinal-de-controle-i-mais-p-no-tempo}, permite inferir que o erro
+não é mais acumulado por um longo período de tempo caso a saturação ocorra,
+inibindo desta forma a lentidão do ínicio do seguimento de referencia da
+resposta do sistema em malha fechada.
+
+Por fim, as 4 respostas das 4 diferentes configurações foram inseridas no mesmo
+gráfico a título de comparação, conforme Figura
+\ref{fig:desafio2:resultado-questao-6-9}. Diante das respostas é possível
+verificar que as configurações com filtro de referência e controlador I+P sem
+saturação a primeira vista apresentam um melhor regime transitório. Entretanto,
+é possível observar que o tempo de acomodação nestas duas configurações é
+próximo para configuração com ação \textit{anti-windup}. É possível concluir
+também que a depender do requisito de tempo de acomodação (5\%, 2\%, 1\% etc),
+mesmo o sistema com a saturação do sinal de controle tem um tempo de acomodação
+próximo aos demais. Não menos importante, nota-se que todas as configurações
+rejeitaram a perturbação na entrada da planta. Isto acontece pois ambos os
+controladores têm ação integral. Assim, de acordo com o Princípio do Modelo
+Interno, as perturbações do tipo degrau serão sempre rejeitadas pois sempre
+existirá a ação integradora no caminho de realimentação entre a saída aa planta
+e a perturbação da entrada.
 
 \begin{figure}[!ht]
     \caption{Simulação do sistema de controle em malhada fechada para diferentes
     configurações.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:desafio2:resultado-questao6}
+    \label{fig:desafio2:resultado-questao-6-9}
     \begin{minipage}{\linewidth}
         \input{images/challenge2/resultado-questao-6-9.tex}
     \end{minipage}
 \end{figure}
 
 \subsection{Conclusões}
-(Concluir em que medida os resultados apresentam relação com a motivação.
-Permitem ilustratar ou concluir algo sobre a motivação? )
+Os resultados apresentados nas subseções acima permitem concluir que o sistema
+em malha fechada é estável para os 4 modelos da planta real que foram obtidos em
+diferentes pontos de operação. Esta conclusão foi alcançada pois o controlador
+projetado utilizando o modelo nominal, obtido da média paramétrica dos 4
+modelos, não violou a regra do Teorema do Pequeno Ganho. Esta afirmação é
+proveniente tanto da análise da resposta em frequência quanto da simulação de um
+dos modelos em diferentes configurações do sistema.
 
-\begin{figure}[!ht]
-    \caption{Simulação do sistema de controle em malhada fechada para condições
-    impostas no Cenário 1.}
-    \vspace{-10pt}
-    \hspace{-30pt}
-    \label{fig:resultado-extra-desafio2-questao6}
-    \begin{minipage}{\linewidth}
-        \input{images/challenge2/resultado-extra-questao-6-9.tex}
-    \end{minipage}
-\end{figure}
+Portanto, é notório a importância da aplicabilidade da análise da resposta em
+frequência da planta para analisar sua robustez e estabilidade.
