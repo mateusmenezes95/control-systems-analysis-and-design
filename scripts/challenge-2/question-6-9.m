@@ -5,7 +5,8 @@ run common_parameters_scripts.m
 % Transfer Functions Definions
 % =============================================================================
 
-simulate_question(6:9) = [false false true false]
+simulate_question(6:9) = [true true true true]
+plot_saturation_analysis = false
 
 disp('=======================================================================')
 disp('Simulating plant response with input reference filter')
@@ -84,37 +85,38 @@ if simulate_question(8)
                                     y, '$y_{m1}(t)$ com saturação de $u(t)$',
                                     err, '$e_{m1}(t)$ com saturação',
                                     u, '$u_{m1}(t)$ com saturação', 'g-')
+    if plot_saturation_analysis
+        sat_idxs(1) = find(u >= 0.8)(1);
+        sat_idxs(2)= find(u(1, ++sat_idxs(1):end) < 0.8)(1) + sat_idxs(1);
+        sat_times = [(--sat_idxs(1) * dt) (--sat_idxs(2) * dt)]; % Time starts from zero!!!
+        err_cross_idx(1) = find(err < 0)(1);
+        err_cross_idx(2) = find(err(1, ++err_cross_idx(1):end) >= 0)(1) + err_cross_idx(1);
+        neg_e_time = [(--err_cross_idx(1) * dt) (--err_cross_idx(2) * dt)];
 
-    sat_idxs(1) = find(u >= 0.8)(1);
-    sat_idxs(2)= find(u(1, ++sat_idxs(1):end) < 0.8)(1) + sat_idxs(1);
-    sat_times = [(--sat_idxs(1) * dt) (--sat_idxs(2) * dt)]; % Time starts from zero!!!
-    err_cross_idx(1) = find(err < 0)(1);
-    err_cross_idx(2) = find(err(1, ++err_cross_idx(1):end) >= 0)(1) + err_cross_idx(1);
-    neg_e_time = [(--err_cross_idx(1) * dt) (--err_cross_idx(2) * dt)];
-
-    plot_coordinates(sat_times(1), y(1, sat_idxs(1)), [3 1 1], '$t_{1}$')
-    plot_coordinates(neg_e_time(1), y(1, err_cross_idx(1)), [3 1 1], '$t_{2}$')
-    plot_coordinates(sat_times(2), y(1, sat_idxs(2)), [3 1 1], '$t_{3}$')
-    plot_coordinates(neg_e_time(2), y(1, err_cross_idx(1)), [3 1 1], '$t_{4}$')
-    set(gca, 'ylim', [-0.2 1.2]); % This is called in Brazil "armengue!"
-    set(gca, 'ytick', [-0.2:.2:1.2]); % This is called in Brazil "armengue!"
-    set(gca, 'box', 'on'); % This is called in Brazil "armengue!"
-    
-    plot_coordinates(sat_times(1), err(1, sat_idxs(1)), [3 1 2], '$t_{1}$')
-    plot_coordinates(neg_e_time(1), err(1, err_cross_idx(1)), [3 1 2], '$t_{2}$')
-    plot_coordinates(sat_times(2), err(1, sat_idxs(2)), [3 1 2], '$t_{3}$')
-    plot_coordinates(neg_e_time(2), err(1, err_cross_idx(2)), [3 1 2], '$t_{4}$')
-    
-    plot_coordinates(sat_times(1), u(1, sat_idxs(1)), [3 1 3], '$t_{1}$')
-    plot_coordinates(neg_e_time(1), u(1, err_cross_idx(1)), [3 1 3], '$t_{2}$')
-    plot_coordinates(sat_times(2), u(1, sat_idxs(2)), [3 1 3], '$t_{3}$')
-    plot_coordinates(neg_e_time(2), u(1, err_cross_idx(2)), [3 1 3], '$t_{4}$')
+        plot_coordinates(sat_times(1), y(1, sat_idxs(1)), [3 1 1], '$t_{1}$')
+        plot_coordinates(neg_e_time(1), y(1, err_cross_idx(1)), [3 1 1], '$t_{2}$')
+        plot_coordinates(sat_times(2), y(1, sat_idxs(2)), [3 1 1], '$t_{3}$')
+        plot_coordinates(neg_e_time(2), y(1, err_cross_idx(1)), [3 1 1], '$t_{4}$')
+        set(gca, 'ylim', [-0.2 1.2]); % This is called in Brazil "armengue!"
+        set(gca, 'ytick', [-0.2:.2:1.2]); % This is called in Brazil "armengue!"
+        set(gca, 'box', 'on'); % This is called in Brazil "armengue!"
+        
+        plot_coordinates(sat_times(1), err(1, sat_idxs(1)), [3 1 2], '$t_{1}$')
+        plot_coordinates(neg_e_time(1), err(1, err_cross_idx(1)), [3 1 2], '$t_{2}$')
+        plot_coordinates(sat_times(2), err(1, sat_idxs(2)), [3 1 2], '$t_{3}$')
+        plot_coordinates(neg_e_time(2), err(1, err_cross_idx(2)), [3 1 2], '$t_{4}$')
+        
+        plot_coordinates(sat_times(1), u(1, sat_idxs(1)), [3 1 3], '$t_{1}$')
+        plot_coordinates(neg_e_time(1), u(1, err_cross_idx(1)), [3 1 3], '$t_{2}$')
+        plot_coordinates(sat_times(2), u(1, sat_idxs(2)), [3 1 3], '$t_{3}$')
+        plot_coordinates(neg_e_time(2), u(1, err_cross_idx(2)), [3 1 3], '$t_{4}$')
+    end
 end
 
 if simulate_question(9)
-    disp('=============================================================================')
-    disp('Simulating plant response with I+P controller, control outuput saturation and anti-winduṕ actio')
-    disp('=============================================================================')
+    disp('====================================================================')
+    disp('Simulating plant response with I+P , saturation and anti-windup')
+    disp('====================================================================')
 
     [u, y, err] = simulate_sys(sim.time, dt,
                             g, delay, ci, f_unit,
@@ -133,4 +135,11 @@ if simulate_question(9)
                                     u, '$u_{m1}(t)$ com anti-windup', 'k-')
 
     set(gca, 'ytick', [0:.2:1.2]); % This is called in Brazil "armengue!"
+end
+
+if all(simulate_question(6:9))
+    for i=1:3
+        subplot(3,1,i);
+        set(legend, 'location', 'eastoutside');
+    end
 end
