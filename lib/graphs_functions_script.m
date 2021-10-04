@@ -5,7 +5,7 @@ printf("Loading graphs plot functions...\n");
 % =============================================================================
 
 global font_size = 10;
-global line_thickness = 1;
+global line_thickness = 2;
 global y_axis_limits_offset = 0.2;
 
 % =============================================================================
@@ -141,15 +141,90 @@ function plot_response_and_control_signals (sim_time, figure_num = 1,
                 line_color, u_legend)
 end
 
-function plot_coordinates(x, y, which_subplot = [1 1 1], point_description = '')
-    global line_thickness;
+function generate_subplot (which_subplot = [1 1 1])
     subplot(which_subplot(1), which_subplot(2), which_subplot(3))
+endfunction
+
+function plot_coordinates(x, y, which_subplot = [1 1 1], point_description = '',
+                          color = 'k', linestyle = ':', point_symbol = '.')
+    global line_thickness;
+    generate_subplot(which_subplot)
     set(legend, 'autoupdate', 'off')
     line([x x], [ylim()(1) y],
-        'color', 'k', 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
-    line([0 x], [y y],
-        'color', 'k', 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+        'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', linestyle)
+    line([xlim()(1) x], [y y],
+        'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', linestyle)
     hold on
-    plot(x, y, '.', 'color', 'k')
-    text(x-1.5, ylim()(1) + 0.08, point_description)
+    plot(x, y, point_symbol, 'color', color)
+
+    if !isnull(point_description)
+        text(x-1.5, ylim()(1) + 0.08, point_description)
+    end
 end
+
+function plot_semilogx(x, y, color = 'b', linestyle = '-', legend_str = '',
+                       xtitle = '', ytitle = '')
+    global line_thickness;
+    semilogx(x, y, 'color', color, 'linestyle', linestyle,
+             'linewidth', (line_thickness - 0.5));
+    legend(legend_str);
+    xlabel(xtitle);
+    ylabel(ytitle);
+    grid on
+endfunction
+
+function plot_bode(sys, w, color, linestyle, legend_str,
+                   gain_subplot = [2 1 1], phase_subplot = [2 1 2])
+    [gain, phase, w] = bode(sys, w);
+
+    generate_subplot(gain_subplot)
+    hold on
+    plot_semilogx(w, 20*log10(gain), color, linestyle, legend_str,
+                  'Frequência (rad/s)', 'Ganho_{db}')
+    generate_subplot(phase_subplot)
+    hold on
+    plot_semilogx(w, phase, color, linestyle, legend_str,
+                  'Frequência (rad/s)', 'Fase (graus)')
+endfunction
+
+function plot_phase_margin(sys, gain_subplot = [2 1 1], phase_subplot = [2 2 2],
+                           color = 'k');
+    global line_thickness;
+    [gain_margin, phase_margin, w_gain_margin, w_phase_margin] = margin(sys);
+
+    generate_subplot(gain_subplot)
+    set(legend, 'autoupdate', 'off')
+
+    line(xlim(), [0 0], 'color', color, 'linewidth', 0.5, 'linestyle', ':')
+    line([w_phase_margin w_phase_margin], [ylim()(1) 0],
+         'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+    
+    generate_subplot(phase_subplot)
+    set(legend, 'autoupdate', 'off')
+
+    line(xlim(), [-180 -180], 'color', color, 'linewidth', 0.5, 'linestyle', ':')
+
+    y = (-180 + phase_margin);
+
+    line([w_phase_margin w_phase_margin], [-180 y],
+         'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+    line([xlim()(1) w_phase_margin], [y y],
+         'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+    hold on
+    plot(w_phase_margin, y, 'marker', '.', 'color', color, 'linewidth', (line_thickness - 0.5))
+endfunction
+
+function plot_phase_peak(sys, w, gain_subplot = [2 1 1], phase_subplot = [2 2 2],
+                         color = 'k');
+    global line_thickness;
+    [gain, phase, w] = bode(sys, w);
+
+    [phi_max, phi_max_idx] = max(phase);
+
+    plot_coordinates(w(phi_max_idx), 20*log10(gain(phi_max_idx)), gain_subplot,
+                     '', color, '--', 'o')
+    plot_coordinates(w(phi_max_idx), phi_max, phase_subplot,
+                     '', color, '--', 'o')
+endfunction
+
+printf("Loaded successfuly graphs plot functions \n");

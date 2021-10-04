@@ -195,4 +195,50 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
     end
 end
 
+% Function created by SANTOS, T. L. M.
+function wb=bandwidth_lti(sys)
+    [mag, W] = sigma(sys);
+  
+    if max(mag)<1/sqrt(2)
+        display('Resposta em frequência abaixo de -3db ')
+        return   
+    endif
+  
+    [aux,i]=min(abs(mag-1/sqrt(2)));
+    w=linspace(W(i-1),W(i+1),1000);
+    [mag, W] = sigma(sys,w);
+    [aux,i]=min(abs(mag-1/sqrt(2)));
+    wb=w(i);
+endfunction
+
+function [idx, true_value] = find_idx(X, value, condition = 'le')
+    switch (condition)
+        case 'le'
+            idx = find(X <= value)(1);
+        case 'ge'
+            idx = find(X >= value)(1);
+        otherwise
+            disp(['Condition ' condition ' does not exist!'])
+            return
+    endswitch
+    true_value = X(idx);
+endfunction
+
+function [phimax, alpha, t, leadc] = get_lead_compensator(sys, desirable_margin,
+                                                          slack, k = 1)
+    [gain, w] = bodemag(sys);
+    [gain_margin, phi, w_gain, w_phi] = margin(sys);
+    
+    phimax = desirable_margin - phi + slack;
+    alpha = (1 - sin(deg2rad(phimax))) / (1 + sin(deg2rad(phimax)));
+    
+    sqrt_alpha_idx = find_idx(gain, sqrt(alpha));
+    sqrt_alpha_freq = w(sqrt_alpha_idx);
+    
+    t = 1 / (sqrt_alpha_freq * sqrt(alpha))
+
+    s = tf('s');
+    leadc = k * ((t*s + 1) / ((alpha*t*s) + 1))
+endfunction
+
 printf("Loaded successfuly common functions \n");
