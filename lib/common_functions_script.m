@@ -116,7 +116,6 @@ function u_to_qu_tf = get_controller_output_to_input_disturbance_tf (G, C, F)
 end
 
 function [xkplus1, y] = get_ss_output(x0, ss_matrix = ss(0,0,0,0), uk) 
-    k = 1;
     xk = x0;
     xkplus1 = xk*(1+ss_matrix.a) + (ss_matrix.b*uk);
     y = ss_matrix.c*xkplus1 + (ss_matrix.d*uk);
@@ -194,6 +193,28 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
         E(k) = err;
     end
 end
+
+function [U, Y, E] = simulate_sys_lsim (sim_time, p, c, filt, r, qy, qu)
+    y_to_r = get_output_to_reference_tf (p, c, filt);
+    y_to_qy = get_output_to_output_disturbance_tf (p, c, filt);
+    y_to_qu = get_output_to_input_disturbance_tf (p, c, filt);
+
+    u_to_r = get_controller_output_to_reference_tf (p, c, filt);
+    u_to_qy = get_controller_output_to_output_disturbance_tf (p, c, filt);
+    u_to_qu = get_controller_output_to_input_disturbance_tf (p, c, filt);
+
+    yr = lsim(y_to_r, r, sim_time);
+    yqu = lsim(y_to_qy, qu, sim_time);
+    yqy = lsim(y_to_qu, qy, sim_time);
+
+    ur = lsim(u_to_r, r, sim_time);
+    uqu = lsim(u_to_qy, qu, sim_time);
+    uqy = lsim(u_to_qu, qy, sim_time);
+
+    Y = (yr + yqu + yqy);
+    U = (ur + uqu + uqy);
+    E = Y - r;
+endfunction
 
 % Function created by SANTOS, T. L. M.
 function wb=bandwidth_lti(sys)
