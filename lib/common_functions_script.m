@@ -235,10 +235,10 @@ function [phimax, alpha, t, leadc] = get_lead_compensator(sys, desirable_margin,
     sqrt_alpha_idx = find_idx(gain, sqrt(alpha));
     sqrt_alpha_freq = w(sqrt_alpha_idx);
     
-    t = 1 / (sqrt_alpha_freq * sqrt(alpha))
+    t = 1 / (sqrt_alpha_freq * sqrt(alpha));
 
     s = tf('s');
-    leadc = k * ((t*s + 1) / ((alpha*t*s) + 1))
+    leadc = k * ((t*s + 1) / ((alpha*t*s) + 1));
 endfunction
 
 printf("Loaded successfuly common functions \n");

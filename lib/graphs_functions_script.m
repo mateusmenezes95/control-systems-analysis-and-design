@@ -5,7 +5,7 @@ printf("Loading graphs plot functions...\n");
 % =============================================================================
 
 global font_size = 10;
-global line_thickness = 2;
+global line_thickness = 1;
 global y_axis_limits_offset = 0.2;
 
 % =============================================================================
@@ -165,9 +165,8 @@ end
 function plot_semilogx(x, y, color = 'b', linestyle = '-', legend_str = '',
                        xtitle = '', ytitle = '')
     global line_thickness;
-    semilogx(x, y, 'color', color, 'linestyle', linestyle,
+    semilogx(x, y, [color ';' legend_str ';'], 'linestyle', linestyle,
              'linewidth', (line_thickness - 0.5));
-    legend(legend_str);
     xlabel(xtitle);
     ylabel(ytitle);
     grid on
@@ -180,11 +179,11 @@ function plot_bode(sys, w, color, linestyle, legend_str,
     generate_subplot(gain_subplot)
     hold on
     plot_semilogx(w, 20*log10(gain), color, linestyle, legend_str,
-                  'Frequência (rad/s)', 'Ganho_{db}')
+                  'Frequência [rad/s]', 'Ganho [db]')
     generate_subplot(phase_subplot)
     hold on
     plot_semilogx(w, phase, color, linestyle, legend_str,
-                  'Frequência (rad/s)', 'Fase (graus)')
+                  'Frequência [rad/s]', 'Fase [graus]')
 endfunction
 
 function plot_phase_margin(sys, gain_subplot = [2 1 1], phase_subplot = [2 2 2],
@@ -222,9 +221,9 @@ function plot_phase_peak(sys, w, gain_subplot = [2 1 1], phase_subplot = [2 2 2]
     [phi_max, phi_max_idx] = max(phase);
 
     plot_coordinates(w(phi_max_idx), 20*log10(gain(phi_max_idx)), gain_subplot,
-                     '', color, '--', 'o')
+                     '', 'k', '--', 'o')
     plot_coordinates(w(phi_max_idx), phi_max, phase_subplot,
-                     '', color, '--', 'o')
+                     '', 'k', '--', 'o')
 endfunction
 
 printf("Loaded successfuly graphs plot functions \n");
