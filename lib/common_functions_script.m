@@ -204,16 +204,16 @@ function [U, Y, E] = simulate_sys_lsim (sim_time, p, c, filt, r, qy, qu)
     u_to_qu = get_controller_output_to_input_disturbance_tf (p, c, filt);
 
     yr = lsim(y_to_r, r, sim_time);
-    yqu = lsim(y_to_qy, qu, sim_time);
-    yqy = lsim(y_to_qu, qy, sim_time);
+    yqu = lsim(y_to_qu, qu, sim_time);
+    yqy = lsim(y_to_qy, qy, sim_time);
 
     ur = lsim(u_to_r, r, sim_time);
-    uqu = lsim(u_to_qy, qu, sim_time);
-    uqy = lsim(u_to_qu, qy, sim_time);
+    uqu = lsim(u_to_qu, qu, sim_time);
+    uqy = lsim(u_to_qy, qy, sim_time);
 
     Y = (yr + yqu + yqy);
     U = (ur + uqu + uqy);
-    E = Y - r;
+    E = r - Y;
 endfunction
 
 % Function created by SANTOS, T. L. M.
@@ -260,6 +260,12 @@ function [phimax, alpha, t, leadc] = get_lead_compensator(sys, desirable_margin,
 
     s = tf('s');
     leadc = k * ((t*s + 1) / ((alpha*t*s) + 1));
+endfunction
+
+function [betavar, clag] = get_lag_compensator(sys, openloop_gain, tlag)
+    s = tf('s');
+    betavar = openloop_gain / sys(0);
+    clag = betavar*((tlag*s + 1)/(betavar*tlag*s + 1));
 endfunction
 
 printf("Loaded successfuly common functions \n");

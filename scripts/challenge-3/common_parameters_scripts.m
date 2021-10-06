@@ -10,4 +10,4 @@ run graphs_functions_script
 
 g = 0.5 / ((s^2 + 0.6*s + 1)*(0.1*s + 1))
 k = 1 / g(0)
-w = logspace(-1, 2, 1e4);
+w = logspace(-4, 2, 1e4);

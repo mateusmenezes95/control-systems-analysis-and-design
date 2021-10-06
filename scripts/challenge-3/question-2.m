@@ -11,4 +11,6 @@ bodemag(p)
 
 set(legend, 'string', '$|P(jw)|$')
 plot_coordinates(p_wb, -3.0, [1 1 1], '', 'r', '--', 'o')
-text(p_wb + 0.2, -3, ['$|P(w_{b} \approx  ' num2str(p_wb, '%.2f') ')| = -3_{db}$'])
+text(p_wb + 0.2, -3, ['$|P(w_{b} \approx  ' num2str(p_wb, '%.2f') ')| \approx -3_{db}$'])
+xlabel('Frequência [rad/s]')
+title('')
