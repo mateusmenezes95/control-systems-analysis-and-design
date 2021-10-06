@@ -1,13 +1,114 @@
-\section{Desafio III - ``título''} 
+\section{Desafio III - Resposta em Frequência} 
 
 \subsection{Motivação}
-(Explicar o problema que motiva o desafio, relevância, possíveis aplicações...) 
+Este último desafio da série visa reduzir a abstração do critério de Nyquist,
+evidenciando como ele pode ser aplicado no projeto de controladores no domínio
+da frequência. Além disso, o uso da resposta em frequência junto com o critério
+de Nyquist permite que os controladores sejam projetados apenas com a função de
+transferência de malha aberta, sem precisar também do conceito de dominância
+modal. Portanto, poder projetar controladores no domínio da frequência é mais
+uma ferramenta que o projetista tem em mãos na hora de decidir qual abordagem
+seguir na resolução de um determinado problema de controle. Os campos que se
+beneficiam dessa abordagem são principalmente aqueles que envolvam eletrônica de
+potência, como o controle de tensão na saída de conversores DC-DC regulados, e
+vibrações. 
 
 \subsection{Simulações realizadas}
-(Explicar quais simulações foram realizadas de maneira descritiva e sequêncial.) 
+As simulações realizadas focaram no design de compensadores de avanço, de atraso
+e de avanço-atraso de fase.
+
+Primeiro as simulações foram realizadas para analisar a
+resposta em frequência de um compensador em avanço variando primeiro a folga de
+fase utilizada no projeto; depois projetando o compensador com o requisito de
+largura de banda de malha aberta; e no fim desta primeira parte, analisou o
+compensador com diferentes ganhos.
+
+A segunda etapa consistiu na análise no
+domínio do tempo da resposta do sistema em malha fechada com os diferentes
+compensadores projetados na primeira parte e também com a adição de um filtro de
+referência.
+
+Por fim, foi realizada novamente a simulação do sistema em malha fechada,
+entretanto, com a adição de um compensador em atraso, ficando o compensador
+final com a topologia de avanço-atraso. Também avaliou-se a resposta em malha
+fechada com um filtro de referência. Adicionalmente, foi avaliada a resposta do
+sistema para uma perturbação do tipo degrau na entrada da planta.
+
+Também como nos dois desafios anteriores, este desafio teve como referência o
+sistema em malha fechada ilustrado pela Figura
+\ref{fig:diagrama-de-blocos-malha-fechada} e descrita no tópico
+\ref{sec:desafio-1-simulacoes-realizadas}. A função de transferência da
+planta/processo utilizada está definida na Equação \ref{eq:desafio-3:g-de-s}. O
+tópico posterior descreve e contém discussões dos resultados obtidos.
+
+\begin{equation}
+    \label{eq:desafio-3:g-de-s}
+    G(s) = \frac{0,5}{(s^2 + 0,6s +1)(0,1s + 1)}.
+\end{equation}
 
 \subsection{Resultados obtidos}
-(Apresentar resultados, gráficos e analisar os resultados observados.) 
+As simulações começaram com a definição de $\overline{K}$ tal que
+$\overline{K}G(0) = 1$. Através de álgebra simples, achou-se $\overline{K} = 2$.
+Com a definição desse valor de ganho, foi calculada a largura de banda de $P(s)
+= \overline{K}G(s)$, cujo resultado é ilustrado na Figura
+\ref{fig:desafio-3:questao-3}. A largura de banda $w_{b} \approx 1,45$ rad/s.
+Vale ressaltar que como foi realizado computação numérica, os valores
+serão aproximados devido a discretização da magnitude e fase no diagrama de bode.
+
+\begin{figure}[!ht]
+    \caption{Magnitude da resposta em frequência de $P(s)$
+    com destaque na largura de banda.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-3:questao-3}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-2.tex}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[!ht]
+    \caption{Magnitude da resposta em frequência de $P(s)$
+    com destaque na largura de banda.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-3:questao-3-4}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-3-4-compensadores.tex}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[!ht]
+    \caption{Magnitude da resposta em frequência de $P(s)$
+    com destaque na largura de banda.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-3:questao-3-4}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-3-4-malha-aberta.tex}
+    \end{minipage}
+\end{figure}
 
 \subsection{Conclusões}
-(Concluir em que medida os resultados apresentam relação com a motivação. Permitem ilustratar ou concluir algo sobre a motivação? )
+(Concluir em que medida os resultados apresentam relação com a motivação.
+Permitem ilustratar ou concluir algo sobre a motivação? )
+
+
+\begin{figure}[!ht]
+    \caption{Resposta ao degrau para os modelos M1, M2, M3 e M4.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio2:questao5}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-5-6-leadcs.tex}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[!ht]
+    \caption{Resposta ao degrau para os modelos M1, M2, M3 e M4.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio2:questao-7}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-7.tex}
+    \end{minipage}
+\end{figure}

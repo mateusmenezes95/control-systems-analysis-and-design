@@ -6,14 +6,14 @@ run common_parameters_scripts.m
 % =============================================================================
 
 disp('=================== Open loop with lead compensator ===================')
-[phimax, alpha, t, cl] = get_lead_compensator(k*g,
-                                              desirable_margin = 60,
-                                              slack = 24,
-                                              gain = 1)
+[phimax, alpha, tlead, cl] = get_lead_compensator(k*g,
+                                                  desirable_margin = 60,
+                                                  slack = 24,
+                                                  gain = 1)
 openloop = cl * k * g;
 [gm, pm, w_gm, w_pm] = margin(openloop);
 bandwidth = bandwidth_lti(openloop);
-f = 1 / (t*s + 1)
+f = 1 / (tlead*s + 1)
 disp('=======================================================================')
 
 disp('============================== Compute Kc =============================')
@@ -25,15 +25,15 @@ disp('=======================================================================')
 
 
 disp(['=========== Open loop with fixed Kc equal ' num2str(kc) ' ==========='])
-[phimax, alpha, t, cl_with_fixed_kc] = get_lead_compensator(kc*k*g,
+[phimax, alpha, tlead_with_fixed_kc, cl_with_fixed_kc] = get_lead_compensator(kc*k*g,
                                                             desirable_margin = 60,
                                                             slack = 24, 
                                                             gain = 1);
-phimax, alpha, t
+phimax, alpha, tlead_with_fixed_kc
 cl_with_fixed_kc = kc * cl_with_fixed_kc
 openloop_with_fixed_kc = cl_with_fixed_kc * k * g;
 [gm, pm, w_gm, w_pm] = margin(openloop_with_fixed_kc);
 bandwidth = bandwidth_lti(openloop_with_fixed_kc);
-f_with_fixed_kc = 1 / (t*s + 1)
+f_with_fixed_kc = 1 / (tlead_with_fixed_kc*s + 1)
 disp('=======================================================================')
 
