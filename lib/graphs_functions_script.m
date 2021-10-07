@@ -192,25 +192,29 @@ function plot_phase_margin(sys, gain_subplot = [2 1 1], phase_subplot = [2 2 2],
     [gain_margin, phase_margin, w_gain_margin, w_phase_margin] = margin(sys);
 
     generate_subplot(gain_subplot)
+    hold on
     set(legend, 'autoupdate', 'off')
 
-    line(xlim(), [0 0], 'color', color, 'linewidth', 0.5, 'linestyle', ':')
+    line(xlim(), [0 0], 'color', 'k', 'linewidth', line_thickness/2, 'linestyle', ':')
     line([w_phase_margin w_phase_margin], [ylim()(1) 0],
-         'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+         'color', 'r', 'linewidth', line_thickness/2, 'linestyle', '-')
+    set(legend, 'location', 'southwest')
+    plot(w_phase_margin, 0, 'marker', '.', 'color', 'r')
     
     generate_subplot(phase_subplot)
     set(legend, 'autoupdate', 'off')
 
-    line(xlim(), [-180 -180], 'color', color, 'linewidth', 0.5, 'linestyle', ':')
+    line(xlim(), [-180 -180], 'color', 'k', 'linewidth', 0.5, 'linestyle', ':')
 
     y = (-180 + phase_margin);
 
     line([w_phase_margin w_phase_margin], [-180 y],
-         'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
-    line([xlim()(1) w_phase_margin], [y y],
-         'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+         'color', 'r', 'linewidth', line_thickness/2, 'linestyle', '-')
+    % line([xlim()(1) w_phase_margin], [y y],
+    % 'color', color, 'linewidth', (line_thickness - 0.5), 'linestyle', ':')
+    set(legend, 'location', 'southwest')
     hold on
-    plot(w_phase_margin, y, 'marker', '.', 'color', color, 'linewidth', (line_thickness - 0.5))
+    plot(w_phase_margin, y, 'marker', '.', 'color', 'r')
 endfunction
 
 function plot_phase_peak(sys, w, gain_subplot = [2 1 1], phase_subplot = [2 2 2],
@@ -221,9 +225,9 @@ function plot_phase_peak(sys, w, gain_subplot = [2 1 1], phase_subplot = [2 2 2]
     [phi_max, phi_max_idx] = max(phase);
 
     plot_coordinates(w(phi_max_idx), 20*log10(gain(phi_max_idx)), gain_subplot,
-                     '', 'k', '--', 'o')
+                     '', 'k', '--', '.')
     plot_coordinates(w(phi_max_idx), phi_max, phase_subplot,
-                     '', 'k', '--', 'o')
+                     '', 'k', '--', '.')
 endfunction
 
 printf("Loaded successfuly graphs plot functions \n");

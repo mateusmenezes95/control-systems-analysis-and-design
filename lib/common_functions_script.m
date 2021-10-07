@@ -5,6 +5,8 @@ pkg load signal
 
 s = tf("s");
 
+format bank
+
 function sim = get_sim_time (dt = 0.01, end_time = 100)
     sim.time_step = dt;
     sim.time = 0:dt:end_time;
