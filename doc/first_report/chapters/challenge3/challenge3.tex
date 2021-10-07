@@ -48,7 +48,7 @@ tópico posterior descreve e contém discussões dos resultados obtidos.
 
 \subsection{Resultados obtidos}
 As simulações começaram com a definição de $\overline{K}$ tal que
-$\overline{K}G(0) = 1$. Através de álgebra simples, achou-se $\overline{K} = 2$.
+$\overline{K}G(0) = 1$. Através de álgebra simples, chegou-se a $\overline{K} = 2$.
 Com a definição desse valor de ganho, foi calculada a largura de banda de $P(s)
 = \overline{K}G(s)$, cujo resultado é ilustrado na Figura
 \ref{fig:desafio-3:questao-3}. A largura de banda $w_{b} \approx 1,45$ rad/s.
@@ -66,49 +66,194 @@ serão aproximados devido a discretização da magnitude e fase no diagrama de b
     \end{minipage}
 \end{figure}
 
+Em seguida foi projetado dois compensadores em avanço, dado pela Equação
+\ref{eq:desafio-3:clinha-de-s}, tal que a margem de fase de $C(s)G(s)$ fosse
+maior ou igual a $60^{\circ}$, a largura de banda de malha aberta fosse maior
+que 2,5 rad/s dado $C(s) = {C}'(s)\overline{K}$ e $K_{c} = 1$. Um controlador
+foi projetado considerando uma folga de $12^{\circ}$ e o outro para uma folga de
+$24^{\circ}$. Os parâmetros do compensador foram calculados conforme as Equações
+\ref{eq:desafio-3:phi-max}, \ref{eq:desafio-3:alpha} e \ref{eq:desafio-3:te}.
+
+\begin{equation}
+    \label{eq:desafio-3:clinha-de-s}
+    {C}'(s) = K_{c}\frac{Ts + 1}{\alpha Ts + 1}
+\end{equation}
+
+\begin{equation}
+    \label{eq:desafio-3:phi-max}
+    \phi_{max} = mf_{d} - mf_{a} + folga,
+\end{equation}
+onde:
+
+\begin{conditions*}
+    \phi_{max} & a máxima fase que o compensador em avanço necessita ter para
+    que o sistema em malha aberta possua a margem de fase desejada; \\
+    mf_{d} & a margem de fase desejada; e \\
+    mf_{a} & a margem de fase atual. \\
+\end{conditions*}
+
+\begin{equation}
+    \label{eq:desafio-3:alpha}
+    \alpha = \frac{1 - \sin(\phi_{max})}{1 + \sin(\phi_{max})},
+\end{equation}
+
+\begin{equation}
+    \label{eq:desafio-3:te}
+    T = \frac{1}{w_{\phi_{max}}\sqrt{\alpha}}
+\end{equation}
+
+Para o compensador com menor folga foi encontrado $\phi_{max} = 28,72^{\circ}$,
+$\alpha = 0.35$, $T = 1,09$ e $w_{b} = 1,81$ rad/s. Já para o segundo
+compensador $\phi_{max} = 40,72^{\circ}$, $\alpha = 0,21$, $T = 1,28$ e $w_{b} =
+2,04$ rad/s. A resposta em frequência dos dois compensadores projetados é
+expressa na Figura \ref{fig:desafio-3:questao-3-4-compensadores}.
+
 \begin{figure}[!ht]
-    \caption{Magnitude da resposta em frequência de $P(s)$
-    com destaque na largura de banda.}
+    \caption{Compensador em avanço ${C}'(s)$ projetado com folgas de
+    $12^{\circ}$ e $24^{\circ}$.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:desafio-3:questao-3-4}
+    \label{fig:desafio-3:questao-3-4-compensadores}
     \begin{minipage}{\linewidth}
         \input{images/challenge3/resultado-questao-3-4-compensadores.tex}
     \end{minipage}
 \end{figure}
 
+Na Figura \ref{fig:desafio-3:questao-3-4-compensadores} é possível visualizar
+que o controlador projetado com maior folga foi o que obteve maior pico de fase,
+condizente com a Equação \ref{eq:desafio-3:phi-max}. O compensador com folga de
+$24^{\circ}$ também possui maior ganho na frequência de pico de fase. Para
+avaliar a contribuição dos dois controladores em $G(s)$, foi obtida a resposta
+em frequência $C(s)G(s)$ conforme Figura
+\ref{fig:desafio-3:questao-3-4-malha-aberta}.
+
 \begin{figure}[!ht]
-    \caption{Magnitude da resposta em frequência de $P(s)$
-    com destaque na largura de banda.}
+    \caption{Resposta em frequência de ${C}'(s)\overline{K}G(s)$ com compensador
+    em avanço ${C}'(s)$ projetado com folgas de $12^{\circ}$ e $24^{\circ}$.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:desafio-3:questao-3-4}
+    \label{fig:desafio-3:questao-3-4-malha-aberta}
     \begin{minipage}{\linewidth}
         \input{images/challenge3/resultado-questao-3-4-malha-aberta.tex}
     \end{minipage}
 \end{figure}
 
+Como realçado nas linhas verticais do gráfico de fase na Figura
+\ref{fig:desafio-3:questao-3-4-malha-aberta}, o sistema em malha aberta
+$\overline{K}G(s)$ é o que possui menor margem de fase ($M_{f} =
+43,28^{\circ}$), conforme esperado. A margem de fase é melhorada com a adição do
+compensador projetado com a folga de $12^{\circ}$, atingindo uma $M_{f} =
+53,70^{\circ}$, mas que ainda possui uma diferença considerável da margem de
+fase desejada ($60^{\circ}$). Por outro lado, o compensador projetado com uma
+folga de $24^{\circ}$ contribuiu com maior fase e portanto a margem de fase de
+$C(s)G(s)$ atingiu $59,44^{\circ}$, muito mais próxima ao valor desejado. A
+melhor contribuição do segundo projeto pode ser explicado devido as incertezas
+no projeto de compensador no domínio da frequência. É incerto em que valor de
+frequência ocorrerá o pico de fase do compensador quando ele é colocado junto
+com a planta/processo. O pico pode ficar tanto antes quanto depois do ponto de
+frequência desejável. Dessa forma, utilizando uma folga de $24^{\circ}$ permite
+que caso o pico de fase do compensador ocorra antes do valor de frequência
+desejado, o compensador ainda contribua com um valor alto de fase para o sistema
+em malha aberta. Além disso, caso o pico ocorra após a frequência desejada, o
+projeto vai ser ainda mais conservador, já que a margem de fase vai ser superior
+a desejada. Portanto, o projeto usando uma folda de $24^{\circ}$ acaba sendo
+mais conservador se comparado ao de $12^{\circ}$.
+
+Embora o segundo compensador tenha coontribuido efetivamente para o requisito de
+margem de fase, o mesmo não foi obtido para largura de banda de malha aberta.
+Nessa linha, o déficit do projeto usando a folga de $12^{\circ}$ é evidente já
+que ele também não contribuiu para o sistema em malha aberta para atingir a
+largura de banda requerida. Diante disso, visando aumentar a largura de banda de
+$C(s)G(s)$, foi calculado o valor de $K_{c}$ tal que $w_{b} = 2,5$ rad/s. O
+valor de ganho do compensador foi calculado conforme Equação
+\ref{eq:desafio3:calculo-de-kc}, obtendo assim $K_c = 1,43$.
+
+\begin{equation}
+    \label{eq:desafio3:calculo-de-kc}
+    K_{c} = \left. \frac{1}{\sqrt{2}(|{C}'(jw)\overline{K}G(jw)|)} \right |_{w = 2,5}
+\end{equation}
+
+A inserção do ganho no compensador de avanço desloca todo os valores de
+magnitude para a direita. Como consequência a frequência de cruzamento de ganho
+também é deslocada para direita. Entretanto, a fase não é deslocada na inserção
+de um ganho estático. A consequência é que a margem de fase do sistema em
+malha aberta é reduzida, que para esse caso à um valor de
+$49,49^{\circ}$. Este fato fica evidente quando mostrado de forma gráfica na
+Figura \ref{fig:desafio-3:questao-5-6-malha-aberta}.
+
+\begin{figure}[ht!]
+    \caption{Comparação da resposta em frequência de ${C}'(s)\overline{K}G(s)$ com
+    diferentes valores de ganho estático do compensador e largura de banda em
+    malha aberta.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-3:questao-5-6-malha-aberta}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-5-6-malha-aberta.tex}
+    \end{minipage}
+\end{figure}
+
+Como já evidenciado na Figura \ref{fig:desafio-3:questao-5-6-malha-aberta}, a
+margem de fase foi corrigida para próximo do valor desejado novamente. A
+correção se deu projetando um novo compensador em avanço fixando o valor de
+$K_{c}$, isto é, projetando ${C}'(s)$ considerando que a planta é
+$K_{c}\overline{K}G(s)$. O projeto foi realizado também para uma margem de fase
+desejada de $60^{\circ}$ com folga de $24^{\circ}$. Após correção, a margem de
+fase obtida foi de $59,88^{\circ}$, superior até à obtida com o compensar em
+avanço com ganho estático unitário. Já a largura de banda teve um acréscimo,
+ficando igual a 2,83 rad/s. O compensador ao final tem os parâmetros $\phi_{max}
+= 54,30^{\circ}$, $\alpha = 0,10$ e $T = 1,36$, conforme Equação
+\ref{eq:desafio3:compensador-com-kc-diferente-de-um}.
+
+\begin{equation}
+    \label{eq:desafio3:compensador-com-kc-diferente-de-um}
+    C'(s) = 1,43\frac{1,36s + 1}{0,14s + 1}
+\end{equation}
+
+A fim de avaliar a resposta em malha fechada para os dois compensadores, foi
+simulada a saída da planta no domínio do tempo. O resultado obtido é apresentado
+graficamente na Figura \ref{fig:desafio-3:questao-7-dominio-do-tempo}.
+
+\begin{figure}[ht!]
+    \caption{Resposta da planta em malha fechada no domínio do tempo para
+    diferentes ganhos do compensador em avanço.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-3:questao-7-dominio-do-tempo}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-7-resposta-no-tempo.tex}
+    \end{minipage}
+\end{figure}
+
+Observa-se na Figura \ref{fig:desafio-3:questao-7-dominio-do-tempo} que ambos os
+compensadores possuem uma resposta em regime permanente com erro não nulo.
+Diante do diagrama de magnitude da Figura
+\ref{fig:desafio-3:questao-5-6-malha-aberta}, nota-se que o ganho em baixas
+frequências é menor quando $K_c = 1$ e um pouco maior para $K_c = 1,43$.
+Exatamente essa diferença que explica o erro não nulo em regime permanente para
+$y(t)$ em ambos os casos e também porque o erro é menor para o sistema com
+compensador de maior ganho estático. Esta interpretação fica mais palpável
+quando aplicado ao teorema do valor final em que para uma referência do tipo
+degrau
+
+\begin{equation}
+    \label{eq:desafio3-teorema-do-valor-final}
+    \lim_{t \rightarrow \infty }e(t)=\lim_{s \rightarrow 0 }sE(s)=\frac{1}{1+K_v},
+\end{equation}
+onde:
+
+\begin{conditions*}
+    K_v & igual $\lim_{s \rightarrow 0 }C(0)G(0)$.
+\end{conditions*}
+
+Assim, para $K_c = 1$ temos que $e(\infty) = 0,5$ e $y(\infty) = 0,5$. Já para
+$K_c = 1,43$ $e(\infty) = 0,41$ e $y(\infty) = 0,59$, condizente com o gráfico.
+Uma outra interpretação é da resposta do regime transitório. Como para o sistema
+com compensador de ganho unitário a margem de fase é menor, consequentemente
+o fator de amortecimento $\xi$ também é menor, decorrendo em um maior
+\textit{overshoot} da resposta em malha fechada do sistema para uma referência
+do tipo degrau.
+
 \subsection{Conclusões}
 (Concluir em que medida os resultados apresentam relação com a motivação.
 Permitem ilustratar ou concluir algo sobre a motivação? )
-
-
-\begin{figure}[!ht]
-    \caption{Resposta ao degrau para os modelos M1, M2, M3 e M4.}
-    \vspace{-10pt}
-    \hspace{-30pt}
-    \label{fig:desafio2:questao5}
-    \begin{minipage}{\linewidth}
-        \input{images/challenge3/resultado-questao-5-6-leadcs.tex}
-    \end{minipage}
-\end{figure}
-
-\begin{figure}[!ht]
-    \caption{Resposta ao degrau para os modelos M1, M2, M3 e M4.}
-    \vspace{-10pt}
-    \hspace{-30pt}
-    \label{fig:desafio2:questao-7}
-    \begin{minipage}{\linewidth}
-        \input{images/challenge3/resultado-questao-7.tex}
-    \end{minipage}
-\end{figure}
