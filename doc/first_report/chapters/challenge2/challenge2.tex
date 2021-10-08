@@ -1,7 +1,7 @@
 \section{Desafio II - Teorema do Pequeno Ganho e Anti-Windup} 
  
 \subsection{Motivação}
-Este dasafio foi dividido em duas partes. A primeira visa a análise de
+Este desafio foi dividido em duas partes. A primeira visa a análise de
 incertezas na modelagem de sistemas via Teorema do Pequeno Ganho e Teoria de
 Controle Robusto. Já a segunda, em série com o resultado da primeira parte,
 analisa o comportamento da saída de um modelo de planta, considerando um ponto
@@ -14,7 +14,7 @@ frequência. Esta modelagem é realizada principalmente quando não se tem o mod
 teórico. Desta forma é preciso realizar a modelagem com a planta real, obtendo
 assim um modelo nominal da planta. Assim, torna-se necessário analisar qual o
 efeito das incertezas oriundas da modelagem, para garantir a estabilidade do
-sistema em malha fechada sendo controlado por um controlador projetado
+sistema real em malha fechada sendo controlado por um controlador projetado
 utilizando o modelo nominal da planta. Esta análise de robustez é obtida via
 Teorema do Pequeno Ganho e Teoria da Instabilidade Interna (não contemplada
 neste desafio).
@@ -75,9 +75,12 @@ A partir destes modelos foram realizadas 3 simulações:
     referência $r(t)$ em degrau unitário e uma perturbação na entrada $q_{u}(t)$
     também em degrau;
     \item Resposta do modelo M1 em malha fechada com diferentes configurações:
-    com filtro de referência $F(s)$, com controlador I+P, com controlador I+P e
-    saturação do sinal de controle e com os dois itens anteriores mais a ação de
-    anti-windup.
+        \begin{itemize}
+            \item com filtro de referência $F(s)$;
+            \item com controlador I+P;
+            \item com controlador I+P e saturação do sinal de controle $u(t)$; e
+            \item com os dois itens anteriores mais a ação de anti-windup.
+        \end{itemize}
 \end{enumerate}
 
 O tópico seguinte irar descrever os resultados obtidos para os 3 itens acima.
@@ -198,16 +201,16 @@ projetado com o modelo nominal $G_{n}(s)$ do processo.
 
 É possível observar também na Figura \ref{fig:desafio2:questao5} uma diferença
 das respostas ao degrau dos modelos M1 e M4. O primeiro responde com um alto
-overshoot e oscilação na resposta transitória. Já o segundo se comporta próximo
-a um sistema superamortecido. Com base na resposta em frequência, pode se
-analisar tal diferença entre os modelos. Na resposta em frequência, o atraso
+\textit{overshoot} e oscilação na resposta transitória. Já o segundo se comporta
+próximo a um sistema superamortecido. Com base na resposta em frequência, pode
+se analisar tal diferença entre os modelos. Na resposta em frequência, o atraso
 $e^{-sL_{i}}$ insere no sistema uma diminuição de fase de formar linear, pois
 $\arg\angle e^{-jwL_{i}} = L_{i}w$. Dessa forma, como $L_{1} > L_{4}$, a fase em
 altas frequência do sistema do modelo M1 é maior, consequentemente menor margem
 de fase e mais próximo do eixo $jw$ os polos do sistema em malha fechada estão.
 Como o degrau é rico em altas frequências, o modelo com menor margem de fase
-tende a ter maior oscilação e, consequentemente, um maior overshoot. O que é
-observado no modelo M1.
+tende a ter maior oscilação e, consequentemente, um maior \textit{overshoot}, o
+que é observado no modelo M1.
 
 \subsubsection{Resposta em malha fechada do modelo M1 com diferentes configurações}
 Conforme discutido no final do tópico
@@ -311,7 +314,7 @@ $jw$ pelo controlador $C(s)$.
 A Figura \ref{fig:desafio2:resultado-questao-8} permite analisar o que acontece
 com o mesmo sistema em malha fechada quando existe uma não linearidade no sinal
 de controle devido ao efeito de saturação do sinal, como observado no último
-gráfico. Observa-se que a resposta do sistema não apresente um
+gráfico. Observa-se que a resposta do sistema não apresenta um
 \textit{overshoot}, pelo contrário, ela se comporta próxima a resposta de um
 sistema de primeira ordem. Antes de analisar graficamemte a consequência da
 saturação do sinal, é necessário entender algebricamente o controlador I+P. No
@@ -372,7 +375,7 @@ $u(t)$ é o sinal efeitvo aplicado a planta, que nesse caso pode estar saturado
 ou não. A ação de zerar a parcela integral, analisando algebricamente a Equação
 \ref{eq:desafio2:sinal-de-controle-i-mais-p-no-tempo}, permite inferir que o erro
 não é mais acumulado por um longo período de tempo caso a saturação ocorra,
-inibindo desta forma a lentidão do ínicio do seguimento de referencia da
+inibindo desta forma a lentidão do ínicio do seguimento de referência da
 resposta do sistema em malha fechada.
 
 Por fim, as 4 respostas das 4 diferentes configurações foram inseridas no mesmo
@@ -388,7 +391,7 @@ próximo aos demais. Não menos importante, nota-se que todas as configurações
 rejeitaram a perturbação na entrada da planta. Isto acontece pois ambos os
 controladores têm ação integral. Assim, de acordo com o Princípio do Modelo
 Interno, as perturbações do tipo degrau serão sempre rejeitadas pois sempre
-existirá a ação integradora no caminho de realimentação entre a saída aa planta
+existirá a ação integradora no caminho de realimentação entre a saída da planta
 e a perturbação da entrada.
 
 \begin{figure}[!ht]

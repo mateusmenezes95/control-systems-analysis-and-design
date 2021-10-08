@@ -64,7 +64,7 @@ serão aproximados devido a discretização da magnitude e fase no diagrama de b
 
 \begin{figure}[!ht]
     \caption{Magnitude da resposta em frequência de $P(s)$
-    com destaque na largura de banda.}
+    com destaque para largura de banda.}
     \vspace{-10pt}
     \hspace{-30pt}
     \label{fig:desafio-3:questao-3}
@@ -75,10 +75,10 @@ serão aproximados devido a discretização da magnitude e fase no diagrama de b
 
 Em seguida foi projetado dois compensadores em avanço, dado pela Equação
 \ref{eq:desafio-3:clinha-de-s}, tal que a margem de fase de $C(s)G(s)$ fosse
-maior ou igual a $60^{\circ}$, a largura de banda de malha aberta fosse maior
-que 2,5 rad/s dado $C(s) = {C}'(s)\overline{K}$ e $K_{c} = 1$. Um controlador
-foi projetado considerando uma folga de $12^{\circ}$ e o outro para uma folga de
-$24^{\circ}$. Os parâmetros do compensador foram calculados conforme as Equações
+maior ou igual a $60^{\circ}$ e a largura de banda de malha aberta fosse maior
+que 2,5 rad/s dados $C(s) = {C}'(s)\overline{K}$ e $K_{c} = 1$. Um controlador
+foi projetado considerando uma folga de $12^{\circ}$ e o outro $24^{\circ}$. Os
+parâmetros do compensador foram calculados conforme as Equações
 \ref{eq:desafio-3:phi-max}, \ref{eq:desafio-3:alpha} e \ref{eq:desafio-3:te}.
 
 \begin{equation}
@@ -163,7 +163,7 @@ que caso o pico de fase do compensador ocorra antes do valor de frequência
 desejado, o compensador ainda contribua com um valor alto de fase para o sistema
 em malha aberta. Além disso, caso o pico ocorra após a frequência desejada, o
 projeto vai ser ainda mais conservador, já que a margem de fase vai ser superior
-a desejada. Portanto, o projeto usando uma folda de $24^{\circ}$ acaba sendo
+a desejada. Portanto, o projeto usando uma folga de $24^{\circ}$ acaba sendo
 mais conservador se comparado ao de $12^{\circ}$.
 
 Embora o segundo compensador tenha coontribuido efetivamente para o requisito de
@@ -206,7 +206,7 @@ correção se deu projetando um novo compensador em avanço fixando o valor de
 $K_{c}$, isto é, projetando ${C}'(s)$ considerando que a planta é
 $K_{c}\overline{K}G(s)$. O projeto foi realizado também para uma margem de fase
 desejada de $60^{\circ}$ com folga de $24^{\circ}$. Após correção, a margem de
-fase obtida foi de $59,88^{\circ}$, superior até à obtida com o compensar em
+fase obtida foi de $59,88^{\circ}$, superior até à obtida com o compensador em
 avanço com ganho estático unitário. Já a largura de banda teve um acréscimo,
 ficando igual a 2,83 rad/s. O compensador ao final tem os parâmetros $\phi_{max}
 = 54,30^{\circ}$, $\alpha = 0,10$ e $T = 1,36$, conforme Equação
@@ -277,7 +277,7 @@ de avanço-atraso. Dessa forma o valor de $\beta$ foi calculado para $C(0)G(0) =
 
 \begin{equation}
     \label{eq:desafio3:beta}
-    \beta = \frac{C(0)G(0)}{C'(s)\overline{K}G(0)} = \frac{5}{C'(s)\overline{K}G(0)}
+    \beta = \frac{C(0)G(0)}{C'(0)\overline{K}G(0)} = \frac{5}{C'(0)\overline{K}G(0)}
 \end{equation}
 
 Portanto, para o sistem com o compensador em avanço com $K_c = 1$, foi
@@ -320,7 +320,7 @@ frequências, quando compostos com o compensador em avaço a diferença desapare
 Isto está em concordância com a teoria, pois apesar dos valores de $\beta$
 serem diferentes, ambos compensadores em atraso foram projetados para ter o
 mesmo ganho estático $C(0)G(0)$ e, portanto, o ganho para baixas frequências
-serão iguais, divergindo com o incremento do valor de frequência.
+serão iguais, divergindo com o aumento da frequência.
 
 O fato observado do ganho em baixas frequências fica mais evidente quando
 analisado a resposta em frequência de $C(s)G(s)$ para os dois compensadores
@@ -329,9 +329,9 @@ avanço-atraso na Figura
 valores de ganho dos dois compensadores avanço-atraso são próximos até 0,1
 rad/s. Vale constatar também a não interferência nas altas frequências. Como
 pode ser visualizado na Figura
-\ref{fig:desafio-3:resposta-em-frequencia-da-malha-aberta}, a margem de fase teve
-uma leve modificação, não sendo possível a diferença devido a quase completa
-sobreposição das linhas indicadoras da margem de fase.
+\ref{fig:desafio-3:resposta-em-frequencia-da-malha-aberta}, a margem de fase
+teve uma leve modificação, não sendo possível a ver a diferença devido a quase
+completa sobreposição das linhas indicadoras da margem de fase.
 
 \begin{figure}[H]
     \caption{Resposta em frequência do sistema de malha aberta com compensadores

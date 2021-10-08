@@ -6,7 +6,7 @@ run common_parameters_scripts.m
 % =============================================================================
 
 simulate_question(6:9) = [true true true true]
-plot_saturation_analysis = false
+plot_saturation_analysis = true
 
 disp('=======================================================================')
 disp('Simulating plant response with input reference filter')
