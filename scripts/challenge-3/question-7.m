@@ -40,21 +40,38 @@ y_with_fixed_kc_inf = 1 - err_with_fixed_kc_inf
 % =============================================================================
 figure(1)
 
+unit_kc_str = ' p/ $K_{c} = 1$';
+fixed_kc_str = [' p/ $K_{c} = ' num2str(kc, '%.2f') '$'];
+
+subplot(2,1,1)
 plot_signal(sim.time, '', r.signal, '', '--r', '$r(t)$')
 hold on
-
-unit_kc_str = ' p/ $K_{c} = 1$';
 plot_signal (sim.time, '',
              y, '',
              line_color = 'b-',
              ['$y(t)$' unit_kc_str])
-                                    
-hold on
-fixed_kc_str = [' p/ $K_{c} = ' num2str(kc, '%.2f') '$'];
 plot_signal (sim.time, 'Tempo(s)',
              y_with_fixed_kc, 'Saída $y(t)$',
              line_color = 'r-',
              ['$y(t)$' fixed_kc_str])
+subplot(2,1,2)
+hold on
+plot_signal (sim.time, '',
+             err, '',
+             line_color = 'b-',
+             ['$e(t)$' unit_kc_str])
+plot_signal (sim.time, 'Tempo(s)',
+             err_with_fixed_kc, 'Erro $e(t)$',
+             line_color = 'r-',
+             ['$e(t)$' fixed_kc_str])
+
+
+subplot(2,1,1)
+set(legend, 'location', 'northeastoutside')
+subplot(2,1,2)
+set(legend, 'location', 'northeastoutside')
+set(gca, 'box', 'on'); % This is called in Brazil "armengue!"
+
 
 figure(2)
 plot_semilogx(w, 20*log10(mag), 'b', '-', [open_loop_str unit_kc_str], '', '')

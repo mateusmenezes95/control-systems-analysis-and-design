@@ -13,3 +13,4 @@ k = 1 / g(0)
 w = logspace(-4, 2, 1e4);
 
 open_loop_str = ["${C}\'(jw)" '\overline{K}G(jw)$'];
+cl_str = "${C}\'(jw)$";

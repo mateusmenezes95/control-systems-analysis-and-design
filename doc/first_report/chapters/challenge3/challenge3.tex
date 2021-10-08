@@ -1,4 +1,4 @@
-\section{Desafio III - Resposta em Frequência} 
+\section{Desafio III - Resposta em Frequência}
 
 \subsection{Motivação}
 Este último desafio da série visa reduzir a abstração do critério de Nyquist,
@@ -10,8 +10,15 @@ modal. Portanto, poder projetar controladores no domínio da frequência é mais
 uma ferramenta que o projetista tem em mãos na hora de decidir qual abordagem
 seguir na resolução de um determinado problema de controle. Os campos que se
 beneficiam dessa abordagem são principalmente aqueles que envolvam eletrônica de
-potência, como o controle de tensão na saída de conversores DC-DC regulados, e
-vibrações. 
+potência, como o controle de tensão na saída de conversores DC-DC regulados
+conforme exemplo na Figura \ref{fig:desafio3:dc-dc-datasheet}, e vibrações.
+
+\begin{figure}[h]
+	\centering
+	\caption{Recorte do Datasheet de um conversor DC-DC isolado e regulado.}
+	\label{fig:desafio3:dc-dc-datasheet}
+	\includegraphics[width=\textwidth]{images/challenge3/datasheet-screenshot.png}
+\end{figure}
 
 \subsection{Simulações realizadas}
 As simulações realizadas focaram no design de compensadores de avanço, de atraso
@@ -233,7 +240,7 @@ frequências é menor quando $K_c = 1$ e um pouco maior para $K_c = 1,43$.
 Exatamente essa diferença que explica o erro não nulo em regime permanente para
 $y(t)$ em ambos os casos e também porque o erro é menor para o sistema com
 compensador de maior ganho estático. Esta interpretação fica mais palpável
-quando aplicado ao teorema do valor final em que para uma referência do tipo
+quando aplicado ao Teorema do valor Final em que para uma referência do tipo
 degrau
 
 \begin{equation}
@@ -254,6 +261,132 @@ o fator de amortecimento $\xi$ também é menor, decorrendo em um maior
 \textit{overshoot} da resposta em malha fechada do sistema para uma referência
 do tipo degrau.
 
+Objetivando melhorar a resposta em regime permanente, foi adicionado um
+compensador em atraso para melhorar o ganho do sistema em malha aberta nas
+baixas frequências. O compensador em atraso projetado é governado pela Equação
+\ref{eq:desafio3:compensador-em-atraso}. Para manter os requisitos anteriores, o
+compensador em avanço foi mantido, tornando o controlador final com a topologia
+de avanço-atraso. Dessa forma o valor de $\beta$ foi calculado para $C(0)G(0) =
+5$, em que $C(s) = C'(s)\overline{K}C_{at}$, conforme Equação
+\ref{eq:desafio3:beta} e $T_{at} = 5T$.
+
+\begin{equation}
+    \label{eq:desafio3:compensador-em-atraso}
+    C_{at} = \frac{\beta (T_{at}s + 1)}{\beta T_{at}s+1}
+\end{equation}
+
+\begin{equation}
+    \label{eq:desafio3:beta}
+    \beta = \frac{C(0)G(0)}{C'(s)\overline{K}G(0)} = \frac{5}{C'(s)\overline{K}G(0)}
+\end{equation}
+
+Portanto, para o sistem com o compensador em avanço com $K_c = 1$, foi
+encontrado $\beta = 5,00$ e $T_{at} = 6,40$. Já para $K_c = 1,43$, chegou-se aos
+valores de $\beta = 3,49$ e $T_{at} = 6,82$. Assim, os dois compensadores em
+atraso resultaram nas Equações
+\ref{eq:desafio3:compensador-em-atraso-para-kc-unitario} e
+\ref{eq:desafio3:compensador-em-atraso-para-kc-nao-unitario}, para os respectivos
+ganhos do compensador em avanço. A resposta em frequência de ambos
+compensadores em atraso bem como com os controladores avanço-atraso é expressa na
+Figura \ref{fig:desafio-3:resposta-em-frequencia-dos-compensadores}.
+
+\begin{equation}
+    \label{eq:desafio3:compensador-em-atraso-para-kc-unitario}
+    C_{at} = \frac{5,00 (6,40s + 1)}{32s+1}
+\end{equation}
+
+\begin{equation}
+    \label{eq:desafio3:compensador-em-atraso-para-kc-nao-unitario}
+    C_{at} = \frac{3,87 (6,82s + 1)}{23,78s+1}
+\end{equation}
+
+\begin{figure}[ht!]
+    \caption{Resposta em frequência dos compensadores em atraso e avanço-atraso
+    para diferentes valores de $K_c$.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-3:resposta-em-frequencia-dos-compensadores}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-8-9-compensadores.tex}
+    \end{minipage}
+\end{figure}
+
+Como pode ser analisado na Figura
+\ref{fig:desafio-3:resposta-em-frequencia-dos-compensadores}, o compensador em
+atraso cumpriu seu objetivo contribuindo com um alto ganho nas baixas frequências
+ao mesmo tempo que não interferiu nas altas frequências. É interessante notar
+que embora os compensadores em atraso aprensentem ganhos diferentes nas baixas
+frequências, quando compostos com o compensador em avaço a diferença desaparece.
+Isto está em concordância com a teoria, pois apesar dos valores de $\beta$
+serem diferentes, ambos compensadores em atraso foram projetados para ter o
+mesmo ganho estático $C(0)G(0)$ e, portanto, o ganho para baixas frequências
+serão iguais, divergindo com o incremento do valor de frequência.
+
+O fato observado do ganho em baixas frequências fica mais evidente quando
+analisado a resposta em frequência de $C(s)G(s)$ para os dois compensadores
+avanço-atraso na Figura
+\ref{fig:desafio-3:resposta-em-frequencia-da-malha-aberta}. Percebe-se que os
+valores de ganho dos dois compensadores avanço-atraso são próximos até 0,1
+rad/s. Vale constatar também a não interferência nas altas frequências. Como
+pode ser visualizado na Figura
+\ref{fig:desafio-3:resposta-em-frequencia-da-malha-aberta}, a margem de fase teve
+uma leve modificação, não sendo possível a diferença devido a quase completa
+sobreposição das linhas indicadoras da margem de fase.
+
+\begin{figure}[H]
+    \caption{Resposta em frequência do sistema de malha aberta com compensadores
+    em atraso e avanço-atraso para diferentes valores de $K_c$.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-3:resposta-em-frequencia-da-malha-aberta}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-8-9-malha-aberta.tex}
+    \end{minipage}
+\end{figure}
+
+Por fim, foi analisado também a resposta em malha fechada no domínio do tempo
+para os compensadores avanço-atraso, fazendo uma comparação deles com os
+compensadores de somente avanço. O resultado obtido é expresso na Figura
+\ref{fig:desafio-3:resposta-dominio-do-tempo-dos-compensadores-avanco-atraso}.
+
+\begin{figure}[H]
+    \caption{Resposta no domínio do tempo do sistema de malha fechada com
+    compensadores avanço-atraso comparado aos compensadores de somente avanço
+    para diferentes valores de $K_c$.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:desafio-3:resposta-dominio-do-tempo-dos-compensadores-avanco-atraso}
+    \begin{minipage}{\linewidth}
+        \input{images/challenge3/resultado-questao-8-9-resposta-no-tempo.tex}
+    \end{minipage}
+\end{figure}
+
+Conforme esperado, nota-se na Figura
+\ref{fig:desafio-3:resposta-dominio-do-tempo-dos-compensadores-avanco-atraso}.
+que o regime permanente melhorou de forma igualitária para os dois compensadores
+de avanço atraso. A igualidade é devido ao ganho estático fornecido pelo
+compensador em atraso, cujo para ambos os casos $C(0)G(0) = 5$. O mesmo cenário
+de melhoria e igualidade acontece para o regime permanente na ocorrência de uma
+perturbação na entrada do processo. Para comprovar isto, basta analisar
+novamente o Teorema do valor Final para $y(t)$ dado $q_u(t)$ do tipo degrau. O
+valor de $y(t)$ em regime permanente é calculado conforme a Equação
+\ref{eq:desafio3-teorema-do-valor-com-perturbacao-na-entrada}. Assim, para ambos
+valores de $K_c$ e considerando uma perturbação na entrada do tipo degrau,
+tem-se que $e(\infty) = 0,08$ e $y(\infty) = 0,92$. 
+
+\begin{equation}
+    \label{eq:desafio3-teorema-do-valor-com-perturbacao-na-entrada}
+    \lim_{t \rightarrow \infty }e(t)=\lim_{s \rightarrow 0 }s
+    \left [ \frac{G(s)}{1+C(s)G(s)}Q_u(s)  \right ]
+    = \frac{G(0)}{1+K_v},
+\end{equation}
+
 \subsection{Conclusões}
-(Concluir em que medida os resultados apresentam relação com a motivação.
-Permitem ilustratar ou concluir algo sobre a motivação? )
+Em suma, os resultados apresentados evidenciaram de forma muito clara e objetiva
+a utilização do critério de Nyquist para projeto de controladores. A evidência
+fica clara principalmente quando foi observado as margens de fase se alterando
+quando os parâmetros dos compensadores eram também modificados. Fica notório
+também que em nenhum momento foi necessário utilizar o conceito de dominância
+modal para projetar os compensadores. Por fim, foi possível observar a
+flexibilidade que o projeto no domínio da frequência oferece ao projetista,
+sendo possível analisar os resultados ainda com o sistema em malha aberta.
