@@ -1,7 +1,7 @@
 addpath(genpath("./")) % Add current dir path to Octave script file search paths
 run common_parameters_script.m
 
-observable_poles = filt(zpk(desirable_z_poles(3:4), [0 0], 1,ts));
+observable_poles = filt(zpk(desirable_z_poles(3:4), [0 0], 1,sampling_period));
 desirable_closed_loop_poles = controllable_poles*observable_poles;
 desirable_coeficcients = get(desirable_closed_loop_poles, 'num'){1};
 
@@ -25,12 +25,25 @@ B = [
 x = inv(A)*B
 [s0, s1, s2, r] = deal(x(1), x(2), x(3), x(4));
 
-cz = filt([s0 s1 s2], [1 -r-1 r], ts);
+cz = filt([s0 s1 s2], [1 -r-1 r], sampling_period);
 
-sz = filt([s0 s1 s2], 1, ts)
-rz = filt([1 -r-1 r], 1, ts)
+sz = filt([s0 s1 s2], 1, sampling_period)
+rz = filt([1 -r-1 r], 1, sampling_period)
 to = 1/dcgain(bz/controllable_poles)
 tz = to*observable_poles
 fz = minreal(tz/sz, minreal_precision)
 
 closed_loop = minreal((tz*bz/(rz*az+sz*bz)), minreal_precision)
+
+[U, Y, E, R] = simulate_discrete_sys(sim.time, dt, integration_step_ratio,
+                                  gn_of_s, cz, fz,
+                                  reference.signal,
+                                  output_disturbance.signal,
+                                  input_disturbance.signal);
+
+plot_response_and_control_signals (sim.time, figure_num = 1,
+                                   reference.signal,
+                                   Y, '$y(t)$',
+                                   E, '$e(t)$',
+                                   U, '$u(t)$',
+                                   'b')
