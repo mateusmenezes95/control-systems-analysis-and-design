@@ -237,7 +237,7 @@ function [U, Y, E, R] = simulate_discrete_sys(sim_time, dt, integration_step_rat
     err = zeros(1, length(digital_controller_num)-1);   % Initial conditions
 
     for k=1:length(sim_time)
-        if (mod(k, integration_step_ratio+1) == 0) || (k == 1)
+        if (mod(k, integration_step_ratio) == 1) || (k == 1)
             digital_controller_out_idx = length(digital_controller_out) + 1;
             err_idx = length(err) + 1;
             if !has_filter
