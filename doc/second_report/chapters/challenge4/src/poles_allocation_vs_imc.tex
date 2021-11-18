@@ -1,5 +1,16 @@
 \subsubsection{Alocação de Polos x IMC}
 
+A Figura \ref{fig:comparacao-entre-imc-e-alocacao-de-polos} mostra o comparativo
+das respostas do sistema de controle amostrado da
+\ref{fig:diagrama-de-blocos-malha-fechada} utilizando os dois controladores
+projetados. Para esta simulação a perturbação na entrada $q_u(t) =
+0,2\mathds{1}(t - 7)$ e na saída $q_y(t) = 0,2\mathds{1}(t - 12)$. Observa-se
+que ambos os controladores atendem o requisito de tempo de acomodação e
+seguimento de referência. Entretanto, apesar dos dois controladores também façam
+com que perturbações constantes do tipo degrau sejam rejeitadas, nota-se que o
+projeto via alocação de polos fornecem uma resposta mais rápida a perturbações
+se comparada com o projeto via IMC.
+
 \begin{figure}[!ht]
     \caption{Comparação das repostas do sistema em malha fechada com
     controladores projetados via Alocação de Polos e IMC.}
@@ -10,3 +21,41 @@
         \input{chapters/challenge4/images/resultado-questao-5.tex}
     \end{minipage}
 \end{figure}
+
+Para analisar o comportamento da resposta as perturbações dos dois diferentes
+projetos, é necessário a inspeção dos pares entrada/saída. Percebe-se nas
+Equações \ref{eq:ft-da-saida-para-perturbacao-na-entrada} e
+\ref{eq:ft-da-saida-para-perturbacao-na-saida} que os polos das funções de
+transferência da entrada para saída foram exatamente os polos alocados, sendo os
+polos observáveis 10 vezes mais rápidos que os polos controláveis, que já são
+rápidos devido a constante de tempo $\tau = 0,5$. Em contrapartida, devido a
+propriedade intrínseca de cancelamento do projeto via IMC, alguns polos lentos
+podem aparecer nas funções de transferência das perturbações para saída do
+sistema em malha fechada.
+
+A partir da Equação \ref{eq:filtro-de-robustez} e do diagrama de blocos
+\ref{fig:diagrama-de-blocos-malha-fechada}, as seguintes funções de
+transferência são deduzidas:
+
+\begin{equation}
+    \label{eq:ft-perturbacao-entrada-imc}
+    \frac{Y(z)}{Q_u(z)} = P_n(z)(1-F_r(z)) = P_n(z)S(z)
+\end{equation} em que $S(z)$ é a complementar de sensibilidade e
+
+\begin{equation}
+    \label{eq:ft-perturbacao-saida-imc}
+    \frac{Y(z)}{Q_y(z)} = 1-F_r(z) = S(z).
+\end{equation}
+
+Percebe-se então que para um perturbação na entrada da planta $q_u(t)$, aparecem
+os polos da própria planta, que neste caso são polos lentos se comparados com os
+da malha fechada via projeto por alocação de polos. Por outro lado, para
+perturbações na saída $q_y(t)$ os polos são os mesmos que os desejáveis, que são
+rápidos e, portanto, fornecem uma resposta a perturbação mais rápida. 
+
+É notório também a influência de zeros na rejeição a perturbação na saída da
+planta. Observa-se que para o projeto via alocação de polos, a saída da planta
+$y(t)$ cai abaixo do valor de \textit{set point}, devido a um zero negativo fora
+do círculo unitário (-1.3319). Já em \ref{eq:ft-perturbacao-saida-imc} não há
+zeros negativo fora do circulo unitário e, consequentemente, o mesmo
+comportamento não é observado.
