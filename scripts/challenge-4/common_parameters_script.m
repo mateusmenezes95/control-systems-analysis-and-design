@@ -30,7 +30,8 @@ controllable_poles = filt(zpk(desirable_z_poles(1:2), [0 0], 1,sampling_period))
 % =============================================================================
 integration_step_ratio = 20;
 dt = sampling_period/integration_step_ratio;
-sim = get_sim_time (dt, end_time = 20);
+end_time = 20;
+sim = get_sim_time (dt, round(end_time/sampling_period)*sampling_period);
 
 % =============================================================================
 % Input signals
