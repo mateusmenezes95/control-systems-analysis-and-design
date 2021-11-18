@@ -1,0 +1,69 @@
+\subsubsection{Projeto via IMC}
+\label{subsub:projeto-via-imc}
+
+O controlador IMC foi projetado com base no diagrama de blocos da Figura
+\ref{fig:diagrama-de-blocos-imc} e sua associação com o diagrama da Figura
+\ref{fig:diagrama-de-blocos-malha-fechada}. Dessa forma, o filtro de referência
+e o controlador é dado da seguinte forma:
+
+\begin{equation}
+    \label{eq:filtro-de-referencia-imc}
+    F(z) = \frac{H_d(z)}{F_r(z)}
+\end{equation} e
+
+\begin{equation}
+    \label{eq:controlador-imc}
+    C(z) = \frac{F_r(z)P_{n}^{-1}(z)}{1-F_r(z)}
+\end{equation} em que $P_n(z)$ neste caso é igual o modelo da planta dado por
+\ref{eq:modelo-em-z-da-planta}. As restrições impostas é que para manter
+causalidade, $g_r\left [ F_r(z) \right ] \geq g_r\left [ P_n(z) \right ]$ e
+$g_r\left [ H_d(z) \right ] \geq g_r\left [ F_r(z) \right ]$, em que $g_r$
+significa grau relativo ou excedentes de polos em relação a zeros.
+
+\begin{figure}[ht!]
+	\centering
+	\caption{Diagrama de blocos de um controlador IMC.}
+	\label{fig:diagrama-de-blocos-imc}
+	\includegraphics[width=\textwidth]{chapters/challenge4/images/diagrama-de-blocos-imc.png}
+    \caption*{Fonte: \citeonline{Tito2021}}
+\end{figure}
+
+Através de álgebra partindo da Equação \ref{fig:diagrama-de-blocos-imc},
+observa-se que o filtro de robustez $F_r(z)$ é igual a complementar de
+sensibilidade $\boldsymbol{C}(z)$. Assim, temos que
+
+\begin{equation}
+    \label{eq:associacao-do-filtro-de-robustez}
+    F_r(z) = \boldsymbol{C}(z) = \frac{C(z)G(z)}{1+C(z)G(z)} = \frac{Y(z)}{Y_{r}(z)}.
+\end{equation}
+
+Portanto, observa-se que o filtro de robustez $F_r(z)$ é nada mais que e a
+função de transferência em $z$ da entrada $y_r(t)$ para a saída $y(t)$. Desta
+maneira definiu-se $F_r(z)$ para ter os polos desejáveis $z^* = 0,7408$ que
+resulta no atendimento dos requisitos de regime transitório. Já para os zeros,
+foram mantidos os zeros de fase não mínima em $F_r(z)$ para evitar cancelamentos
+indesejáveis que leve a instabilidade dado uma perturbação na entrada ou saída
+da planta. Por fim, para atender o requisito de rejeição de perturbação, o
+controlador precisa possuir um integrador. Isso é assegurado fazendo $F_r(1) =
+1$ pois $F_r(1)P_{n}^{-1}(1) \neq 0$ e, portanto, $C(1) \rightarrow \infty$, o
+que garante que o controlador possui ação integradora. Observa-se depois destas
+definições que $F_r(z)$ torna-se igual a função de transferência
+\ref{eq:ft-da-saida-para-referencia}, que é então
+
+\begin{equation}
+    \label{eq:filtro-de-robustez}
+    F_r(z^{-1}) = \frac{-0,00943z^{-1}+0,07661z^{-2}}{1-1,482z^{-1}+0,5488z^{-2}}
+\end{equation}
+
+Substituindo \ref{eq:modelo-em-z-da-planta} e \ref{eq:filtro-de-robustez} em
+\ref{eq:controlador-imc}, tem-se que
+
+\begin{equation}
+    \label{eq:controlador-imc-definido}
+    C(z^{-1}) = \frac{1,731-2,98z^{-1}+1,282z^{-2}}{1-1,472z^{-1}+0,4722z^{-2}}.
+\end{equation}
+
+Como não é necessário um outro grau de liberdade no projeto do controlador,
+faz-se $F_r(z) = H_d(z)$ e, portanto, $F(z) = 1$. Por fim, observa-se que a
+causalidade do sistema foi mantida, pois $g_r\left [ F_r(z) \right ] = g_r\left
+[ P_n(z) \right ]$. 

@@ -1,0 +1,60 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{psfrag}
+\usepackage{times}
+\usepackage{indentfirst}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{dsfont}
+\usepackage{xcolor}
+\usepackage{tipa}
+\usepackage{tipx}
+\usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{cancel}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage[num]{abntex2cite}
+
+% Extracted from:
+% https://tex.stackexchange.com/questions/95838/how-to-write-a-perfect-equation-parameters-description
+\newenvironment{conditions*}
+    {\par\vspace{\abovedisplayskip}\noindent
+    \tabularx{\columnwidth}{>{$}l<{$} @{${}$ é ${}$} >{\raggedright\arraybackslash}X}}
+    {\endtabularx\par\vspace{\belowdisplayskip}}
+
+\title{\textbf{Análise e Projeto de Sistemas de Controle} \\
+\vspace{0.5cm}
+\underline{Relatório II} \\
+\vspace{4.5cm}
+\includegraphics[width=4.0cm]{brasao_ufba.jpg}
+\vspace{4.5cm} }
+\author{Mateus dos Santos de Meneses}
+\date{Novembro, 2021}
+
+\begin{document}
+\maketitle
+\captionsetup{justification=centering}
+
+\clearpage 
+
+\tableofcontents
+
+\clearpage
+
+\listoffigures
+
+\clearpage
+
+\include{chapters/initial_considerations}
+\include{chapters/challenge4/src/main}
+
+\addcontentsline{toc}{section}{Referências}
+\bibliographystyle{apalike}
+\bibliography{references.bib}
+
+\end{document}

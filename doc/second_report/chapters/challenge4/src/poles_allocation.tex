@@ -1,0 +1,233 @@
+\subsubsection{Projeto via Alocação de Polos}
+\label{subsub:projeto-via-alocacao-de-polos}
+O projeto via alocação de polos começa reescrevendo as funções de transferências
+dos elementos que compões a malha fechada (Figura
+\ref{fig:diagrama-de-blocos-malha-fechada}) em frações de polinômios em
+$z^{-1}$. Dessa forma, tem-se que
+
+\begin{equation}
+    \label{eq:modelo-da-planta-com-fracoes-de-polinomios}
+    G(z^{-1}) = \frac{B(z^{-1})}{A(z^{-1})},
+\end{equation}
+
+\begin{equation}
+    \label{eq:filtro-de-referencia-com-fracoes-de-polinomios}
+    F(z^{-1}) = \frac{T(z^{-1})}{R(z^{-1})},
+\end{equation}
+
+\begin{equation}
+    \label{eq:controlador-com-fracoes-de-polinomios}
+    C(z^{-1}) = \frac{S(z^{-1})}{R(z^{-1})}.
+\end{equation}
+
+A partir das Equações \ref{eq:modelo-da-planta-com-fracoes-de-polinomios},
+\ref{eq:filtro-de-referencia-com-fracoes-de-polinomios} e
+\ref{eq:controlador-com-fracoes-de-polinomios}, define-se $\eta_{p}$ como o grau
+do polinômio $P(z^{-1})$. Assim, para que o sistema seja causal,
+consequentemente implementável, as seguintes restrições devem ser seguidas:
+$\eta_{r} \geq \eta_{s}$ e $\eta_{s} \geq \eta_{t}$. Das mesmas equações
+as funções de transferências para malha fechada da Figura
+\ref{fig:diagrama-de-blocos-malha-fechada} podem ser reescritas como
+
+\begin{equation}
+    \label{eq:ft-da-saida-para-referencia}
+    \frac{Y(z)}{Y_{r}(z)} = \frac{T(z^{-1})B(z^{-1})}
+                                 {R(z^{-1})A(z^{-1})+S(z^{-1})B(z^{-1})}
+                          = \frac{t_{0}B(z^{-1})}{\lambda_{c}(z^{-1})},
+\end{equation}
+
+\begin{equation}
+    \label{eq:ft-da-saida-para-perturbacao-na-entrada}
+    \frac{Y(z)}{Q_{u}(z)} = \frac{R(z^{-1})B(z^{-1})}
+                                 {R(z^{-1})A(z^{-1})+S(z^{-1})B(z^{-1})}
+                          = \frac{R(z^{-1})B(z^{-1})}
+                                 {\lambda_{c}(z^{-1})\lambda_{o}(z^{-1})},
+\end{equation}
+
+\begin{equation}
+    \label{eq:ft-da-saida-para-perturbacao-na-saída}
+    \frac{Y(z)}{Q_{y}(z)} = \frac{R(z^{-1})A(z^{-1})}
+                                 {R(z^{-1})A(z^{-1})+S(z^{-1})B(z^{-1})}
+                          = \frac{R(z^{-1})A(z^{-1})}
+                                 {\lambda_{c}(z^{-1})\lambda_{o}(z^{-1})}.
+\end{equation} em que $\lambda_{c}(z^{-1})$ e $\lambda_{o}(z^{-1})$ são polinômios
+contendo os polos controláveis e observáveis do sistema em malha fechada,
+respectivamente, e 
+
+\begin{equation}
+    \label{eq:numerador-do-filtro-de-referencia}
+    T(z^{-1}) = t_{o}\lambda_{o}(z^{-1}).
+\end{equation}
+
+Dessa forma, tem-se que a \textbf{equação característica desejada} é dada por
+\begin{equation}
+    \label{eq:equacao-caracteristica-sem-coeficientes}
+    \begin{split}
+        \lambda(z^{-1}) &= R(z^{-1})A(z^{-1})+S(z^{-1})B(z^{-1}) \\
+                        &= \lambda_{c}(z^{-1})\lambda_{o}(z^{-1}).
+    \end{split}
+\end{equation}
+
+Como comentado anteriormente, é necessário que o controlador possua ação
+integradora para rejeição de perturbação e seguimento de referência. Assim, deve
+se empregar o polinômio $V(z^{-1}) = 1 - z^{-1}$ na função de transferência do
+controlador. Desse modo, a Equação
+\ref{eq:controlador-com-fracoes-de-polinomios} torna-se
+
+\begin{equation}
+    \label{eq:controlador-com-fracoes-de-polinomios-com-integrador}
+    C(z^{-1}) = \frac{S(z^{-1})}{V(z^{-1})R'(z^{-1})}.
+\end{equation} em que $R(z^{-1}) = V(z^{-1})R'(z^{-1})$ e
+$\eta_r = \eta_v + \eta_{r'}$. Como agora apenas os coeficientes de $R'$ são
+livres, para-se ter uma solução única e determinada para o sistema de equações
+que define os coeficientes de $C(z^{-1})$ a igualdade $\eta_s = \eta_v + \eta_a
+- 1 = 2$ tem que ser satisfeita. E para que o controlador seja causal, faz-se
+$\eta_r = \eta_s$. Portanto, a função de transferência do controlador é então
+
+\begin{equation}
+    C(z^{-1}) = \frac{s_0+s_1z^{-1}+s_2z^{-2}}{(1-z^{-1})(1-rz^{-1})} 
+              = \frac{s_0+s_1z^{-1}+s_2z^{-2}}{1+(-r-1)z^{-1}+rz^{-2}}.
+\end{equation}
+
+Com a imposição da ação integradora, faz-se necessário arbitrar dois polos
+adicionais na equação característica desejada para que seja satisfeita a
+igualdade $\eta_\lambda = \eta_a + \eta_r = 4$. Optou-se então por mais dois
+polos duplos iguais afastados 10 vezes dos polos dominantes. Este polos são
+justamente os polos observáveis que originam o polinômio
+$\lambda_o(z^{-1})$, enquanto os polos dominantes (ou controláveis)
+originam o polinômio $\lambda_c(z^{-1})$. Assim os polos controláveis $z_{c}^{*}
+= 0.7408$ e os polos observáveis $z_{o}^{*} = 0.049787$.
+
+Com estas definições, a Equação \ref{eq:equacao-caracteristica-sem-coeficientes}
+torna-se
+\begin{equation}
+    \label{eq:equacao-caracteristica-com-coeficientes}
+    \begin{split}
+        R(z^{-1})A(z^{-1})+S(z^{-1})B(z^{-1})
+        = \lambda_0+\lambda_1z^{-1}+\lambda_2z^{-2}+\lambda_3z^{-3}+\lambda_4z^{-4} \\
+        = 1-1,581z^{-1}+0,6988z^{-2}-0,05832z^{-3}+0,00136z^{-4}
+    \end{split}
+\end{equation}
+
+A partir da Equação \ref{eq:equacao-caracteristica-com-coeficientes}, chega-se
+ao conjunto de equações lineares
+
+\begin{equation}
+    \label{eq:sistema-de-equacoes-lineares}
+    \begin{split}
+        s_0b_0 - r &= \lambda_1-a_1+1\\ 
+        s_0b_1 + s_1b_0 + r(1-a_1) &= \lambda_2+a_1-a_2 \\ 
+        s_1b_1 + s_2b_0 + r(a_1-a_2) &= \lambda_3+a_2 \\  
+        s_2b_1 + ra_2 &= \lambda_4 
+    \end{split}
+\end{equation} que reescrita de forma matricial se torna
+
+\begin{equation}
+    \label{eq:equacoes-lineares-em-forma-matricial}
+    \begin{bmatrix}
+        b_0 & 0   & 0   & -1     \\ 
+        b_1 & b_0 & 0   & 1-a_1  \\ 
+        0   & b_1 & b_0 & a_1-a2 \\ 
+        0   & 0   & b_1 & a_2
+        \end{bmatrix}
+        \begin{bmatrix}
+        s_0 \\ 
+        s_1 \\ 
+        s_2 \\ 
+        r
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+        \lambda_1\\ 
+        \lambda_2\\ 
+        \lambda_3\\ 
+        \lambda_4
+        \end{bmatrix}
+        +
+        \begin{bmatrix}
+        -a_1+1\\ 
+        a_1-a_2\\ 
+        a_2\\ 
+        0
+        \end{bmatrix}
+\end{equation} sendo a solução dada por 
+
+\begin{equation}
+    \label{eq:solucao-da-equacao-linear}
+    \begin{bmatrix}
+        s_0 \\ 
+        s_1 \\ 
+        s_2 \\ 
+        r
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+        b_0 & 0   & 0   & -1     \\ 
+        b_1 & b_0 & 0   & 1-a_1  \\ 
+        0   & b_1 & b_0 & a_1-a2 \\ 
+        0   & 0   & b_1 & a_2
+        \end{bmatrix}^{-1}
+        \begin{bmatrix}
+        \lambda_1-a_1+1\\ 
+        \lambda_2+a_1-a_2\\ 
+        \lambda_3+a_2\\ 
+        \lambda_4
+        \end{bmatrix}.
+\end{equation}
+
+Substituindo \ref{eq:modelo-em-z-da-planta} e
+\ref{eq:equacao-caracteristica-com-coeficientes} em
+\ref{eq:solucao-da-equacao-linear}, tem-se então que
+
+\begin{equation}
+    \label{eq:coeficientes-do-controlador}
+    \begin{bmatrix}
+        s_0 \\ 
+        s_1 \\ 
+        s_2 \\ 
+        r
+    \end{bmatrix}
+        =
+    \begin{bmatrix}
+        35,168 \\ 
+        -55,931 \\ 
+        22,326 \\ 
+        -1,3319
+    \end{bmatrix}
+\end{equation} e então
+
+\begin{equation}
+    \label{eq:controlador-discreto}
+    C(z^{-1}) = \frac{35,17-55,93z^{-1}+22,33z^{-2}}{1+0,3319z^{-1}-1,332z^{-2}}.
+\end{equation}
+
+Já a definição do filtro de referência $F(z^{-1})$ (Equação
+\ref{eq:filtro-de-referencia-com-fracoes-de-polinomios}) considerou a Equação
+\ref{eq:numerador-do-filtro-de-referencia} sendo
+
+\begin{equation}
+    \label{eq:definicao-dos-polos-0bservaveis}
+    \lambda_o(z^{-1}) = 1 - 0.09957 z^{-1} + 0.002479 z^{-2}
+\end{equation} e para garantir seguimento de referência, a partir da Equação
+\ref{eq:ft-da-saida-para-referencia}, tem-se que
+
+\begin{equation}
+    \label{eq:ganho-do-filtro-de-referencia}
+    t_0 = \frac{\lambda_c(1)}{B(1)} = 1,7311
+\end{equation} e, portanto,
+
+\begin{equation}
+    F(z^{-1}) = \frac{0,04922-0,004901z^{-1}+0,000122z^{-2}}{1-1,59z^{-1}+0,6348z^{-2}}.
+\end{equation}
+
+Assim o projeto por alocação de polos está finalizado e os polinômios
+$R(z^{-1})$, $S(z^{-1})$ e $T(z^{-1})$ são
+
+\begin{equation}
+    \label{eq:polinomios-rst}
+    \begin{split}
+        R(z^{-1}) &= 1+0,3319z^{-1}-1,332z^{-2}, \\
+        S(z^{-1}) &= 35,17-55,93z^{-1}+22,33z^{-2}, \\
+        T(z^{-1}) &= 1,731-0,1724z^{-1}+0,004291z^{-2}.
+    \end{split}
+\end{equation}

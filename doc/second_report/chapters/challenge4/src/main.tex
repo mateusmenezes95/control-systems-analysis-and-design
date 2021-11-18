@@ -1,0 +1,118 @@
+\section{Desafio IV - Sistemas de Controle Amostrados} 
+
+\subsection{Motivação}
+Este desafio visa demonstrar duas técnicas de projeto de controladores de
+sistemas de controle amostrados diretamente no domínio de tempo discreto. O
+aprendizado dessas técnicas é de extrema importância na aplicação prática de
+sistemas de controle, visto que nas últimas décadas sistemas implementados por
+computadores analógicos vem sendo substituídos por computadores digitais. Isto
+se observa na predominância de sistemas de controle amostrados em problemas
+complexos de controle, como aplicações em diversos sistemas de espaçonaves,
+piloto automático de aeronaves, carros elétricos autônomos, geração de energia
+elétrica através de usinas nucleares etc, até problemas simples como o controle
+de velocidade das rodas de um robô diferencial. Além do mais, controladores
+modernos, como o caso de controladores adaptativos, são desenvolvidos partindo
+dos conceitos e ferramentas oferecidos por sistemas de controle amostrados.
+Desta forma, torna-se imprescindível para profissionais e/ou pesquisadores da
+área de controle possuir conhecimento dos sistemas de controle amostrados.
+
+\subsection{Simulações realizadas}
+As simulações realizadas neste desafio visaram demonstrar e comparar as
+respostas de um sistema de controle realimentado utilizando duas técnicas de
+projeto de controladores no domínio do tempo discreto: alocação de polos e
+controlador por modelo interno (IMC). O sistema em malha fechada utilizado como
+base para as simulações está representado na Figura
+\ref{fig:diagrama-de-blocos-malha-fechada}, em que:
+
+\begin{itemize}
+    \item $R(z)$ é a transformada Z do sinal de referência $r(k)$;
+    \item $E(z)$ é a transformada Z do erro $e(k)$;
+    \item $C(z)$ é a função de transferência do controlador no domínio Z;
+    \item $SoZ$ é a função de transferência do sustentador de ordem zero;
+    \item $U(s)$ é a transformada de Laplace do sinal de controle $u(t)$;
+    \item $Q_{u}(s)$ é a transformada de Laplace da perturbação de entrada
+    $q_{u}(t)$;
+    \item $G(s)$ é a função de transferência da planta;
+    \item $Q_{y}(s)$ é a transformada de Laplace da perturbação na saída
+    $q_{y}(t)$; e, por fim
+    \item $Y(s)$ é a transformada de Laplace da saída do sistema $y(t)$.
+\end{itemize}
+
+\begin{figure}[ht!]
+	\centering
+	\caption{Sistema em malha fechada de um sistema de controle amostrado e com
+    perturbações persistentes.}
+	\label{fig:diagrama-de-blocos-malha-fechada}
+	\includegraphics[width=\textwidth]{chapters/challenge4/images/diagrama-de-blocos-sistema-de-controle-amostrado.png}
+\end{figure}
+
+Os controladores foram projetados a partir da planta cujo o modelo está definido
+na Equação abaixo.
+
+\begin{equation}
+    \label{eq:modelo-em-s-da-planta}
+    G(s) = \frac{0,2(10 - s)}{(s+1)^{2}}
+\end{equation}
+
+Com base no modelo definido na Equação \ref{eq:modelo-em-s-da-planta}, os dois
+controladores foram projetados para que o sistema em malha fechada atendesse os
+seguintes requisitos:
+
+\begin{enumerate}
+    \item Tempo de acomodação de 2\% da resposta da saída para variação de
+    referência do tipo degrau seja aproximadamente metade do tempo de acomodação
+    de 2\% da resposta em malha aberta;
+    \item Seguimento de referência do tipo degrau; e
+    \item Rejeição de perturbações constantes.
+\end{enumerate}
+
+Como parâmetro do projeto, foi utilizado o período de amostragem de $T_{a} =
+0,15 s$, baseado no critério definido por \cite[p. 61]{Franklin1997} em que
+"\textit{Generally, sample rates should be faster than 30 times the bandwidth in
+order to assure that the digital controller can be made to closely match the
+performance of the continuous controller.}". Já a discretização do modelo da
+planta foi realizada através da função c2d do Octave utilizando o método de
+conversão $zoh$. Assim, o modelo da planta discretizada utilizando os parâmetros
+acima é dado por
+
+\begin{equation}
+    \label{eq:modelo-em-z-da-planta}
+    G(z) = \frac{-0,00545z^{-1} + 0,04425z^{-2}}{1 - 1.721z^{-1} + 0.7408z^{-2}}.
+\end{equation}
+
+Na próxima seção são apresentados os resultados para seguimento de referência e
+rejeição a perturbações do tipo degrau para o sistema de controle amostrado
+contendo os dois controladores projetados.
+
+\subsection{Resultados obtidos}
+As duas técnicas de projeto controle visam definir o controlador a partir de um
+modelo de planta desejado. Sendo assim, para atender o requisito de regime
+transitório, foram escolhidos os mesmos polos desejados para os dois
+controladores. Para isso, optou-se por dois polos iguais para se valer da
+aproximação de sistema com polos repetidos no domínio do tempo em que o tempo de
+acomodação de 2\% ($t_{s_{2\%}}$) é aproximado por $6\tau$. Como os dois polos
+de $G(s)$ (Equação \ref{eq:modelo-em-s-da-planta}) fornecem um tempo de
+acomodação de $t_{s_{2\%}}\approx 6s$ ($\tau = 1$), definiu-se $\tau = 0,5$ que
+consequentemente $t_{s_{2\%}}\approx 3s$. Assim, o objetivo dos
+controladores é proporcionar dois polos $s^*=-2$, que no tempo discreto
+utilizando a conversão $e^{-T_{a}s}$ e $T_{a} = 0.15s$ chega-se a dois polos
+$z^*=0,7408$.
+
+Para atender os requisitos de regime estacionário seguimento de referência e
+rejeição a perturbações constantes do tipo degrau, os controladores devem
+possuir ao menos um integrador. Esta premissa parte do Princípio do Modelo
+Interno, pois como nesse caso não há um integrador na planta, tal ação deve ser
+proporcionada pelo controlador.
+
+Como os projetos em si se materializam de forma diferente, apesar das mesmas
+premissas, a subseções seguintes aborda de forma detalhada cada uma das
+técnicas. Vale salientar, que embora as duas técnicas de projeto possam ser
+aplicadas também em tempo contínuo, os projetos foram realizados em sua
+completude no domínio do tempo discreto.
+
+\input{chapters/challenge4/src/poles_allocation.tex}
+\input{chapters/challenge4/src/imc.tex}
+\input{chapters/challenge4/src/poles_allocation_vs_imc.tex}
+
+\subsection{Conclusões}
+(Concluir em que medida os resultados apresentam relação com a motivação. Permitem ilustrar ou concluir algo sobre a motivação? )
