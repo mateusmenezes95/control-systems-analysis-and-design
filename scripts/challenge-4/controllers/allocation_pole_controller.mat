@@ -1,0 +1,230 @@
+# Created by Octave 6.4.0, Wed Nov 17 18:29:43 2021 -03 <mateus@avell>
+# name: allocation_pole_controller
+# type: class
+# classname: tf
+# length: 5
+# name: den
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: class
+# classname: tfpoly
+# length: 1
+# name: poly
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: matrix
+# rows: 1
+# columns: 3
+ 1 0.33185543218629765 -1.3318554321862976
+
+
+
+
+
+
+
+
+
+
+
+
+
+# name: inv
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: bool
+1
+
+
+
+
+
+# name: lti
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: class
+# classname: lti
+# length: 8
+# name: ingroup
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 0
+
+
+
+
+
+# name: inname
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: null_string
+# elements: 0
+
+
+
+
+
+
+
+
+# name: name
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: null_string
+# elements: 0
+
+
+
+
+
+# name: notes
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: cell
+# rows: 0
+# columns: 0
+
+
+
+
+
+# name: outgroup
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: scalar struct
+# ndims: 2
+ 1 1
+# length: 0
+
+
+
+
+
+# name: outname
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: null_string
+# elements: 0
+
+
+
+
+
+
+
+
+# name: tsam
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: scalar
+0.14999999999999999
+
+
+
+
+
+# name: userdata
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: null_matrix
+# rows: 0
+# columns: 0
+
+
+
+
+
+
+
+
+
+
+# name: num
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: class
+# classname: tfpoly
+# length: 1
+# name: poly
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: matrix
+# rows: 1
+# columns: 3
+ 35.167825616091854 -55.930919454724489 22.32612744614228
+
+
+
+
+
+
+
+
+
+
+
+
+
+# name: tfvar
+# type: cell
+# rows: 1
+# columns: 1
+# name: <cell-element>
+# type: string
+# elements: 1
+# length: 1
+z
+
+
+
+
+
+
+
