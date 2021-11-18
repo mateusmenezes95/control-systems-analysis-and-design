@@ -1,6 +1,5 @@
 run common_parameters_script.m
 
-observable_poles = filt(zpk(desirable_z_poles(3:4), [0 0], 1,sampling_period));
 desirable_closed_loop_poles = controllable_poles*observable_poles;
 desirable_coeficcients = get(desirable_closed_loop_poles, 'num'){1};
 
@@ -37,6 +36,8 @@ reference_filter = fz;
 save ./controllers/pole_allocation_controller.mat pole_allocation_controller reference_filter;
 
 closed_loop = minreal((tz*bz/(rz*az+sz*bz)), minreal_precision)
+y_to_qy = minreal(1/(1+(cz*gn_of_z)), minreal_precision)
+y_to_qu = minreal(gn_of_z/(1+(cz*gn_of_z)), minreal_precision)
 
 [U, Y, E, R] = simulate_discrete_sys(sim.time, dt, integration_step_ratio,
                                   gn_of_s, cz, fz,

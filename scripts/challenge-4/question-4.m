@@ -7,15 +7,17 @@ fr_of_z = kf*(bz/controllable_poles)
 nfr_of_z = filt(fr_num_coefficients{1}, 1, ts)
 dfr_of_z = filt(fr_den_coefficients{1}, 1, ts)
 
-c_of_z = (kf*az)/(dfr_of_z - nfr_of_z)
+cz = (kf*az)/(dfr_of_z - nfr_of_z)
 
-imc_controller = c_of_z;
+imc_controller = cz;
 save ./controllers/imc_controller.mat imc_controller;
 
-closed_loop = minreal(feedback(c_of_z*gn_of_z, 1), minreal_precision)
+closed_loop = minreal(feedback(cz*gn_of_z, 1), minreal_precision)
+y_to_qy = minreal(1/(1+(cz*gn_of_z)), minreal_precision)
+y_to_qu = minreal(gn_of_z/(1+(cz*gn_of_z)), minreal_precision)
 
 [U, Y, E, R] = simulate_discrete_sys(sim.time, dt, integration_step_ratio,
-                                  gn_of_s, c_of_z, filt(1),
+                                  gn_of_s, cz, filt(1),
                                   reference.signal,
                                   output_disturbance.signal,
                                   input_disturbance.signal);

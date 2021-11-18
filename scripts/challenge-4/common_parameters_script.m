@@ -24,6 +24,7 @@ bz = filt(b{1}, 1, sampling_period)
 desirable_s_poles = [-2 -2 -20 -20];
 desirable_z_poles = e.^(desirable_s_poles.*sampling_period)
 controllable_poles = filt(zpk(desirable_z_poles(1:2), [0 0], 1,sampling_period));
+observable_poles = filt(zpk(desirable_z_poles(3:4), [0 0], 1,sampling_period));
 
 % =============================================================================
 % Simulation parameters
