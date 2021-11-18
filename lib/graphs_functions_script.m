@@ -117,10 +117,9 @@ function plot_response_and_control_signals (sim_time, figure_num = 1,
     figure(figure_num)
 
     subplot(3,1,1)
-
-    if !ischar(reference)
+    if ((!ischar(reference)) & (length(get(gca, 'children')) == 0))
         plot_signal(sim_time, '', reference, '', '--r', '$r(t)$')
-    end
+    endif
 
     hold on
 
