@@ -1,0 +1,237 @@
+\section{Desafio I - Controle Multivariável - Espaço de Estados} 
+
+\subsection{Motivação}
+(Explicar o problema que motiva o desafio, relevância, possíveis aplicações...) 
+
+\subsection{Simulações realizadas}
+
+\begin{equation}
+    \label{eq:matriz-de-fts}
+    \mathbf{G}(s) = 
+        \begin{bmatrix}
+            \frac{2}{(10s+1)} & \frac{0,8}{(10s+1)(2s+1)}\\ 
+            \frac{0,6}{(10s+1)(2s+1)} & \frac{2}{(10s+1)}
+        \end{bmatrix}
+\end{equation}
+(Explicar quais simulações foram realizadas de maneira descritiva e sequêncial.) 
+
+\subsection{Resultados obtidos}
+\label{sub:resultados-obtidos-desafio6}
+
+\subsubsection{Cálculo do ponto de equilíbrio}
+\label{subsub:calculo-do-ponto-de-equilibrio}
+Dado que o sistema multivariável é caracterizado por \ref{eq:matriz-de-fts}, a
+saída do sistema é $\mathbf{y} = [Y_1(s) \thickspace Y_2(s)]^{T}$ dado o vetor de
+sinais de controle $\mathbf{u} = [U_1(s) \thickspace U_2(s)]^{T}$, temos então que
+$\mathbf{y} = \mathbf{G}\mathbf{u}$ ou 
+
+\begin{equation}
+    \label{eq:relacao-entrada-saida-de-g}
+    \begin{bmatrix}
+        Y_1(s)\\ 
+        Y_2(s)
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        \frac{2}{(10s+1)} & \frac{0,8}{(10s+1)(2s+1)}\\ 
+        \frac{0,6}{(10s+1)(2s+1)} & \frac{2}{(10s+1)}
+    \end{bmatrix}
+    \begin{bmatrix}
+        U_1(s)\\ 
+        U_2(s)
+    \end{bmatrix}.
+\end{equation}
+
+Quando aplicado o sinal de controle $\mathbf{u}_{eq} = \lim_{t \rightarrow
+\infty }\mathbf{u}(t)$, a saída do sistema chega ao equilíbrio $\mathbf{y}_{eq}
+= \lim_{t \rightarrow \infty }\mathbf{y}(t)$. Aplicando o teorema do valor
+final em \ref{eq:relacao-entrada-saida-de-g} dado uma entrada em degrau para
+$\mathbf{u}(t)$, temos que $\mathbf{u}_{eq} = \mathbf{G}(0)^{-1}\mathbf{y}_{eq}$
+se $det(\mathbf{G}(0)) \neq 0$. Como,
+
+\begin{equation}
+    \label{eq:ganho-estatico-de-g}
+    \mathbf{G}(0)
+    =
+    \begin{bmatrix}
+        2,0 & 0,8\\ 
+        0,6 & 1,5
+    \end{bmatrix},
+\end{equation}logo, $det(\mathbf{G}(0)) \neq 0$ e $\mathbf{G}(0)^{-1}$ existe.
+Dado a saída de equilíbrio desejada $\mathbf{y}_{eq} = [2 \thickspace
+1]^\top$, o sinal de controle de equilíbrio 
+
+\begin{equation}
+    \label{eq:vetor-do-controle-de-equilibrio}
+    \mathbf{u}_{eq} = [0,8730 \thickspace 0,3175]^\top.
+\end{equation}
+
+\subsubsection{Espaço de Estados no domínio de tempo continuo}
+\label{subsub:espaco-de-estados-no-dominio-de-tempo-continuo}
+
+A utilização da função \textit{ss} do Octave para transformar o modelo
+\ref{eq:matriz-de-fts} dado no domínio de Laplace para realização em espaço de
+estados
+
+\begin{subequations}
+    \label{eq:espaco-de-estados-continuo}
+    \begin{align}
+        \mathbf{\dot{x}}(t) &= \mathbf{A}\mathbf{x}(t) + \mathbf{B}\mathbf{u}(t)
+        \label{eq:derivada-do-vetor-de-estados}\\
+        \mathbf{y}(t) &= \mathbf{C}\mathbf{x}(t) + \mathbf{D}\mathbf{u}(t)
+        \label{eq:saida-do-sistema-em-espaco-de-estados}
+    \end{align}
+\end{subequations} resulta nas matrizes $\mathbf{A}_{4\times 4}$,
+$\mathbf{B}_{4\times 2}$ e $\mathbf{C}_{2\times 4}$, cujo elementos estão
+definidas em \ref{eq:matrizes-do-espaco-de-estados}. Ressalta-se entretanto, que
+$\mathbf{D} = \mathbf{\bar{0}}$ para o sistema deste desafio. Observa-se das dimensões
+destas matrizes, que para o sistema dado existem 4 variáveis de estados.
+
+\begin{subequations}
+    \label{eq:matrizes-do-espaco-de-estados}
+    \begin{align}
+        \mathbf{A} &= 
+        \begin{bmatrix}
+            0.0500 &  0      &  0.1164  &  0        \\
+            0      &  0.0500 &  0       &  0.1164   \\
+            0.7089 &  0      & -0.6500  &  0        \\
+            0      & -0.7089 &  0       & -0.6500
+        \end{bmatrix},  \label{eq:matriz-a} \\
+        \mathbf{B} &=
+        \begin{bmatrix}
+            -0.0849 & -0.2333  \\
+            -0.3111 & -0.1131  \\
+            0       &  0.3007  \\
+            0.4010  &  0
+        \end{bmatrix},  \label{eq:matriz-b} \\
+        \mathbf{C} &=
+        \begin{bmatrix}
+            0    &    0  &      0  & 0.4988  \\
+            0    &    0  & 0.4988  & 0
+        \end{bmatrix}   \label{eq:matriz-c}
+    \end{align}
+\end{subequations}
+
+Com estas matrizes é possível calcular qual são os estados do sistema quando a
+saída atinge seu valor de equilíbrio. Quando isto acontece, $\mathbf{\dot{x}}(t)
+= \mathbf{0}$ e, portanto, a partir de \ref{eq:derivada-do-vetor-de-estados},
+
+\begin{equation}
+    \label{eq:calculo-do-vetor-de-estados-de-equilibrio}
+    \mathbf{x}_{eq} = -\mathbf{A}^{-1}\mathbf{B}\mathbf{u}_{eq}.
+\end{equation} Vale reforçar que isto é verdadeiro se $\mathbf{A}$ é invertível
+ou det($\mathbf{A}$) $\neq 0$. De \ref{eq:matrizes-do-espaco-de-estados},
+verifica-se que det($\mathbf{A}$) $\neq 0$. Assim, substituindo
+\ref{eq:vetor-do-controle-de-equilibrio}, \ref{eq:matriz-a} e \ref{eq:matriz-b}
+em \ref{eq:calculo-do-vetor-de-estados-de-equilibrio}, tem se que
+
+\begin{equation}
+    \label{eq:estados-de-equilibrio}
+    \mathbf{x}_{eq} =
+    \begin{bmatrix}
+        x_{eq_{1}} \\
+        x_{eq_{2}} \\
+        x_{eq_{3}}  \\
+        x_{eq_{4}}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        -1.7038 \\
+        -3.1831 \\
+        2.0050  \\
+        4.0100
+    \end{bmatrix}.
+\end{equation}
+
+\subsubsection{Espaço de Estado no domínio de tempo discreto}
+\label{subsub:espaco-de-estados-no-dominio-de-tempo-discreto}
+
+A versão em tempo discreto para a representação em espaço de estados definido em
+\ref{eq:espaco-de-estados-continuo} é dado da seguinte forma
+
+\begin{subequations}
+    \label{eq:espaco-de-estados-discreto}
+    \begin{align}
+        \mathbf{x}[k+1] &= \mathbf{\tilde{A}}\mathbf{x}[k] + \mathbf{\tilde{B}}\mathbf{u}[k]
+        \label{eq:estimativa-do-vetor-de-estados}\\
+        \mathbf{y}[k] &= \mathbf{\tilde{C}}\mathbf{x}[t] + \mathbf{\tilde{D}}\mathbf{u}[k]
+        \label{eq:saida-do-sistema-em-espaco-de-estados-discreto}
+    \end{align}
+\end{subequations} que segundo \citeonline{Chen2006}, a relação entre as
+matrizes de tempo continuo e discreto é dado como
+
+\begin{equation*}
+    \mathbf{\tilde{A}} = e^{\mathbf{A}T},
+    \thickspace
+    \mathbf{\tilde{B}} = \int_{0}^{T}e^{A\tau}d\tau \mathbf{B},
+    \thickspace
+    \mathbf{\tilde{C}} = \mathbf{C}
+    \thickspace e \thickspace
+    \mathbf{\tilde{D}} = \mathbf{D},
+\end{equation*} em que $T$ é o período de amostragem do sistema de controle
+amostrado. Observa-se portanto que é necessário definir um período de amostragem
+adequado para ter a realização do modelo \ref{eq:matriz-de-fts} em espaço de
+estados de tempo discreto.
+
+O critério para definição do tempo de amostragem foi igual ao utilizado no
+desafio 4 de projetos no tempo discreto (seção
+\ref{sub:simulacoes-realizadas-desafio4}). Entretanto, o modelo em questão é
+multivariável. Considerando então, que $\mathbf{W}$ é uma matriz cujo elementos
+$w_{ij}$ é a frequência de corte de cada função de transferência $g_{ij}$ de
+$\mathbf{G}(s)$, optou-se por aplicar o critério na máxima frequência de corte,
+ou seja $w_a = 30\times\max(\mathbf{W})$, em que $w_a$ é a frequência de
+amostragem em $rad/s$. Esta abordagem é conservadora, pois os sistemas cuja a
+frequência de corte $w_c < \max(\mathbf{W})$ por si só irão atenuar sinais de
+alta frequências, e então estes sinais não contribuirão significativamente em
+suas respostas. Ou de forma matemática, se $w_a = 30\times\max(\mathbf{W})$,
+logo o critério de $30\times$ será válido para as demais plantas. Assim,
+obteve-se a matriz $W$ conforme \ref{eq:matriz-das-frequencias-de-corte}.
+Observa-se que $w_{21} = 0$. Foi atribuído o valor zero pois $\mod{g_{21}(0)} <
+-3$dB, e esta atribuição não compromete o critério da definição do período de
+amostragem.
+
+\begin{equation}
+    \label{eq:matriz-das-frequencias-de-corte}
+    \mathbf{W} = 
+        \begin{bmatrix}
+            0,2646 & 0,0516\\ 
+            0 & 0,1871
+        \end{bmatrix}
+\end{equation}
+
+Portanto, $\max(\mathbf{W}) = 0,2646$ rad/s, o que resultou, após
+arrendondamento, num período de amostragem $T_a = 0,75$s.
+
+Novamente com o auxílio da função \textit{ss} do Octave, mas agora passando o
+período de amostragem como argumento, chegou-se as seguintes matrizes
+
+ALTERAR VALORES DA MATRIZ B E C!!!!
+
+\begin{subequations}
+    \label{eq:matrizes-do-espaco-de-estados-discretizadas}
+    \begin{align}
+        \mathbf{\tilde{A}} &= 
+        \begin{bmatrix}
+            -0.4986  &   0        &  1.9513  &   -0 \\
+            0        &   -0.4986  &  0       &   -1.9513    \\
+            -0.8668  &   0        &  2.1136  &   -0 \\
+            0        &   0.8668   &  -0      &    2.1136         
+        \end{bmatrix},  \label{eq:matriz-til-a} \\
+        \mathbf{\tilde{B}} &=
+        \begin{bmatrix}
+            -0.0849 & -0.2333  \\
+            -0.3111 & -0.1131  \\
+            0       &  0.3007  \\
+            0.4010  &  0
+        \end{bmatrix},  \label{eq:matriz-til-b} \\
+        \mathbf{\tilde{C}} &=
+        \begin{bmatrix}
+            0    &    0  &      0  & 0.4988  \\
+            0    &    0  & 0.4988  & 0
+        \end{bmatrix}   \label{eq:matriz-til-c}
+    \end{align}
+\end{subequations}
+
+\subsection{Conclusões}
+(Concluir em que medida os resultados apresentam relação com a motivação.
+Permitem ilustrar ou concluir algo sobre a motivação? )
