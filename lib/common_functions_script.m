@@ -117,6 +117,9 @@ function u_to_qu_tf = get_controller_output_to_input_disturbance_tf (G, C, F)
     u_to_qu_tf.outname = 'U(s)';
 end
 
+% This is the Euler Forward Algorithm implementation. Therefore, the matrices A
+% here must be informat to A = (I - dt*A) and B = dt*B, where dt is the
+% integration step size.
 function [xkplus1, y] = get_ss_output(xk, ss_matrix = ss(0,0,0,0), uk)
     xkplus1 = (ss_matrix.a*xk) + (ss_matrix.b*uk);
     y = ss_matrix.c*xkplus1 + (ss_matrix.d*uk);

@@ -12,28 +12,6 @@ pkg load miscellaneous
 format short
 
 % =============================================================================
-% Simulation parameters
-% =============================================================================
-
-sampling_period = 0.1;
-integration_step_ratio = 20;
-dt = sampling_period/integration_step_ratio;
-end_time = 20;
-sim = get_sim_time (dt, round(end_time/sampling_period)*sampling_period);
-minreal_precision = 0.01;
-
-% =============================================================================
-% Input signals
-% =============================================================================
-
-reference = get_signal (sim.time, amplitude = 1,
-                        start_time = 1, end_time = inf);
-output_disturbance = get_signal (sim.time, amplitude = 0.2,
-                                 start_time = 7, end_time = inf);
-input_disturbance = get_signal (sim.time, amplitude = 0.2,
-                                start_time = 12, end_time = inf);
-
-% =============================================================================
 % Model definition
 % =============================================================================
 
@@ -65,13 +43,13 @@ sampling_period_computed = truncate(1/fs, -2)
 sampling_period = 0.75
 
 Gz = c2d(Gs, sampling_period);
-Gz_ss = ss(Gz)
+Gz_ss = c2d(Gs_ss, sampling_period)
 
 % =============================================================================
 % Equilibrium output and control signal computation
 % =============================================================================
 
-g0 = dcgain(G)
+g0 = dcgain(Gs)
 det_g0 = det(g0)
 inv_g0 = inv(g0)
 yeq = [2; 1];
@@ -81,4 +59,26 @@ ueq = inv_g0*yeq
 % Equilibrium states
 % =============================================================================
 
-xeq = -1*inv(Gs_ss.A)*Gs_ss.B*ueq
+xeq_continue = -1*inv(Gs_ss.A)*Gs_ss.B*ueq
+xeq_discrete = (inv(eye(size(Gz_ss.A)) - Gz_ss.A)*Gz_ss.B)*ueq
+yeq_discrete = Gz_ss.C*xeq_discrete
+
+% =============================================================================
+% Simulation parameters
+% =============================================================================
+
+integration_step_ratio = 30;
+dt = sampling_period/integration_step_ratio; %Integration step
+end_time = 160;
+sim = get_sim_time (dt, ceil(end_time/sampling_period)*sampling_period);
+
+% =============================================================================
+% Input signals
+% =============================================================================
+
+reference = get_signal (sim.time, amplitude = 1,
+                        start_time = 1, end_time = inf);
+output_disturbance = get_signal (sim.time, amplitude = 0.2,
+                                 start_time = 100, end_time = inf);
+input_disturbance = get_signal (sim.time, amplitude = 0.2,
+                                start_time = 120, end_time = inf);
