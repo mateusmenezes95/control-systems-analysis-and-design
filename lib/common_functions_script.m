@@ -120,9 +120,9 @@ end
 % This is the Euler Forward Algorithm implementation. Therefore, the matrices A
 % here must be informat to A = (I - dt*A) and B = dt*B, where dt is the
 % integration step size.
-function [xkplus1, y] = get_ss_output(xk, ss_matrix = ss(0,0,0,0), uk)
+function [xkplus1, yk] = get_ss_output(xk, ss_matrix = ss(0,0,0,0), uk)
     xkplus1 = (ss_matrix.a*xk) + (ss_matrix.b*uk);
-    y = ss_matrix.c*xkplus1 + (ss_matrix.d*uk);
+    yk = ss_matrix.c*xk + (ss_matrix.d*uk);
 end
 
 % Discrete simulation based in SANTOS, T. L. M. code example 

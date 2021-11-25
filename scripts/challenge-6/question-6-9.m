@@ -1,75 +1,100 @@
 run base_script.m
+run specific_state_space_graphs_funtions.m
+
+simulate_regulator = true;
+simulate_reference_follower = true;
 
 for i=1:4
     desirable_eigenvalues(i) = e^(-sampling_period/4);
 endfor
 
-kd = place(Gz_ss.A, Gz_ss.B, desirable_eigenvalues)
+kd = place(gz_ss.A, gz_ss.B, desirable_eigenvalues)
 
 % Initial contidions
 xk0 = zeros(size(xeq_continue));
 
-integration_step_ratio = 30
-integration_step_size = sampling_period/integration_step_ratio
+a_euler = eye(size(gs_ss.A))+(integration_step_size*gs_ss.A);
+b_euler = integration_step_size*gs_ss.B;
 
-a_bar = eye(size(Gs_ss.A))+(integration_step_size*Gs_ss.A);
-b_bar = integration_step_size*Gs_ss.B;
+gs_ss_for_euler = ss(a_euler, b_euler, gs_ss.c, gs_ss.d)
 
-gs_ss_for_euler = ss(a_bar, b_bar, Gs_ss.c, Gs_ss.d)
-
-for k=1:length(sim.time)
-    if (mod(k, integration_step_ratio) == 1)
-        t = (k-1)*dt;
-        if k == 1
-            uk = -kd*(xk0-xeq_discrete)+ueq;
-        else
-            uk = -kd*(xk-xeq_discrete)+ueq;
+% Regulator action
+ueq = ueq.*unit_step(1:2,:);
+yr = yeq.*unit_step(1:2,:);
+ref = [yr; ueq];
+if simulate_regulator
+    for k=1:length(sim.time)
+        if (mod(k, integration_step_ratio) == 1)
+            t = (k-1)*integration_step_size;
+            if k == 1
+                uk = -kd*(xk0 - xeq_discrete.*unit_step(:,k)) + ueq(:,k);
+            else
+                uk = -kd*(xk - xeq_discrete.*unit_step(:,k)) + ueq(:,k);
+            endif
         endif
-    endif
+        ukd = uk + qu(:,k);
 
-    if k == 1
-        [xk, yk] = get_ss_output(xk0, gs_ss_for_euler, uk);
-        Y = yk;
-        U = uk;
-        X = xk;
-    else
-        [xk, yk] = get_ss_output(xk, gs_ss_for_euler, uk);
-        Y = [Y yk];
-        U = [U uk];
-        X = [X xk];
-    endif
-endfor
+        if k == 1
+            [xk, yk] = get_ss_output(xk0, gs_ss_for_euler, uk);
+            [xkd, ykd] = get_ss_output(xk0, gs_ss_for_euler, ukd);
+            Y = yk;
+            Yd = ykd + qy(:,k);
+            U = uk;
+            Ud = ukd;
+            X = xk;
+        else
+            [xk, yk] = get_ss_output(xk, gs_ss_for_euler, uk);
+            [xkd, ykd] = get_ss_output(xkd, gs_ss_for_euler, ukd);
+            Y = [Y yk];
+            ykd = ykd + qy(:,k); 
+            Yd = [Yd ykd];
+            U = [U uk];
+            Ud = [Ud ukd];
+            X = [X xk];
+        endif
+    endfor
 
-y1 = Y(1,:);
-y2 = Y(2,:);
+    plot_mimo_response_and_control_signals(sim.time, figure_num = 1,
+                                           Y, U, 'b', {'sem integrador'});
+    % plot_mimo_references(sim.time, figure_num = 1, ref, {'ponto de equilibrio'})
+    plot_mimo_response_and_control_signals(sim.time, figure_num = 2,
+                                           Yd, Ud, 'b', {'sem integrador'});
+endif
 
-u1 = U(1,:);
-u2 = U(2,:);
+zero_bar = zeros(4,2);
+idty = eye(2,2);
+a_bar = [gz_ss.a zero_bar; gz_ss.c*gz_ss.a idty];
+b_bar = [gz_ss.b; gz_ss.c*gz_ss.b];
+desirable_eigenvalues = [desirable_eigenvalues desirable_eigenvalues(1:2)];
 
-subplot(2,2,1)
-plot(sim.time, y1)
-set(gca, 'xlim', [0 160])
-line(xlim(), [2 2], 'linestyle', '--', 'color', 'k')
-ylabel('y_1(t)');
-xlabel('Tempo (s)');
-subplot(2,2,2)
-plot(sim.time, y2)
-set(gca, 'xlim', [0 160])
-line(xlim(), [1 1], 'linestyle', '--', 'color', 'k')
-ylabel('y_2(t)');
-xlabel('Tempo (s)');
+k_bar = place(a_bar , b_bar , desirable_eigenvalues);
+kx = k_bar(:,1:4);
+ki = k_bar(:,5:6);
 
-subplot(2,2,3)
-plot(sim.time, u1)
-set(gca, 'xlim', [0 160])
-line(xlim(), [ueq(1) ueq(1)], 'linestyle', '--', 'color', 'k')
-ylabel('u_1(t)');
-xlabel('Tempo (s)');
-subplot(2,2,4)
-plot(sim.time, u2)
-set(gca, 'xlim', [0 160])
-line(xlim(), [ueq(2) ueq(2)], 'linestyle', '--', 'color', 'k')
-ylabel('u_2(t)');
-xlabel('Tempo (s)');
+% Reference following with disturbance rejection
 
-eig(Gs_ss.A - Gs_ss.B*kd)
+us(:,1:3) = zeros(2,3);
+xs(:,1:3) = [xk0 xk0 xk0];
+ys(:,1:3) = zeros(2,3);
+x(:,1) = xk0;
+y(:,1) = [0;0];
+k = 2;
+if simulate_reference_follower
+    for i=1:length(sim.time)
+        if (mod(i, integration_step_ratio) == 1);
+            k=k+1;
+            xs(:,k) = x(:,i);
+            ys(:,k) = y(:,i);
+            yrs(:,k) = yr(:,i);
+            us(:,k) = us(:,k-1) - kx*(xs(:,k) - xs(:,k-1)) + ki*(yrs(:,k) - ys(:,k));
+        endif
+
+        u(:,i) = us(:,k);
+        [x(:,i+1), y(:,i+1)] = get_ss_output(x(:,i), gs_ss_for_euler, us(:,k) + qu(:,i));
+        y(:,i+1) = y(:,i+1) + qy(:,i);
+    endfor
+
+    plot_mimo_response_and_control_signals(sim.time, figure_num = 2,
+                                           y(:,2:end), u, 
+                                           'r', {'sem integrador','com integrador'});
+endif

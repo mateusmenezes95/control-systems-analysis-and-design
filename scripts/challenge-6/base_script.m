@@ -6,7 +6,6 @@ addpath(genpath("../../lib")) % Add lib path to Octave script file search paths
 % =============================================================================
 
 run common_functions_script
-run graphs_functions_script
 
 pkg load miscellaneous
 format short
@@ -25,13 +24,13 @@ wc12 = bandwidth_lti(g12)
 wc21 = 0
 wc22 = bandwidth_lti(g22)
 
-Gs = [g11 g12;
+gs = [g11 g12;
      g21 g22]
 W = [wc11 wc12;
      wc21 wc22]
 
-Gs_ss = ss(Gs)
-det_A = det(Gs_ss.A)
+gs_ss = ss(gs)
+det_A = det(gs_ss.A)
 
 % =============================================================================
 % Sampling period definition and discrete state space realization
@@ -42,14 +41,14 @@ fs = 30*(wb_max/(2*pi()))
 sampling_period_computed = truncate(1/fs, -2)
 sampling_period = 0.75
 
-Gz = c2d(Gs, sampling_period);
-Gz_ss = c2d(Gs_ss, sampling_period)
+gz = c2d(gs, sampling_period);
+gz_ss = c2d(gs_ss, sampling_period)
 
 % =============================================================================
 % Equilibrium output and control signal computation
 % =============================================================================
 
-g0 = dcgain(Gs)
+g0 = dcgain(gs)
 det_g0 = det(g0)
 inv_g0 = inv(g0)
 yeq = [2; 1];
@@ -59,26 +58,29 @@ ueq = inv_g0*yeq
 % Equilibrium states
 % =============================================================================
 
-xeq_continue = -1*inv(Gs_ss.A)*Gs_ss.B*ueq
-xeq_discrete = (inv(eye(size(Gz_ss.A)) - Gz_ss.A)*Gz_ss.B)*ueq
-yeq_discrete = Gz_ss.C*xeq_discrete
+xeq_continue = -1*inv(gs_ss.A)*gs_ss.B*ueq
+xeq_discrete = (inv(eye(size(gz_ss.A)) - gz_ss.A)*gz_ss.B)*ueq
+yeq_discrete = gz_ss.C*xeq_discrete
 
 % =============================================================================
 % Simulation parameters
 % =============================================================================
 
 integration_step_ratio = 30;
-dt = sampling_period/integration_step_ratio; %Integration step
-end_time = 160;
-sim = get_sim_time (dt, ceil(end_time/sampling_period)*sampling_period);
+integration_step_size = sampling_period/integration_step_ratio;
+end_time = 140;
+sim = get_sim_time (integration_step_size, ceil(end_time/sampling_period)*sampling_period);
 
 % =============================================================================
 % Input signals
 % =============================================================================
 
 reference = get_signal (sim.time, amplitude = 1,
-                        start_time = 1, end_time = inf);
+                        start_time = 10, end_time = inf);
 output_disturbance = get_signal (sim.time, amplitude = 0.2,
-                                 start_time = 100, end_time = inf);
+                                 start_time = 50, end_time = inf);
 input_disturbance = get_signal (sim.time, amplitude = 0.2,
-                                start_time = 120, end_time = inf);
+                                start_time = 100, end_time = inf);
+qu = [output_disturbance.signal'; output_disturbance.signal'];
+qy = [input_disturbance.signal'; input_disturbance.signal'];
+unit_step = [reference.signal'; reference.signal'; reference.signal'; reference.signal'];
