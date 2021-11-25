@@ -1,19 +1,29 @@
-\section{Desafio I - Controle Multivariável - Espaço de Estados} 
+\section{Desafio I - Controle Multivariável - Espaço de Estados}
 
 \subsection{Motivação}
-(Explicar o problema que motiva o desafio, relevância, possíveis aplicações...) 
+(Explicar o problema que motiva o desafio, relevância, possíveis aplicações...)
 
 \subsection{Simulações realizadas}
 
 \begin{equation}
     \label{eq:matriz-de-fts}
-    \mathbf{G}(s) = 
-        \begin{bmatrix}
-            \frac{2}{(10s+1)} & \frac{0,8}{(10s+1)(2s+1)}\\ 
-            \frac{0,6}{(10s+1)(2s+1)} & \frac{2}{(10s+1)}
-        \end{bmatrix}
+    \mathbf{G}(s) =
+    \begin{bmatrix}
+        \frac{2}{(10s+1)}         & \frac{0,8}{(10s+1)(2s+1)} \\
+        \frac{0,6}{(10s+1)(2s+1)} & \frac{2}{(10s+1)}
+    \end{bmatrix}
 \end{equation}
-(Explicar quais simulações foram realizadas de maneira descritiva e sequêncial.) 
+(Explicar quais simulações foram realizadas de maneira descritiva e sequêncial.)
+
+Algumas definições:
+
+\begin{itemize}
+    \item O acento \textbf{~} é utilizado para as variáveis em tempo discreto
+    \item $u[k] := u(kT_a)$ para $k = 0, 1, 2, ..., n$ em que $T_a$ é o período
+          amostragem do sistema amostrado
+    \item A simulação foi realizada utilizando a aproximação por euler
+\end{itemize}
+
 
 \subsection{Resultados obtidos}
 \label{sub:resultados-obtidos-desafio6}
@@ -23,28 +33,28 @@
 Dado que o sistema multivariável é caracterizado por \ref{eq:matriz-de-fts}, a
 saída do sistema é $\mathbf{y} = [Y_1(s) \thickspace Y_2(s)]^{T}$ dado o vetor de
 sinais de controle $\mathbf{u} = [U_1(s) \thickspace U_2(s)]^{T}$, temos então que
-$\mathbf{y} = \mathbf{G}\mathbf{u}$ ou 
+$\mathbf{y} = \mathbf{G}\mathbf{u}$ ou
 
 \begin{equation}
     \label{eq:relacao-entrada-saida-de-g}
     \begin{bmatrix}
-        Y_1(s)\\ 
+        Y_1(s) \\
         Y_2(s)
     \end{bmatrix}
     =
     \begin{bmatrix}
-        \frac{2}{(10s+1)} & \frac{0,8}{(10s+1)(2s+1)}\\ 
+        \frac{2}{(10s+1)}         & \frac{0,8}{(10s+1)(2s+1)} \\
         \frac{0,6}{(10s+1)(2s+1)} & \frac{2}{(10s+1)}
     \end{bmatrix}
     \begin{bmatrix}
-        U_1(s)\\ 
+        U_1(s) \\
         U_2(s)
     \end{bmatrix}.
 \end{equation}
 
 Quando aplicado o sinal de controle $\mathbf{u}_{eq} = \lim_{t \rightarrow
-\infty }\mathbf{u}(t)$, a saída do sistema chega ao equilíbrio $\mathbf{y}_{eq}
-= \lim_{t \rightarrow \infty }\mathbf{y}(t)$. Aplicando o teorema do valor
+        \infty }\mathbf{u}(t)$, a saída do sistema chega ao equilíbrio $\mathbf{y}_{eq}
+    = \lim_{t \rightarrow \infty }\mathbf{y}(t)$. Aplicando o teorema do valor
 final em \ref{eq:relacao-entrada-saida-de-g} dado uma entrada em degrau para
 $\mathbf{u}(t)$, temos que $\mathbf{u}_{eq} = \mathbf{G}(0)^{-1}\mathbf{y}_{eq}$
 se $det(\mathbf{G}(0)) \neq 0$. Como,
@@ -54,12 +64,12 @@ se $det(\mathbf{G}(0)) \neq 0$. Como,
     \mathbf{G}(0)
     =
     \begin{bmatrix}
-        2,0 & 0,8\\ 
+        2,0 & 0,8 \\
         0,6 & 1,5
     \end{bmatrix},
-\end{equation}logo, $det(\mathbf{G}(0)) \neq 0$ e $\mathbf{G}(0)^{-1}$ existe.
-Dado a saída de equilíbrio desejada $\mathbf{y}_{eq} = [2 \thickspace
-1]^\top$, o sinal de controle de equilíbrio 
+\end{equation}logo, det($\mathbf{G}(0)$) $\neq 0$ e $\mathbf{G}(0)^{-1}$ existe.
+Dado a saída de equilíbrio desejada $\mathbf{y}_{eq} = [2 \thickspace 1]^\top$,
+o sinal de controle de equilíbrio
 
 \begin{equation}
     \label{eq:vetor-do-controle-de-equilibrio}
@@ -76,43 +86,47 @@ estados
 \begin{subequations}
     \label{eq:espaco-de-estados-continuo}
     \begin{align}
-        \mathbf{\dot{x}}(t) &= \mathbf{A}\mathbf{x}(t) + \mathbf{B}\mathbf{u}(t)
-        \label{eq:derivada-do-vetor-de-estados}\\
-        \mathbf{y}(t) &= \mathbf{C}\mathbf{x}(t) + \mathbf{D}\mathbf{u}(t)
+        \mathbf{\dot{x}}(t) & = \mathbf{A}\mathbf{x}(t) + \mathbf{B}\mathbf{u}(t)
+        \label{eq:derivada-do-vetor-de-estados}                                   \\
+        \mathbf{y}(t)       & = \mathbf{C}\mathbf{x}(t) + \mathbf{D}\mathbf{u}(t)
         \label{eq:saida-do-sistema-em-espaco-de-estados}
     \end{align}
 \end{subequations} resulta nas matrizes $\mathbf{A}_{4\times 4}$,
 $\mathbf{B}_{4\times 2}$ e $\mathbf{C}_{2\times 4}$, cujo elementos estão
 definidas em \ref{eq:matrizes-do-espaco-de-estados}. Ressalta-se entretanto, que
-$\mathbf{D} = \mathbf{\bar{0}}$ para o sistema deste desafio. Observa-se das dimensões
+$\mathbf{D} = \mathbf{\bar{0}}$ para o sistema deste desafio já que não há
+transmissão direta do sinal de controle para a saída. Observa-se das dimensões
 destas matrizes, que para o sistema dado existem 4 variáveis de estados.
 
 \begin{subequations}
     \label{eq:matrizes-do-espaco-de-estados}
     \begin{align}
-        \mathbf{A} &= 
+        \mathbf{A} & =
         \begin{bmatrix}
-            0.0500 &  0      &  0.1164  &  0        \\
-            0      &  0.0500 &  0       &  0.1164   \\
-            0.7089 &  0      & -0.6500  &  0        \\
-            0      & -0.7089 &  0       & -0.6500
-        \end{bmatrix},  \label{eq:matriz-a} \\
-        \mathbf{B} &=
+            \label{eq:matriz-a}
+            0,0500 & 0       & 0,1164  & 0       \\
+            0      & 0,0500  & 0       & 0,1164  \\
+            0,7089 & 0       & -0,6500 & 0       \\
+            0      & -0,7089 & 0       & -0,6500
+        \end{bmatrix},  \\
+        \mathbf{B} & =
         \begin{bmatrix}
-            -0.0849 & -0.2333  \\
-            -0.3111 & -0.1131  \\
-            0       &  0.3007  \\
-            0.4010  &  0
-        \end{bmatrix},  \label{eq:matriz-b} \\
-        \mathbf{C} &=
+            \label{eq:matriz-b}
+            -0,0849 & -0,2333 \\
+            -0,3111 & -0,1131 \\
+            0       & 0,3007  \\
+            0,4010  & 0
+        \end{bmatrix}, \\
+        \mathbf{C} & =
         \begin{bmatrix}
-            0    &    0  &      0  & 0.4988  \\
-            0    &    0  & 0.4988  & 0
-        \end{bmatrix}   \label{eq:matriz-c}
+            \label{eq:matriz-c}
+            0 & 0 & 0      & 0,4988 \\
+            0 & 0 & 0,4988 & 0
+        \end{bmatrix} 
     \end{align}
 \end{subequations}
 
-Com estas matrizes é possível calcular qual são os estados do sistema quando a
+Com estas matrizes é possível calcular quais são os estados do sistema quando a
 saída atinge seu valor de equilíbrio. Quando isto acontece, $\mathbf{\dot{x}}(t)
 = \mathbf{0}$ e, portanto, a partir de \ref{eq:derivada-do-vetor-de-estados},
 
@@ -120,8 +134,8 @@ saída atinge seu valor de equilíbrio. Quando isto acontece, $\mathbf{\dot{x}}(
     \label{eq:calculo-do-vetor-de-estados-de-equilibrio}
     \mathbf{x}_{eq} = -\mathbf{A}^{-1}\mathbf{B}\mathbf{u}_{eq}.
 \end{equation} Vale reforçar que isto é verdadeiro se $\mathbf{A}$ é invertível
-ou det($\mathbf{A}$) $\neq 0$. De \ref{eq:matrizes-do-espaco-de-estados},
-verifica-se que det($\mathbf{A}$) $\neq 0$. Assim, substituindo
+ou det($\mathbf{A}$) $\neq 0$. De \ref{eq:matriz-a}, verifica-se que
+det($\mathbf{A}$) $\neq 0$. Assim, substituindo
 \ref{eq:vetor-do-controle-de-equilibrio}, \ref{eq:matriz-a} e \ref{eq:matriz-b}
 em \ref{eq:calculo-do-vetor-de-estados-de-equilibrio}, tem se que
 
@@ -131,16 +145,16 @@ em \ref{eq:calculo-do-vetor-de-estados-de-equilibrio}, tem se que
     \begin{bmatrix}
         x_{eq_{1}} \\
         x_{eq_{2}} \\
-        x_{eq_{3}}  \\
+        x_{eq_{3}} \\
         x_{eq_{4}}
     \end{bmatrix}
     =
     \begin{bmatrix}
-        -1.7038 \\
-        -3.1831 \\
-        2.0050  \\
-        4.0100
-    \end{bmatrix}.
+        -1,7038 \\
+        -3,1831 \\
+        2,0050  \\
+        4,0100
+    \end{bmatrix}\text{.}
 \end{equation}
 
 \subsubsection{Espaço de Estado no domínio de tempo discreto}
@@ -152,9 +166,9 @@ A versão em tempo discreto para a representação em espaço de estados definid
 \begin{subequations}
     \label{eq:espaco-de-estados-discreto}
     \begin{align}
-        \mathbf{x}[k+1] &= \mathbf{\tilde{A}}\mathbf{x}[k] + \mathbf{\tilde{B}}\mathbf{u}[k]
-        \label{eq:estimativa-do-vetor-de-estados}\\
-        \mathbf{y}[k] &= \mathbf{\tilde{C}}\mathbf{x}[t] + \mathbf{\tilde{D}}\mathbf{u}[k]
+        \mathbf{x}[k+1] & = \mathbf{\tilde{A}}\mathbf{x}[k] + \mathbf{\tilde{B}}\mathbf{u}[k]
+        \label{eq:estimativa-do-vetor-de-estados}                                             \\
+        \mathbf{y}[k]   & = \mathbf{\tilde{C}}\mathbf{x}[t] + \mathbf{\tilde{D}}\mathbf{u}[k]
         \label{eq:saida-do-sistema-em-espaco-de-estados-discreto}
     \end{align}
 \end{subequations} que segundo \citeonline{Chen2006}, a relação entre as
@@ -163,10 +177,10 @@ matrizes de tempo continuo e discreto é dado como
 \begin{equation*}
     \mathbf{\tilde{A}} = e^{\mathbf{A}T},
     \thickspace
-    \mathbf{\tilde{B}} = \int_{0}^{T}e^{A\tau}d\tau \mathbf{B},
+    \mathbf{\tilde{B}} = \int_{0}^{T}e^{\mathbf{A}\tau}d\tau \mathbf{B},
     \thickspace
     \mathbf{\tilde{C}} = \mathbf{C}
-    \thickspace e \thickspace
+    \thickspace \text{e} \thickspace
     \mathbf{\tilde{D}} = \mathbf{D},
 \end{equation*} em que $T$ é o período de amostragem do sistema de controle
 amostrado. Observa-se portanto que é necessário definir um período de amostragem
@@ -174,63 +188,315 @@ adequado para ter a realização do modelo \ref{eq:matriz-de-fts} em espaço de
 estados de tempo discreto.
 
 O critério para definição do tempo de amostragem foi igual ao utilizado no
-desafio 4 de projetos no tempo discreto (seção
+desafio 4 de projeto de controladores no tempo discreto (seção
 \ref{sub:simulacoes-realizadas-desafio4}). Entretanto, o modelo em questão é
 multivariável. Considerando então, que $\mathbf{W}$ é uma matriz cujo elementos
 $w_{ij}$ é a frequência de corte de cada função de transferência $g_{ij}$ de
 $\mathbf{G}(s)$, optou-se por aplicar o critério na máxima frequência de corte,
 ou seja $w_a = 30\times\max(\mathbf{W})$, em que $w_a$ é a frequência de
-amostragem em $rad/s$. Esta abordagem é conservadora, pois os sistemas cuja a
+amostragem em rad/s. Esta abordagem é conservadora, pois os sistemas cuja a
 frequência de corte $w_c < \max(\mathbf{W})$ por si só irão atenuar sinais de
 alta frequências, e então estes sinais não contribuirão significativamente em
 suas respostas. Ou de forma matemática, se $w_a = 30\times\max(\mathbf{W})$,
 logo o critério de $30\times$ será válido para as demais plantas. Assim,
-obteve-se a matriz $W$ conforme \ref{eq:matriz-das-frequencias-de-corte}.
-Observa-se que $w_{21} = 0$. Foi atribuído o valor zero pois $\mod{g_{21}(0)} <
--3$dB, e esta atribuição não compromete o critério da definição do período de
-amostragem.
+obteve-se a matriz $\mathbf{W}$ conforme
+\ref{eq:matriz-das-frequencias-de-corte}. Percebe-se que $w_{21} = 0$ pois
+$|g_{21}(0)| < -3$dB e esta atribuição não compromete o critério da
+definição do período de amostragem.
 
 \begin{equation}
     \label{eq:matriz-das-frequencias-de-corte}
-    \mathbf{W} = 
-        \begin{bmatrix}
-            0,2646 & 0,0516\\ 
-            0 & 0,1871
-        \end{bmatrix}
+    \mathbf{W} =
+    \begin{bmatrix}
+        0,2646 & 0,0516 \\
+        0      & 0,1871
+    \end{bmatrix}
 \end{equation}
 
 Portanto, $\max(\mathbf{W}) = 0,2646$ rad/s, o que resultou, após
 arrendondamento, num período de amostragem $T_a = 0,75$s.
 
-Novamente com o auxílio da função \textit{ss} do Octave, mas agora passando o
-período de amostragem como argumento, chegou-se as seguintes matrizes
-
-ALTERAR VALORES DA MATRIZ B E C!!!!
+Novamente com o auxílio da função \textit{ss} do Octave, mas agora convertendo
+as matrizes para realização em espaço de estados de tempo discreto utilizando a
+função \textit{c2d} passando como argumento período de amostragem definido,
+chegou-se nas seguintes matrizes:
 
 \begin{subequations}
     \label{eq:matrizes-do-espaco-de-estados-discretizadas}
     \begin{align}
-        \mathbf{\tilde{A}} &= 
+        \mathbf{\tilde{A}} & =
         \begin{bmatrix}
-            -0.4986  &   0        &  1.9513  &   -0 \\
-            0        &   -0.4986  &  0       &   -1.9513    \\
-            -0.8668  &   0        &  2.1136  &   -0 \\
-            0        &   0.8668   &  -0      &    2.1136         
-        \end{bmatrix},  \label{eq:matriz-til-a} \\
-        \mathbf{\tilde{B}} &=
+            \label{eq:matriz-til-a}
+            1,0179 & 0       & 0,069961 & 0      \\
+            0       & 1,0179 & 0      & 0,069961 \\
+            -0,42613 & 0       & 0,59712 & 0      \\
+            0       & -0,42613  & 0     & 0,59712
+        \end{bmatrix}\text{,} \\
+        \mathbf{\tilde{B}} & =
         \begin{bmatrix}
-            -0.0849 & -0.2333  \\
-            -0.3111 & -0.1131  \\
-            0       &  0.3007  \\
-            0.4010  &  0
-        \end{bmatrix},  \label{eq:matriz-til-b} \\
-        \mathbf{\tilde{C}} &=
-        \begin{bmatrix}
-            0    &    0  &      0  & 0.4988  \\
-            0    &    0  & 0.4988  & 0
-        \end{bmatrix}   \label{eq:matriz-til-c}
+            \label{eq:matriz-til-b}
+            -0,064403   & -0,16861  \\
+            -0,22481    & -0,08587  \\
+            0,014608    &  0,21731  \\
+            0,28975     & 0,019477
+        \end{bmatrix}\text{,} \\
+        \mathbf{\tilde{C}} &= \mathbf{C} \\
+        \mathbf{\tilde{D}} &= \mathbf{D}
     \end{align}
 \end{subequations}
+
+Com a definição destas matrizes é possível definir os estados de equilíbrio dado
+o vetor do sinal de controle em equilíbrio
+\ref{eq:vetor-do-controle-de-equilibrio}. Salienta-se entretanto que para o
+tempo discreto, o estado de equilíbrio é alcançado quando o estado atual é igual
+ao estado anterior, ou de forma algébrica, a partir de
+\ref{eq:estimativa-do-vetor-de-estados},
+
+\begin{equation}
+    \label{eq:calculo-dos-estados-de-equilibrio-em-tempo-discreto}
+    \mathbf{\tilde{x}}_{eq} = \mathbf{\tilde{A}}\mathbf{\tilde{x}}_{eq} + \mathbf{\tilde{B}}\mathbf{u}_{eq}
+    \Rightarrow
+    \mathbf{\tilde{x}}_{eq} = (\mathbf{I}-\mathbf{\tilde{A}})^{-1}\mathbf{\tilde{B}}\mathbf{u}_{eq}.
+\end{equation} Portanto, substituindo \ref{eq:vetor-do-controle-de-equilibrio},
+\ref{eq:matriz-til-a} e \ref{eq:matriz-til-b} em
+\ref{eq:calculo-dos-estados-de-equilibrio-em-tempo-discreto}, chegou-se ao mesmo
+resultado de tempo contínuo conforme \ref{eq:estados-de-equilibrio}. O mesmo
+aconteceu para a saída $\mathbf{\tilde{y}}_{eq} =
+\mathbf{\tilde{C}}\mathbf{\tilde{x}}_{eq}$, o que é coerente já que
+$\mathbf{\tilde{x}}_{eq} = \mathbf{x}_{eq}$ e $\mathbf{\tilde{C}} = \mathbf{C}$.
+
+\subsubsection{Regulação em torno do ponto de equilíbrio}
+\label{subsub:regulacao-em-torno-do-ponto-de-equilibrio}
+
+As seções anteriores abordaram a análise do estado de equilíbrio assumindo que o
+sistema já estava na sua condição de equilíbrio. Entretanto, para levar o sistema
+ao equilíbrio é preciso aplicar uma ação de controle de regulação em torno do
+ponto de equilíbrio, dada por
+
+\begin{equation}
+    \label{eq:acao-de-controle-em-torno-do-ponto-de-equilibrio}
+    \mathbf{u}(kT_a) = -\mathbf{\tilde{K}}[\mathbf{x}(kT_a) - \mathbf{x_{eq}}]+\mathbf{u}_{eq}, 
+    \thickspace k = 0, 1, 2, ..., n.
+\end{equation}
+
+Substituindo \ref{eq:acao-de-controle-em-torno-do-ponto-de-equilibrio} em
+\ref{eq:estimativa-do-vetor-de-estados}, já que $u[k] := u(kT_a)$ e $x[k] :=
+x(kT_a)$, o novo polinômio característico é dado por
+det($z\mathbf{I}-\mathbf{\tilde{A}}-\mathbf{\tilde{B}}\mathbf{\tilde{K}}$) e
+portanto os polos do sistema discreto podem ser modificados para um valor
+desejável. Entretanto, isto só é válido se o sistema for controlável, isto é, a
+matriz de controlabilidade $\mathbf{\tilde{U}}$ dado por
+\ref{eq:matriz-de-controlabilidade-de-tempo-discreto} tem todas as linhas
+linearmente independentes.
+
+\begin{equation}
+    \label{eq:matriz-de-controlabilidade-de-tempo-discreto}
+    \mathbf{\tilde{U}} = [
+    \mathbf{\tilde{B}}
+    \thickspace
+    \mathbf{\tilde{A}\tilde{B}} 
+    \thickspace
+    \mathbf{\tilde{A}}\negthinspace^{2}\mathbf{\tilde{B}}
+    \thickspace
+    \mathbf{\tilde{A}}\negthinspace^{3}\mathbf{\tilde{B}}]
+\end{equation}
+
+A aplicação das matrizes \ref{eq:matriz-til-a} e \ref{eq:matriz-til-b} em
+\ref{eq:matriz-de-controlabilidade-de-tempo-discreto} resulta em uma matriz
+$\mathbf{\tilde{U}}$ cujo posto é igual 4, que é a mesma ordem do sistema e,
+portanto, todas as linhas são linearmente independentes. Assim, todos os
+autovalores podem ser definidos escolhendo um $\mathbf{\tilde{K}}$ adequado.
+
+A definição do valor de $\mathbf{\tilde{K}}$ foi realizada através de um método
+de alocação de autovalores em espaço de estados. Existem vários métodos na
+literatura em que usam uma transformação linear de similaridade para facilitar o
+cálculo do ganho $\mathbf{\tilde{K}}$. Alguns destes métodos já são
+disponibilizados computacionalmente em funções, como é o caso da função
+\textit{place} do Octave/Matlab. Dado então o requisito de que os autovalores de
+malha fechada de tempo discreto, ou seja os autovalores da matriz
+$\mathbf{\tilde{A} - \tilde{B}\tilde{K}}$ devem ser $\lambda_i =
+e^{\frac{-T_a}{4}}$ para $i = 1, 2, 3$ e $4$, em que dado $T_a = 0,75$s,
+$\lambda_i = 0,8290$. Utilizando portanto a função \textit{place} tendo como
+argumento as matrizes $\mathbf{\tilde{A}}$ e $\mathbf{\tilde{B}}$ e o vetor
+$\mathbf{\lambda}$ contendo os autovalores desejáveis $\lambda_i$, foi obtida a
+matriz de ganhos
+
+\begin{equation}
+    \label{eq:matriz-de-ganhos-discreto}
+    \mathbf{\tilde{K}} = 
+    \begin{bmatrix}
+        1,663191 & -0,464388 &  1,058965 & -0,045131    \\
+        0,594665 &  1,418127 &  0,522660 &  1,167112
+    \end{bmatrix}.
+\end{equation}
+
+O resultado da simulação da realização em espaço de estados dado o
+$\mathbf{\tilde{K}}$ encontrado é mostrado na Figura
+\ref{fig:resultado-do-regulador-via-realimentacao-de-estados}. Percebe-se nesta
+figura que o sistema atinge seu valor de equilíbrio dado por $\mathbf{u}_{eq} =
+[0,8730 \thickspace 0,3175]^\top$ e $\mathbf{y}_{eq} = [2 \thickspace 1]^\top$.
+Repara-se também a presença de um sobressinal. Como o sistema em questão trata
+de dois tanques interconectados, a interação entre suas dinâmicas faz surgir
+zeros que alteram de forma significativa a saída do sistema, mesmo com
+autovalores reais, o que explica o sobressinal nas respostas $y_1(t)$ e $y_1(t)$
+obtidas.
+
+\begin{figure}[!htp]
+    \caption{Saídas e sinais de controle do sistema MIMO de tanques
+    interconectados utilizando regulação via realimentação de estados.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-do-regulador-via-realimentacao-de-estados}
+    \begin{minipage}{\linewidth}
+        \input{chapters/challenge6/images/resultado-questao-7.tex}
+    \end{minipage}
+\end{figure}
+
+\subsubsection{Rejeição de perturbações e seguimento de referência}
+\label{subsub:rejeicao-de-perturbacoes-e-seguimento-de-referencia}
+
+Na subseção anterior foi abordado a regulação do sistema MIMO de tanques
+interconectados para um ponto de equilíbrio utilizando realimentação de estados.
+Embora esta abordagem tenha funcionado de forma teórica, na prática ela pode
+levar a comportamentos indesejáveis devidos a erros de modelagem, perturbações
+externas e ruídos. Uma das soluções para estes possíveis problemas é a
+utilização da ação integral no controle da realimentação de estados, tópico
+desta seção.
+
+A ação de integração é alcançada fazendo aparecer no espaço de estados um
+dinâmica interna, tal que a realização em espaços de estados de tempo discreto
+\ref{eq:espaco-de-estados-discreto} torna-se a versão aumentada
+
+\begin{equation}
+    \label{eq:espaco-de-estados-discreto-aumentado}
+    \begin{bmatrix}
+        \Delta x[k]\\ 
+        y[k+1]
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        \mathbf{\tilde{A}} & \mathbf{\bar{0}}\\ 
+        \mathbf{\tilde{C}}\mathbf{\tilde{A}} & \mathbf{I}
+    \end{bmatrix}
+    \begin{bmatrix}
+        \Delta x[k]\\ 
+        y[k]
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+        \mathbf{\tilde{B}}\\ 
+        \mathbf{\tilde{C}}\mathbf{\tilde{A}}
+    \end{bmatrix}
+    \Delta \mathbf{u}[k]
+\end{equation} e então as matrizes aumentadas são reescritas como
+
+\begin{subequations}
+    \begin{align}
+        \mathbf{\bar{A}} &=
+        \begin{bmatrix}
+            \label{eq:matriz-aumentada-a}
+            \mathbf{\tilde{A}} & \mathbf{\bar{0}}\\ 
+            \mathbf{\tilde{C}}\mathbf{\tilde{A}} & \mathbf{I}
+        \end{bmatrix}   \\
+        \mathbf{\bar{B}} &=
+        \begin{bmatrix}
+            \label{eq:matriz-aumentada-b}
+            \mathbf{\tilde{B}}\\ 
+            \mathbf{\tilde{C}}\mathbf{\tilde{B}}
+        \end{bmatrix}
+    \end{align}
+\end{subequations} em que para a realização de estados para o problema em
+questão a ordem de $\mathbf{\bar{A}}$ é $6 \times 6$ e de $\mathbf{\bar{B}}$ é
+$6 \times 2$. Portanto, substituindo \ref{eq:matriz-til-a},
+\ref{eq:matriz-til-b} e \ref{eq:matriz-c} em \ref{eq:matriz-aumentada-a} e
+\ref{eq:matriz-aumentada-b}, chegou-se as matrizes:
+
+\begin{subequations}
+        \begin{equation}
+            \label{eq:matriz-aumentanda-a-com-valores}
+            \mathbf{\bar{A}} =
+            \begin{bmatrix}
+                1,0179  &  0       &  0,0700  &  0       & 0       & 0      \\
+                0       &  1,0179  &  0       &  0,0700  & 0       & 0      \\
+                -0,4261 &  0       &  0,5971  &  0       & 0       & 0      \\
+                0       &  -0,4261 &  0       &  0,5971  & 0       & 0      \\
+                0       &  -0,2125 &  0       &  0,2978  & 1       & 0      \\
+                -0,2125 &  0       &  0,2978  &  0       & 0       & 1
+            \end{bmatrix}
+        \end{equation}    
+        \begin{equation}
+            \label{eq:matriz-aumentanda-b-com-valores}
+            \mathbf{\bar{B}} =
+            \begin{bmatrix}
+                -6.4403e^{-02} & -1.6861\times10^{-01} \\
+                -2.2481e^{-01} & -8.5870\times10^{-02} \\
+                1.4608e^{-02} &  2.1731\times10^{-01}  \\
+                2.8975e^{-01} &  1.9477\times10^{-02}  \\
+                1.4451e^{-01} &  9.7144\times10^{-03}  \\
+                7.2858e^{-03} &  1.0838\times10^{-01}
+            \end{bmatrix}
+        \end{equation}
+\end{subequations}
+
+\begin{equation}
+    \mathbf{\bar{A}} =
+    \begin{bmatrix}
+        1,0179 &  0,0000 & 0,0700 &  0,0000 &  0,0000 &   0,0000 \\
+        0,0000 &  1,0179 & 0,0000 &  0,0700 &  0,0000 &   0,0000 \\
+        -0,4261 &  0,0000 & 0,5971 & 0,0000 &  0,0000 &   0,0000 \\
+        0,0000 & -0,4261 & 0,0000 &  0,5971 &  0,0000 &   0,0000 \\
+        0,0000 & -0,2125 & 0,0000 &  0,2978 &  1,0000 &   0,0000 \\
+        -0,2125 &  0,0000 & 0,2978 &  0,0000 & 0,0000 &  1,0000
+    \end{bmatrix}
+\end{equation}
+
+Sabida a realização aumentada em espaço de estados acima, foi
+utilizada a ação de controle
+
+\begin{equation}
+    \label{eq:acao-de-controle-com-integrador}
+    \mathbf{u}[k] = \mathbf{u}[k-1] - \mathbf{K}_x(\mathbf{x}[k]-\mathbf{x}[k-1])+\mathbf{K}_i(\mathbf{y}_r[k]-\mathbf{y}[k])
+\end{equation} em que a representação $\mathbf{v}[k] := \mathbf{v}(kT_a)$ e
+$\mathbf{v}[k-1] := \mathbf{v}((k-1)T_a)$.
+
+Assim é possível novamente alocar os autovalores da matriz
+$\mathbf{\bar{A}}-\mathbf{\bar{B}}\mathbf{\bar{K}}$ sendo $\mathbf{\bar{K}} =
+[\mathbf{K}_x \thickspace \mathbf{K}_i]$. Vale salientar, que a ordem do sistema
+foi aumentada para $n=6$ e, desta forma, são alocados agora 6 autovalores.
+Portanto, utilizando a função \textit{place} do Octave e considerando os 6
+autovalores repetidos $\lambda_i = 0,8290$, foram obtidas as matrizes de ganho
+
+\begin{subequations}
+    \label{eq:matrizes-de-ganho}
+    \begin{equation}
+        \label{eq:matriz-de-ganhos-kx}
+        \mathbf{K}_x =
+        \begin{bmatrix}
+            1.073066 & -0.786854 &  0.552769 & -0.022183   \\
+            -1.049138 &  0.804800 & -0.029577 &  0.414577
+        \end{bmatrix}
+    \end{equation}
+    \text{e}
+    \begin{equation}
+        \label{eq:matriz-de-ganhos-ki}
+        \mathbf{K}_i =
+        \begin{bmatrix}
+            0.131655 & -0.070216 \\
+            -0.052662 &  0.175540
+        \end{bmatrix}\text{.}
+    \end{equation}
+\end{subequations}
+
+\begin{figure}[!htp]
+    \caption{Saídas e sinais de controle do sistema MIMO de tanques
+    interconectados utilizando regulação via realimentação de estados.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-do-regulador-com-integrador}
+    \begin{minipage}{\linewidth}
+        \input{chapters/challenge6/images/resultado-questao-9.tex}
+    \end{minipage}
+\end{figure}
 
 \subsection{Conclusões}
 (Concluir em que medida os resultados apresentam relação com a motivação.
