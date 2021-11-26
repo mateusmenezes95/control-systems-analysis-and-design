@@ -44,15 +44,15 @@ yheld(:,1) = yt(:,1);
 k=1;
 
 if simulate_regulator
-    for i=2:length(sim.time)
-        xt(:,i) = a_euler*xt(:,i-1) + b_euler*ut(:,i-1);
-        xt_with_dist(:,i) = a_euler*xt_with_dist(:,i-1) + b_euler*ut_with_dist(:,i-1);
+    for i=1:length(sim.time)
+        xt(:,i+1) = a_euler*xt(:,i) + b_euler*ut(:,i);
+        xt_with_dist(:,i+1) = a_euler*xt_with_dist(:,i) + b_euler*ut_with_dist(:,i);
 
         yt(:,i) = gs_ss.c*xt(:,i);
         yt_with_dist(:,i) = gs_ss.c*xt_with_dist(:,i) + qy(:,i);
  
-        if (mod(i, integration_step_ratio) == 2) || i == 2
-            t1 = (i-2)*integration_step_size;
+        if (mod(i, integration_step_ratio) == 1) || i == 1
+            t1 = (i-1)*integration_step_size;
             t2 = (k-1)*sampling_period;
             
             xs(:,k) = xt(:,i);
@@ -62,9 +62,11 @@ if simulate_regulator
             k = k+1;
         endif
 
-        ut(:,i) = us(:,k-1);
-        ut_with_dist(:,i) = ut(:,i) + qu(:,i);
-        yheld(:, i) = ys(:,k-1);
+        if i != length(sim.time)
+            ut(:,i+1) = us(:,k-1);
+            ut_with_dist(:,i+1) = ut(:,i) + qu(:,i);
+            yheld(:, i+1) = ys(:,k-1);
+        endif
     endfor
     plot_mimo_response_and_control_signals(sim.time, figure_num = 1,
                                            yt, ut, ref, 'b', {'sem integrador'});
