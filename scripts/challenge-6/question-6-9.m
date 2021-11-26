@@ -55,10 +55,26 @@ if simulate_regulator
     endfor
 
     plot_mimo_response_and_control_signals(sim.time, figure_num = 1,
-                                           Y, U, 'b', {'sem integrador'});
-    % plot_mimo_references(sim.time, figure_num = 1, ref, {'ponto de equilibrio'})
+                                           Y, U, ref, 'b', {'sem integrador'});
+
+    fig_handle = figure(1);
+    set(fig_handle, 'units', 'points')
+    fig_pos_vec = get(fig_handle, 'position')
+    fig_pos_vec(3) = 400;
+    fig_pos_vec(4) = 250;
+    set(fig_handle, 'position', fig_pos_vec)
+
+    subplot(2,2,2)
+    legend('show')
+    set(legend, 'location', 'northoutside')
+    set(legend, 'orientation', 'horizontal')
+    legend({'equilibrio'})
+    legend_pos = get(legend, 'position');
+    legend_pos(4) = 0.044055;
+    set(legend, 'position', legend_pos);
+
     plot_mimo_response_and_control_signals(sim.time, figure_num = 2,
-                                           Yd, Ud, 'b', {'sem integrador'});
+                                           Yd, Ud, ref, 'b', {'sem integrador'});
 endif
 
 zero_bar = zeros(4,2);
@@ -95,6 +111,22 @@ if simulate_reference_follower
     endfor
 
     plot_mimo_response_and_control_signals(sim.time, figure_num = 2,
-                                           y(:,2:end), u, 
-                                           'r', {'sem integrador','com integrador'});
+                                           y(:,2:end), u, ref,
+                                           'r', {'sem integrador','com integrador'}, false);
+    
+    fig_handle = figure(2);
+    set(fig_handle, 'units', 'points')
+    fig_pos_vec = get(fig_handle, 'position')
+    fig_pos_vec(3) = 400;
+    fig_pos_vec(4) = 250;
+    set(fig_handle, 'position', fig_pos_vec)
+
+    subplot(2,2,1)
+    legend('show')
+    set(legend, 'location', 'northoutside')
+    set(legend, 'orientation', 'horizontal')
+    legend({'referencia', 'sem acao integral', 'com acao integral'})
+    legend_pos = get(legend, 'position');
+    legend_pos(1) = 0.25;
+    set(legend, 'position', legend_pos);
 endif

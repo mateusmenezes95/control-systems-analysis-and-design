@@ -98,11 +98,8 @@ function plot_signal (x, x_name,
 
     set(gca, 'fontsize', font_size)
 
-    hx = xlabel(x_name);
-    hy = ylabel(y_name);
-    legend('fontsize', font_size, 'location', 'southeast');
-    set(hx, 'fontsize', font_size)
-    set(hy, 'fontsize', font_size)
+    xlabel(x_name, 'fontsize', font_size);
+    ylabel(y_name, 'fontsize', font_size);
 end
 
 function plot_response_and_control_signals (sim_time, figure_num = 1,
