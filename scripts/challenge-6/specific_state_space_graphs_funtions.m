@@ -1,8 +1,11 @@
 run graphs_functions_script
 
+global line_thickness = 0.8;
+
+
 function plot_mimo_response_and_control_signals (sim_time, figure_num = 1,
                                                  y, u, reference, 
-                                                 line_color, legend_str, plot_ref = true)
+                                                 line_color, plot_ref = true)
     global font_size;
     global line_thickness;
     
@@ -48,3 +51,58 @@ function plot_mimo_response_and_control_signals (sim_time, figure_num = 1,
                 line_color, '')
     legend('off');
 end
+
+function set_figure_size(figure_num)
+    fig_handle = figure(figure_num);
+    set(fig_handle, 'units', 'points')
+    fig_pos_vec = get(fig_handle, 'position');
+    fig_pos_vec(3) = 400;
+    fig_pos_vec(4) = 250;
+    set(fig_handle, 'position', fig_pos_vec)
+endfunction
+
+function set_mimo_signals_graph_legend(figure_num, x_pos, legend_str)
+    set_figure_size(figure_num)
+
+    subplot(2,2,1)
+    legend('show')
+    set(legend, 'location', 'northoutside')
+    set(legend, 'orientation', 'horizontal')
+    legend(legend_str)
+    legend_pos = get(legend, 'position');
+    legend_pos(1) = x_pos;
+    set(legend, 'position', legend_pos);
+endfunction
+
+function plot_mimo_states_estimation_error(num_samples, err, line_color, figure_num)
+    k = 0:(num_samples - 1);
+
+    global font_size;
+    global line_thickness;
+
+    set_figure_size(figure_num)
+
+    for i=1:4
+        subplot(2,2,i)
+        stem(k, err(i,:), 'color', line_color, 'linewidth', (line_thickness - 0.7), 'marker', 'none')
+        ylabel(['Erro $e_' num2str(i) '[k]$'], 'fontsize', font_size);
+        xlabel('Amostra [k]', 'fontsize', font_size);
+        xlim([0 k(end)])
+        ylim([1.2*min(err(i,:)) 1.2*max(err(i,:))])
+    endfor
+endfunction
+
+function plot_mimo_output_estimation_error(sim_time, err, line_color, figure_num)
+    set_figure_size(figure_num)
+
+    for i=1:2
+        subplot(2,1,i)
+        i_str = num2str(i);
+        plot_signal(sim_time, 'Tempo (s)',
+                    err(i,:), ['Saida $y_' i_str '(t) - \hat{y}_' i_str '(t)$'],
+                    line_color,'')
+        ylim([1.2*min(err(i,:)) 1.2*max(err(i,:))])
+        legend('off')
+        hold on
+    endfor
+endfunction

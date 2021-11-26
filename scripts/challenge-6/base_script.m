@@ -70,6 +70,7 @@ integration_step_ratio = 30;
 integration_step_size = sampling_period/integration_step_ratio;
 end_time = 140;
 sim = get_sim_time (integration_step_size, ceil(end_time/sampling_period)*sampling_period);
+sim_time_length = length(sim.time);
 
 % =============================================================================
 % Input signals
