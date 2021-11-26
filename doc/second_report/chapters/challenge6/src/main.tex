@@ -73,7 +73,11 @@ o sinal de controle de equilíbrio
 
 \begin{equation}
     \label{eq:vetor-do-controle-de-equilibrio}
-    \mathbf{u}_{eq} = [0,8730 \thickspace 0,3175]^\top.
+    \mathbf{u}_{eq} =
+    \begin{bmatrix}
+        0,8730 \\
+        0,3175
+    \end{bmatrix}
 \end{equation}
 
 \subsubsection{Espaço de Estados no domínio de tempo continuo}
@@ -235,10 +239,10 @@ chegou-se nas seguintes matrizes:
         \mathbf{\tilde{B}} & =
         \begin{bmatrix}
             \label{eq:matriz-til-b}
-            -0,064403   & -0,16861  \\
-            -0,22481    & -0,08587  \\
-            0,014608    &  0,21731  \\
-            0,28975     & 0,019477
+            -0,0644 & -0,1686  \\
+            -0,2248 & -0,0859  \\
+            0,0146  & 0,2173   \\
+            0,2897  & 0,0195
         \end{bmatrix}\text{,} \\
         \mathbf{\tilde{C}} &= \mathbf{C} \\
         \mathbf{\tilde{D}} &= \mathbf{D}
@@ -325,8 +329,8 @@ matriz de ganhos
     \label{eq:matriz-de-ganhos-discreto}
     \mathbf{\tilde{K}} = 
     \begin{bmatrix}
-        1,663191 & -0,464388 &  1,058965 & -0,045131    \\
-        0,594665 &  1,418127 &  0,522660 &  1,167112
+        1,6632 & -0,4644 & 1,0590 & -0,0451    \\
+        0,5947 & 1,4181 &  0,5227 & 1,1671
     \end{bmatrix}.
 \end{equation}
 
@@ -428,27 +432,15 @@ $6 \times 2$. Portanto, substituindo \ref{eq:matriz-til-a},
             \label{eq:matriz-aumentanda-b-com-valores}
             \mathbf{\bar{B}} =
             \begin{bmatrix}
-                -6.4403e^{-02} & -1.6861\times10^{-01} \\
-                -2.2481e^{-01} & -8.5870\times10^{-02} \\
-                1.4608e^{-02} &  2.1731\times10^{-01}  \\
-                2.8975e^{-01} &  1.9477\times10^{-02}  \\
-                1.4451e^{-01} &  9.7144\times10^{-03}  \\
-                7.2858e^{-03} &  1.0838\times10^{-01}
+                -0,0644 & -0,1686 \\
+                -0,2248 & -0,0859 \\
+                0,0146 &  0,2173  \\
+                0,2897 &  0,0195  \\
+                0,1445 &  0,0097  \\
+                0,0073 &  0,1084
             \end{bmatrix}
         \end{equation}
 \end{subequations}
-
-\begin{equation}
-    \mathbf{\bar{A}} =
-    \begin{bmatrix}
-        1,0179 &  0,0000 & 0,0700 &  0,0000 &  0,0000 &   0,0000 \\
-        0,0000 &  1,0179 & 0,0000 &  0,0700 &  0,0000 &   0,0000 \\
-        -0,4261 &  0,0000 & 0,5971 & 0,0000 &  0,0000 &   0,0000 \\
-        0,0000 & -0,4261 & 0,0000 &  0,5971 &  0,0000 &   0,0000 \\
-        0,0000 & -0,2125 & 0,0000 &  0,2978 &  1,0000 &   0,0000 \\
-        -0,2125 &  0,0000 & 0,2978 &  0,0000 & 0,0000 &  1,0000
-    \end{bmatrix}
-\end{equation}
 
 Sabida a realização aumentada em espaço de estados acima, foi
 utilizada a ação de controle
@@ -487,9 +479,31 @@ autovalores repetidos $\lambda_i = 0,8290$, foram obtidas as matrizes de ganho
     \end{equation}
 \end{subequations}
 
+A substituição das matizes de ganhos \ref{eq:matrizes-de-ganho} na ação de
+controle \ref{eq:acao-de-controle-com-integrador} resultou no comportamento do
+sistema ilustrado na Figura \ref{fig:resultado-do-regulador-com-integrador}.
+Nesta figura foi inserida também o comportamento do sistema sem ação de
+integração a título de comparação. Observa-se que o tempo de acomodação para o
+controlador com ação integral é significativamente superior a regulação com
+ganho estático. Entretanto, para perturbações na saída $\mathbf{q}_{y}(t) =
+0,2\mathbf{\mathds{1}}(t-50)$ e na entrada $\mathbf{q}_{u}(t) =
+0,2\mathbf{\mathds{1}}(t-100)$, fica evidente a rejeição de perturbação para o
+sistema com integrador, o que está de acordo com o Princípio do Modelo Interno.
+Por outro lado, nota-se que o regulador com ganho estático não rejeitou ambas
+perturbações. De forma conceitual, as perturbações não alteram os estados já que
+elas aparecem diretamente na saída e entrada do sistema e não internamente ao
+sistema. Desta forma, como o regulador por realimentação de estados utiliza
+apenas o vetor de estados para levar o sistema ao ponto de equilíbrio desejável,
+as perturbações não são identificadas e, portanto, não podem ser rejeitadas. Em
+contrapartida, o regulador com integrador utiliza tantos os estados quanto a
+saída do sistema e assim é possível identificar as perturbações e rejeitá-las.
+Estas duas afirmações ficam evidentes analisando as equações
+\ref{eq:acao-de-controle-em-torno-do-ponto-de-equilibrio} e
+\ref{eq:acao-de-controle-com-integrador}. 
+
 \begin{figure}[!htp]
-    \caption{Saídas e sinais de controle do sistema MIMO de tanques
-    interconectados utilizando regulação via realimentação de estados.}
+    \caption{Comparação dos sinais de controle e saída do sistema utilizando
+    regulação via realimentação de estados e regulação com ação integral.}
     \vspace{-10pt}
     \hspace{-30pt}
     \label{fig:resultado-do-regulador-com-integrador}
