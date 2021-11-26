@@ -5,61 +5,73 @@ simulate_regulator = true;
 simulate_reference_follower = true;
 
 for i=1:4
-    desirable_eigenvalues(i) = e^(-sampling_period/4);
+    desirable_ctrb_eigenvalues(i) = e^(-sampling_period/4);
+    desirable_obsv_eigenvalues(i) = e^(-sampling_period/2);
 endfor
 
-kd = place(gz_ss.A, gz_ss.B, desirable_eigenvalues)
+kd = place(gz_ss.A, gz_ss.B, desirable_ctrb_eigenvalues);
+ld = place(gz_ss.A', gz_ss.C', desirable_obsv_eigenvalues)';
 
 % Initial contidions
 xk0 = zeros(size(xeq_continue));
+xk0_est = xk0 .+ 0.01;
 
 a_euler = eye(size(gs_ss.A))+(integration_step_size*gs_ss.A);
 b_euler = integration_step_size*gs_ss.B;
 
-gs_ss_for_euler = ss(a_euler, b_euler, gs_ss.c, gs_ss.d)
+a_minus_lc = gs_ss.a - ld*gs_ss.c;
+a_minus_lc_euler = eye(size(a_minus_lc))+(integration_step_size*a_minus_lc);
+
+gs_ss_for_euler = ss(a_euler, b_euler, gs_ss.c, gs_ss.d);
+obsv_ss_for_euler = ss(a_minus_lc, b_euler, gs_ss.c, gs_ss.d);
 
 % Regulator action
 ueq = ueq.*unit_step(1:2,:);
 yr = yeq.*unit_step(1:2,:);
 ref = [yr; ueq];
+
+% Initial conditions
+xt(:,1) = xk0;
+xt_with_dist(:,1) = xk0;
+
+ut(:,1) = [0;0];
+ut_with_dist(:,1) = ut(:,1) + qu(:,1);
+
+yt(:,1) = gs_ss.c*xt(:,1);
+yt_with_dist(:,1) = gs_ss.c*xt(:,1) + qy(:,1);
+
+yheld(:,1) = yt(:,1);
+k=1;
+
 if simulate_regulator
-    for k=1:length(sim.time)
-        if (mod(k, integration_step_ratio) == 1)
-            t = (k-1)*integration_step_size;
-            if k == 1
-                uk = -kd*(xk0 - xeq_discrete.*unit_step(:,k)) + ueq(:,k);
-            else
-                uk = -kd*(xk - xeq_discrete.*unit_step(:,k)) + ueq(:,k);
-            endif
-        endif
-        ukd = uk + qu(:,k);
+    for i=2:length(sim.time)
+        xt(:,i) = a_euler*xt(:,i-1) + b_euler*ut(:,i-1);
+        xt_with_dist(:,i) = a_euler*xt_with_dist(:,i-1) + b_euler*ut_with_dist(:,i-1);
 
-        if k == 1
-            [xk, yk] = get_ss_output(xk0, gs_ss_for_euler, uk);
-            [xkd, ykd] = get_ss_output(xk0, gs_ss_for_euler, ukd);
-            Y = yk;
-            Yd = ykd + qy(:,k);
-            U = uk;
-            Ud = ukd;
-            X = xk;
-        else
-            [xk, yk] = get_ss_output(xk, gs_ss_for_euler, uk);
-            [xkd, ykd] = get_ss_output(xkd, gs_ss_for_euler, ukd);
-            Y = [Y yk];
-            ykd = ykd + qy(:,k); 
-            Yd = [Yd ykd];
-            U = [U uk];
-            Ud = [Ud ukd];
-            X = [X xk];
+        yt(:,i) = gs_ss.c*xt(:,i);
+        yt_with_dist(:,i) = gs_ss.c*xt_with_dist(:,i) + qy(:,i);
+ 
+        if (mod(i, integration_step_ratio) == 2) || i == 2
+            t1 = (i-2)*integration_step_size;
+            t2 = (k-1)*sampling_period;
+            
+            xs(:,k) = xt(:,i);
+            ys(:,k) = yt(:,i);
+            us(:,k) = -kd*(xs(:,k) - xeq_discrete.*unit_step(:,i)) + ueq(:,i);
+
+            k = k+1;
         endif
+
+        ut(:,i) = us(:,k-1);
+        ut_with_dist(:,i) = ut(:,i) + qu(:,i);
+        yheld(:, i) = ys(:,k-1);
     endfor
-
     plot_mimo_response_and_control_signals(sim.time, figure_num = 1,
-                                           Y, U, ref, 'b', {'sem integrador'});
+                                           yt, ut, ref, 'b', {'sem integrador'});
 
     fig_handle = figure(1);
     set(fig_handle, 'units', 'points')
-    fig_pos_vec = get(fig_handle, 'position')
+    fig_pos_vec = get(fig_handle, 'position');
     fig_pos_vec(3) = 400;
     fig_pos_vec(4) = 250;
     set(fig_handle, 'position', fig_pos_vec)
@@ -74,16 +86,17 @@ if simulate_regulator
     set(legend, 'position', legend_pos);
 
     plot_mimo_response_and_control_signals(sim.time, figure_num = 2,
-                                           Yd, Ud, ref, 'b', {'sem integrador'});
+                                           yt_with_dist, ut_with_dist, ref,
+                                           'b', {'sem integrador'});
 endif
 
 zero_bar = zeros(4,2);
 idty = eye(2,2);
 a_bar = [gz_ss.a zero_bar; gz_ss.c*gz_ss.a idty];
 b_bar = [gz_ss.b; gz_ss.c*gz_ss.b];
-desirable_eigenvalues = [desirable_eigenvalues desirable_eigenvalues(1:2)];
+desirable_ctrb_eigenvalues = [desirable_ctrb_eigenvalues desirable_ctrb_eigenvalues(1:2)];
 
-k_bar = place(a_bar , b_bar , desirable_eigenvalues);
+k_bar = place(a_bar , b_bar , desirable_ctrb_eigenvalues);
 kx = k_bar(:,1:4);
 ki = k_bar(:,5:6);
 
@@ -116,7 +129,7 @@ if simulate_reference_follower
     
     fig_handle = figure(2);
     set(fig_handle, 'units', 'points')
-    fig_pos_vec = get(fig_handle, 'position')
+    fig_pos_vec = get(fig_handle, 'position');
     fig_pos_vec(3) = 400;
     fig_pos_vec(4) = 250;
     set(fig_handle, 'position', fig_pos_vec)
