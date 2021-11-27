@@ -374,7 +374,7 @@ dinâmica interna, tal que a realização em espaços de estados de tempo discre
 \begin{equation}
     \label{eq:espaco-de-estados-discreto-aumentado}
     \begin{bmatrix}
-        \Delta x[k]\\ 
+        \Delta x[k+1]\\ 
         y[k+1]
     \end{bmatrix}
     =
@@ -479,7 +479,7 @@ autovalores repetidos $\lambda_i = 0,8290$, foram obtidas as matrizes de ganho
     \end{equation}
 \end{subequations}
 
-A substituição das matizes de ganhos \ref{eq:matrizes-de-ganho} na ação de
+A substituição das matrizes de ganhos \ref{eq:matrizes-de-ganho} na ação de
 controle \ref{eq:acao-de-controle-com-integrador} resultou no comportamento do
 sistema ilustrado na Figura \ref{fig:resultado-do-regulador-com-integrador}.
 Nesta figura foi inserida também o comportamento do sistema sem ação de
@@ -499,16 +499,139 @@ contrapartida, o regulador com integrador utiliza tantos os estados quanto a
 saída do sistema e assim é possível identificar as perturbações e rejeitá-las.
 Estas duas afirmações ficam evidentes analisando as equações
 \ref{eq:acao-de-controle-em-torno-do-ponto-de-equilibrio} e
-\ref{eq:acao-de-controle-com-integrador}. 
+\ref{eq:acao-de-controle-com-integrador}.
+
+\subsubsection{Rejeição de perturbações e seguimento de referência com observador}
+\label{subsub:controlador-utilizando-observador-de-estados}
+
+Nos tópicos anteriores foi abordado o projeto de controladores em espaço de
+estados considerando que todos os estados são mensurados. Entretanto, em
+situações práticas de engenharia, ter todos os estados mensuráveis significa
+maior custo com a aquisição de sensores. Além disso, em alguns sistemas, como os
+aeroespaciais, os estados não são nem sequer mensuráveis diretamente por
+sensores. Desta forma, torna-se necessário estimar os estados do sistema
+utilizando observadores de estados. Portanto, foi realizado também simulações
+para o sistema \ref{eq:matriz-de-fts} utilizando o observador de Luenberger.
+
+Para o presente projeto foi considerado que a estimação dos estados em tempo
+discreto é dada por
+
+\begin{equation}
+    \label{eq:estimacao-do-estado-tempo-discreto}
+    \mathbf{\hat{x}}[k+1] = \mathbf{\tilde{A}}\mathbf{\hat{x}}[k]
+                            + \mathbf{\tilde{B}}\mathbf{u}[k]
+                            + \mathbf{\tilde{L}}(\mathbf{y}[k] - \mathbf{\hat{y}[k]})
+\end{equation} que considerando que o sinal de controle é calculado com base no
+vetor estimado, ou seja
+
+\begin{equation}
+    \label{eq:acao-de-conrole-com-estimador}
+    \mathbf{u}[k] = -\mathbf{\tilde{K}}\mathbf{\hat{x}}[k]\text{.}
+\end{equation} Considerando que existe um erro de estimação
+$\mathbf{e}[k] = \mathbf{x}[k] - \mathbf{\hat{x}}[k]$ que após substituições das
+equações \ref{eq:espaco-de-estados-discreto},
+\ref{eq:estimacao-do-estado-tempo-discreto} e \ref{eq:regulador-com-estimador}
+resulta na equação a diferenças homogênea
+
+\begin{equation}
+    \label{eq:erro-de-estimacao}
+    \mathbf{e}[k+1] = (\mathbf{\tilde{A}}-\mathbf{\tilde{L}}\mathbf{\tilde{C}})\mathbf{e}[k]
+\end{equation} em que os autovalores da matriz
+$\mathbf{\tilde{A}}-\mathbf{\tilde{L}}\mathbf{\tilde{C}}$ definem a velocidade
+de convergência do erro de estimação, que no caso em questão deseja-se a
+convergência para zero. Esta dinâmica de conversão pode ser modificada
+escolhendo adequadamente a matriz $\mathbf{\tilde{L}}$.
+
+Portanto, para o controle do sistema em estudo foi dado como requisito que os
+autovalores da matriz $\mathbf{\tilde{A}}-\mathbf{\tilde{L}}\mathbf{\tilde{C}}$
+sejam um $\sigma_i = e^{\frac{-T_a}{2}}$ para $i = 1, 2, 3$ e $4$ que resulta
+que com base no período de amostragem $T_a = 0,75$s em 4 autovalores $\sigma =
+0,6873$. Utilizando a propriedade que
+$(\mathbf{\tilde{A}}-\mathbf{\tilde{L}}\mathbf{\tilde{C}})^\top =
+\mathbf{\tilde{A}}^\top - \mathbf{\tilde{C}}^\top\mathbf{\tilde{L}}^\top$,
+chega-se no mesmo problema da definição do ganho $\mathbf{\tilde{K}}$ exposto na
+seção \ref{subsub:regulacao-em-torno-do-ponto-de-equilibrio}. Assim, utilizando
+novamente a função \textit{place} do Octave sendo os argumentos
+$\mathbf{\tilde{A}}^\top$, $\mathbf{\tilde{C}}^\top$ e $\mathbf{\sigma}$ foi
+obtido a matriz de ganhos
+
+\begin{equation}
+    \label{eq:matriz-de-ganhos-do-estimador}
+    \mathbf{\tilde{L}} =
+    \begin{bmatrix}
+        0.0000  & -0.3741   \\
+        -0.3741 & 0.0000    \\
+        -0.0000 & 0.4821    \\
+        0.4821  & -0.0000
+    \end{bmatrix}
+\end{equation}
+
+Aplicando a ação de controle \ref{eq:acao-de-conrole-com-estimador} considerando
+também conforme \ref{eq:acao-de-controle-em-torno-do-ponto-de-equilibrio} em que
+se deseja levar os estados para uma condição de equilíbrio fora da origem, foi
+obtido o resultado exibido na Figura \ref{fig:resultado-do-regulador-com-observador}.
 
 \begin{figure}[!htp]
+    \caption{Comparação dos sinais de controle e saída do sistema utilizando
+    regulação para ponto de equilíbrio com e sem observador.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:resultado-do-regulador-com-observador}
+    \begin{minipage}{\linewidth}
+        \input{chapters/challenge6/images/resultado-questao-9.tex}
+    \end{minipage}
+\end{figure}
+
+Na Figura \ref{fig:resultado-do-regulador-com-observador} é imperceptível a
+diferença das duas saídas do sistema fazendo a regulação com e sem o observador
+de Luenberger. Entretanto, considerando que a saída estimada é dada por
+$\mathbf{\hat{y}}(t) = \mathbf{C}\mathbf{\hat{x}}(t)$ foi possível gerar o erro
+entre a saída real e a saída estimada, que está demonstrado na Figura
+\ref{fig:erro-de-estimacao-de-estados-regulador-da-saida}. Percebe-se então
+através desta figura que há uma pequena variação da saída estimada para a saída
+real, porém, após aproximadamente 30s as saídas se igualam. Como trata-se de uma
+simulação, embora considerado que os estados não são mensuráveis, a título
+didático foi gerado também o erro da estimação dos estados, conforme Figura
+\ref{fig:erro-de-estimacao-de-estados-do-regulador-com-observador}. De acordo
+com o esperado, todos os erros convergem para zero após um período transitório
+que é ditado pelos autovalores da matriz
+$\mathbf{\tilde{A}}-\mathbf{\tilde{L}}\mathbf{\tilde{C}}$.
+
+\begin{figure}[!h]
+    \caption{Erro de estimação da saída do sistema utilizando regulador com
+    observador.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:erro-de-estimacao-de-estados-regulador-da-saida}
+    \begin{minipage}{\linewidth}
+        \input{chapters/challenge6/images/resultado-2-questao-10.tex}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[!h]
+    \caption{Erro de estimação dos estados utilizando regulador com observador.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:erro-de-estimacao-de-estados-do-regulador-com-observador}
+    \begin{minipage}{\linewidth}
+        \input{chapters/challenge6/images/resultado-1-questao-10.tex}
+    \end{minipage}
+\end{figure}
+
+Foi realizada também a simulação considerando perturbações na entrada e saída da
+planta. Como verificado na seção anterior, as perturbações só são rejeitadas com
+a adição da ação integral no projeto do controlador em espaço de estados. Em
+virtude disso, para análise do observador na presença de perturbações, foram
+realizadas apenas simulações com projeto incluindo ação integral.  
+
+\begin{figure}[!h]
     \caption{Comparação dos sinais de controle e saída do sistema utilizando
     regulação via realimentação de estados e regulação com ação integral.}
     \vspace{-10pt}
     \hspace{-30pt}
-    \label{fig:resultado-do-regulador-com-integrador}
+    \label{fig:erro-de-estimacao-de-esta}
     \begin{minipage}{\linewidth}
-        \input{chapters/challenge6/images/resultado-questao-9.tex}
+        \input{chapters/challenge6/images/resultado-3-questao-10.tex}
     \end{minipage}
 \end{figure}
 
