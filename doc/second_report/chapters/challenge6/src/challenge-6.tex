@@ -53,7 +53,7 @@ amostrados, todos os resultados foram obtidos considerando que dinâmica da
 planta foi simulada utilizando a aproximação de Euler com um passo de integração
 de 0,025s.
 
-Além disso, para melhor compreensão os vetores, linha e coluna foram
+Além disso, para melhor compreensão, os vetores linha e coluna foram
 representados por letras minúsculas em negrito ($\mathbf{v}$) e as
 matrizes por letra maiúscula também em negrito, exemplo $\mathbf{A}$. Para
 distinguir as matrizes do tempo continuo das do tempo discreto, optou-se por
@@ -108,7 +108,7 @@ se $det(\mathbf{G}(0)) \neq 0$. Como,
     \end{bmatrix},
 \end{equation}logo, det($\mathbf{G}(0)$) $\neq 0$ e $\mathbf{G}(0)^{-1}$ existe.
 Dado a saída de equilíbrio desejada $\mathbf{y}_{eq} = [2 \thickspace 1]^\top$,
-o sinal de controle de equilíbrio
+o sinal de controle de equilíbrio é
 
 \begin{equation}
     \label{eq:vetor-do-controle-de-equilibrio}
@@ -214,7 +214,7 @@ A versão em tempo discreto para a representação em espaço de estados definid
         \mathbf{y}[k]   & = \mathbf{\tilde{C}}\mathbf{x}[t] + \mathbf{\tilde{D}}\mathbf{u}[k]
         \label{eq:saida-do-sistema-em-espaco-de-estados-discreto}
     \end{align}
-\end{subequations} que segundo \citeonline{Chen2006}, a relação entre as
+\end{subequations} que segundo \cite{Chen2006}, a relação entre as
 matrizes de tempo continuo e discreto é dado como
 
 \begin{equation*}
@@ -329,7 +329,7 @@ det($z\mathbf{I}-\mathbf{\tilde{A}}-\mathbf{\tilde{B}}\mathbf{\tilde{K}}$) e
 portanto os polos do sistema discreto podem ser modificados para um valor
 desejável. Entretanto, isto só é válido se o sistema for controlável, isto é, a
 matriz de controlabilidade $\mathbf{\tilde{U}}$ dado por
-\ref{eq:matriz-de-controlabilidade-de-tempo-discreto} tem todas as linhas
+\ref{eq:matriz-de-controlabilidade-de-tempo-discreto} tem todas as colunas
 linearmente independentes.
 
 \begin{equation}
@@ -347,7 +347,7 @@ linearmente independentes.
 A aplicação das matrizes \ref{eq:matriz-til-a} e \ref{eq:matriz-til-b} em
 \ref{eq:matriz-de-controlabilidade-de-tempo-discreto} resulta em uma matriz
 $\mathbf{\tilde{U}}$ cujo posto é igual 4, que é a mesma ordem do sistema e,
-portanto, todas as linhas são linearmente independentes. Assim, todos os
+portanto, todas as colunas são linearmente independentes. Assim, todos os
 autovalores podem ser definidos escolhendo um $\mathbf{\tilde{K}}$ adequado.
 
 A definição do valor de $\mathbf{\tilde{K}}$ foi realizada através de um método
@@ -358,7 +358,7 @@ disponibilizados computacionalmente em funções, como é o caso da função
 \textit{place} do Octave/Matlab. Dado então o requisito de que os autovalores de
 malha fechada de tempo discreto, ou seja os autovalores da matriz
 $\mathbf{\tilde{A} - \tilde{B}\tilde{K}}$ devem ser $\lambda_i =
-e^{\frac{-T_a}{4}}$ para $i = 1, 2, 3$ e $4$, em que dado $T_a = 0,75$s,
+e^{\frac{-T_a}{4}}$ para $i = 1, 2, 3$ e $4$, em que dado $T_a = 0,75$s resulta em
 $\lambda_i = 0,8290$. Utilizando portanto a função \textit{place} tendo como
 argumento as matrizes $\mathbf{\tilde{A}}$ e $\mathbf{\tilde{B}}$ e o vetor
 $\mathbf{\lambda}$ contendo os autovalores desejáveis $\lambda_i$, foi obtida a
@@ -393,6 +393,7 @@ obtidas.
     \begin{minipage}{\linewidth}
         \input{chapters/challenge6/images/resultado-questao-7.tex}
     \end{minipage}
+    \vspace{-10pt}
 \end{figure}
 
 \subsubsection{Rejeição de perturbações e seguimento de referência}
@@ -406,7 +407,7 @@ externas e ruídos. Uma das soluções para estes possíveis problemas é a
 utilização da ação integral no controle da realimentação de estados, tópico
 desta seção.
 
-A ação de integração é alcançada fazendo aparecer no espaço de estados um
+A ação integral é alcançada fazendo aparecer no espaço de estados um
 dinâmica interna, tal que a realização em espaços de estados de tempo discreto
 \ref{eq:espaco-de-estados-discreto} torna-se a versão aumentada
 
@@ -597,7 +598,7 @@ $\mathbf{\tilde{L}}$.
 
 Portanto, para o controle do sistema em estudo foi dado como requisito que os
 autovalores da matriz $\mathbf{\tilde{A}}-\mathbf{\tilde{L}}\mathbf{\tilde{C}}$
-sejam um $\sigma_i = e^{\frac{-T_a}{2}}$ para $i = 1, 2, 3$ e $4$ com base no
+sejam um $\sigma_i = e^{\frac{-T_a}{2}}$ para $i = 1, 2, 3$ e $4$ que com base no
 período de amostragem $T_a = 0,75$s resulta em 4 autovalores $\sigma = 0,6873$.
 Utilizando a propriedade que
 $(\mathbf{\tilde{A}}-\mathbf{\tilde{L}}\mathbf{\tilde{C}})^\top =
@@ -605,7 +606,7 @@ $(\mathbf{\tilde{A}}-\mathbf{\tilde{L}}\mathbf{\tilde{C}})^\top =
 chega-se no mesmo problema da definição do ganho $\mathbf{\tilde{K}}$ exposto na
 seção \ref{subsub:regulacao-em-torno-do-ponto-de-equilibrio}. Assim, utilizando
 novamente a função \textit{place} do Octave sendo agora os argumentos
-$\mathbf{\tilde{A}}^\top$, $\mathbf{\tilde{C}}^\top$ e $\mathbf{\sigma}$ foi
+$\mathbf{\tilde{A}}^\top$, $\mathbf{\tilde{C}}^\top$ e $\mathbf{\sigma}$, foi
 obtido a matriz de ganhos
 
 \begin{equation}

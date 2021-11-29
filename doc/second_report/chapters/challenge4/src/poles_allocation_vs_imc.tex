@@ -59,3 +59,23 @@ $y(t)$ cai abaixo do valor de \textit{set point}, devido a um zero negativo fora
 do círculo unitário (-1.3319). Já em \ref{eq:ft-perturbacao-saida-imc} não há
 zeros negativo fora do circulo unitário e, consequentemente, o mesmo
 comportamento não é observado.
+
+Vale salientar também a importância de não realizar o cancelamento do zero de
+fase não mínimas nos projetos alocando os polos do controlador no mesmo local.
+Caso este polo fosse alocado nos controladores projetados, ele não iria aparecer
+nas funções de transferência listadas neste tópico. Entretanto, ao analisar a
+Gangue dos Seis definidas por \cite{Astrom2008}, caso alocado no controlador, o
+polo instável aparece em dois pares de entrada saída conforme a Equação abaixo,
+em que o argumento foi omitido por simplicidade e o par entrada/saida é definido
+pelo subescrito.
+
+\begin{subequations}
+    \begin{equation}
+        G_{ur} = \frac{CF}{1+PC}
+    \end{equation}
+    \begin{equation}
+        -G_{uw} = \frac{C}{1+PC}
+    \end{equation}
+\end{subequations} em que $u$, $r$ e $w$ significam sinal de controle,
+referência e ruído respectivamente e $P$ e $C$ significam respectivamente função
+de transferência da planta e controlador.
