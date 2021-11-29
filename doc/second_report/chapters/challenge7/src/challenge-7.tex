@@ -1,0 +1,336 @@
+\newcommand{\mat}[1]{\MakeUppercase{\mathbf{#1}}}
+\newcommand{\ssvec}[1]{\MakeLowercase{\mathbf{#1}}}
+\newcommand{\ssveceq}[1]{\MakeLowercase{\mathbf{\bar{#1}}}}
+
+\section{Desafio VII - Controle de Sistema Não-Linear} 
+
+\subsection{Motivação}
+(Explicar o problema que motiva o desafio, relevância, possíveis aplicações...) 
+
+\subsection{Simulações realizadas}
+
+\begin{subequations}
+    \label{eq:modelo-do-oscilador-de-van-der-pol}
+    \begin{equation}
+        \begin{bmatrix}
+            \dot{x}_1(t) \\
+            \dot{x}_2(t)
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            x_2(t) \\
+            -x_1(t) + 0,3(1 - x_1(t)^2)x_2(t) + u(t)
+        \end{bmatrix}
+    \end{equation}
+    \begin{equation}
+        y(t) = x_1(t)
+    \end{equation}
+\end{subequations}
+
+Por simplicidade na representação do Modelo de Van der Pol, o argumento de tempo
+será omitido ao longo desta seção, salve necessidade de explicitar o argumento
+de tempo para melhor compreensão.
+
+(Explicar quais simulações foram realizadas de maneira descritiva e sequêncial.) 
+
+\subsection{Resultados obtidos}
+
+Como o modelo do oscilador de Van der Pol dado em espaço de estados pela Equação
+\ref{eq:modelo-do-oscilador-de-van-der-pol} é não linear, torna-se necessário
+fazer a linearização em torno de um ponto de equilíbrio. Considerando $\ssvec{z}
+= \ssvec{x} - \ssveceq{x}$, $v = u - \bar{u}$ e $w = y - h(\ssveceq{x},
+\bar{u})$ como novas variáveis do espaço de e reescrevendo
+\ref{eq:modelo-do-oscilador-de-van-der-pol} como 
+
+\begin{subequations}
+    \label{eq:modelo-reescrito-do-oscilador-de-van-der-pol}
+    \begin{equation}
+        \label{eq:mapa-vetorial-dos-estados}
+        \dot{\ssvec{x}} = f(\ssvec{x}, u)
+        =
+        \begin{bmatrix}
+            \dot{x}_1 \\
+            \dot{x}_2
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            f_1(\ssvec{x}, u) \\
+            f_2(\ssvec{x}, u) \\
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            x_2 \\
+            -x_1 + 0,3(1 - x_1^2)x_2 + u
+        \end{bmatrix}
+    \end{equation}
+    \begin{equation}
+        y = h(\ssvec{x}, u) = x_1
+    \end{equation}
+\end{subequations} o modelo não linear do Oscilador de Van der Pol pode ser
+convertido para o modelo linear em torno do ponto de equilíbrio através de uma
+linearização jacobiana em que
+
+\begin{subequations}
+    \label{eq:modelo-linearizado-em-torno-do-equilibrio}
+    \begin{equation}
+        \label{eq:derivada-dos-estados-linearizados}
+        \dot{\ssvec{z}} = \mat{a}\ssvec{z} + \mathbf{B}v
+    \end{equation}
+    \begin{equation}
+        w = \mat{C}\ssvec{z} + \mat{D}v
+    \end{equation}
+\end{subequations} sendo as matrizes definidas por
+
+\begin{subequations}
+    \label{eq:derivadas-parcias-do-vetor-estados}
+    \begin{equation}
+        \label{eq:jacobiana-de-a}  
+        \mat{A} =
+        \left.
+            \begin{matrix}
+                \frac{\partial f}{\partial x}
+            \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+        =
+        \begin{bmatrix}
+            \left.
+                \begin{matrix}
+                    \frac{\partial f_1}{\partial x_1}
+                \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+            &
+            \left.
+                \begin{matrix}
+                    \frac{\partial f_1}{\partial x_2}
+                \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+            \\
+            \left.
+                \begin{matrix}
+                    \frac{\partial f_2}{\partial x_1}
+                \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+            &
+            \left.
+                \begin{matrix}
+                    \frac{\partial f_2}{\partial x_2}
+                \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            0 & 1 \\
+            -1 & 0,3(1-\bar{x}_1^2)
+        \end{bmatrix}
+    \end{equation}
+
+    \begin{equation}
+        \label{eq:jacobiano-de-b}
+        \mat{B} =
+        \left.
+            \begin{matrix}
+                \frac{\partial f}{\partial u}
+            \end{matrix}
+        \right|_{(\bar{x}, \thinspace \bar{u})}
+        =
+        \begin{bmatrix}
+            \left.
+                \begin{matrix}
+                    \frac{\partial f_1}{\partial u}
+                \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+            \\
+            \left.
+                \begin{matrix}
+                    \frac{\partial f_2}{\partial u}
+                \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            0 \\
+            1
+        \end{bmatrix}
+    \end{equation}
+
+    \begin{equation}
+        \label{eq:jacoabiana-de-c}
+        \mat{C} =
+        \left.
+            \begin{matrix}
+                \frac{\partial h}{\partial x}
+            \end{matrix}
+        \right|_{(\bar{x}, \thinspace \bar{u})}
+        =
+        \begin{bmatrix}
+            \left.
+                \begin{matrix}
+                    \frac{\partial h}{\partial x_1}
+                \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+            &
+            \left.
+                \begin{matrix}
+                    \frac{\partial h}{\partial x_2}
+                \end{matrix}
+            \right|_{(\bar{x}, \thinspace \bar{u})}
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            1 & 0
+        \end{bmatrix}
+    \end{equation}
+
+    \begin{equation}
+        \mat{D} =
+        \left.
+            \begin{matrix}
+                \frac{\partial h}{\partial u}
+            \end{matrix}
+        \right|_{(\bar{x}, \thinspace \bar{u})}
+        = 0
+    \end{equation}
+\end{subequations}
+
+Como o ponto de equilíbrio é definido por $[\dot{x}_1 \thickspace
+\dot{x}_2]^\top = [0 \thickspace 0]^\top$, de
+\ref{eq:modelo-do-oscilador-de-van-der-pol} tem-se que $\bar{x}_2 = 0$ e
+$\bar{x_1} = \bar{u}$. Assim, considerando dois pontos de equilíbrio $\bar{x}_1
+= 1$ e $\bar{x}_1 = 4$, as matrizes de dinâmica do sistema $\mat{A}_1$ e
+$\mat{A}_2$, respectivamente, são definidas por
+
+\begin{subequations}
+    \label{eq:matrizes-a-linearizadas}
+    \begin{equation}
+        \label{eq:matriz-a1}
+        \mat{A}_1
+        =
+        \begin{bmatrix}
+            0   & 1 \\
+            -1  & 0
+        \end{bmatrix}
+    \end{equation}
+
+    \begin{equation}
+        \label{eq:matriz-a2}
+        \mat{A}_2
+        =
+        \begin{bmatrix}
+            0   & 1 \\
+            -1  & -4,5
+        \end{bmatrix}
+    \end{equation}
+\end{subequations} cujo os autovalores são respectivamente $\lambda_1 = [i
+\thickspace -i]^\top$ e $\lambda_2 = [-0,2344 \thickspace -4,2656]^\top$.
+Nota-se portanto que para o ponto de equilíbrio $[1 \thickspace 0]^\top$ o
+modelo linearizado possui um par conjugado de autovalores. Isto permite concluir
+que partindo de um ponto nas proximidades deste ponto de equilíbrio ou com
+pequenas variações do sinal de controle em torno de $\bar{u} = 1$, fará tanto os
+estados quanto a saída oscilarem. Esta oscilação no diagrama de fases é
+representada por uma trajetória circular em torno do ponto de equilíbrio,
+chamada de círculo limite, como pode ser observado no diagrama de fases (Figura
+\ref{fig:diagrama-de-fases-para-circulo-limite}) obtido no software Pplane
+\textbf{CITAR!}. Por outro lado, para o ponto de equilíbrio $[4 \thickspace
+0]^\top$ nas duas situações, o sistema converge para o ponto de equilíbrio.
+
+\begin{figure}[h]
+	\centering
+	\caption{Diagrama de fases com trajetória circular (círculo limite) nas
+    mediações do ponto de equilíbrio $[1 \thickspace 0]^\top$.}
+	\label{fig:diagrama-de-fases-para-circulo-limite}
+	\includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-com-circulo-limite.png}
+\end{figure}
+
+Com os modelos linearizados foi obtido o vetor linha de ganhos $\mat{K}$ tal que
+a ação de controle $v = \mat{k}\ssvec{z}(t)$ minimiza o custo do controlador
+LQR $J$ dado por
+
+\begin{equation}
+    \label{eq:custo-do-controlador-lqr}
+    J = \int_{t=0}^{\infty }\ssvec{z}(t)^\top \mat{Q} \ssvec{z}(t) + v(t)^\top R v(t)
+\end{equation} com $\mat{Q} = \mat{I}$ e $R = 0,1$. Com isso, através da função
+\textit{lqr} do Octave resultou ganhos $\mat{K}_1$ e $\mat{K}_2$, conforme
+Equação \ref{eq:ganhos-do-controlador-lqr}, relacionados respectivamente as
+matrizes $\mat{A}_1$ e $\mat{A}_2$ (Equação \ref{eq:matrizes-a-linearizadas}).
+
+\begin{subequations}
+    \label{eq:ganhos-do-controlador-lqr}
+    \begin{equation}
+        \mat{K}_1 = [2,3166 \thickspace 3,8253]
+    \end{equation}
+    \begin{equation}
+        \mat{K}_2 = [2,3166 \thickspace 1,4062]
+    \end{equation}
+\end{subequations}
+
+Com isso, definindo $\mat{k} = [k_1 \thickspace k_2]$ e retornando a ação de
+controle para as variáveis de estados originais, isto é
+
+\begin{equation}
+    \label{eq:acao-de-controle-do-sistema-linear}
+    v = -\mat{k}\ssvec{z}
+    \Rightarrow
+    u = -\mat{k}(\ssvec{x} - \ssveceq{x}) + \bar{u}
+    = -k_1(x_1 - \bar{x}_1) - k_2(x_2 - \bar{x}_2) + \bar{u}
+\end{equation} o modelo do Oscilador de Van Der Pol pode ser reescrito como
+
+\begin{equation}
+    \label{eq:modelo-reescrito2-do-oscilador-de-van-der-pol}
+    \begin{bmatrix}
+        \dot{x}_1 \\
+        \dot{x}_2
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        x_2 \\
+        -x_1 + 0,3(1 - x_1^2)x_2 - k_1(x_1 - \bar{x}_1) - k_2(x_2 - \bar{x}_2) + \bar{u}
+    \end{bmatrix}.
+\end{equation}
+
+Para análise do comportamento do sistema, foram gerados, com auxílio do software
+Pplane com o parâmetro \textit{Solution Direction} igual \textit{Forward},
+diagramas de fase com o considerando três cenários:
+
+\begin{itemize}
+    \item i) Modelo do oscilador com $u(t) = 0$;
+    \item ii) Modelo do oscilador utilizando o ganho LQR $\mat{K}_1$ obtido com
+    a linearização em torno do ponto de equilíbrio $[1 \thickspace 0]^\top$; e
+    \item iii) Modelo do oscilador utilizando o ganho LQR $\mat{K}_2$ obtido com
+    a linearização em torno do ponto de equilíbrio $[4 \thickspace 0]^\top$.
+\end{itemize}
+
+O diagrama de fases do cenário (i) é exibido na Figura
+\ref{fig:diagrama-de-fases-sem-controle}. Percebe-se na Figura
+\ref{fig:diagrama-de-fases-sem-controle-ponto-de-equilibrio-1-e-2} que definindo
+a condição inicial aproximadamente os pontos de equilíbrios \peq1
+
+\begin{figure}[ht]
+    \caption{Diagrama de fases do modelo do oscilador com $u(t) = 0$.}
+    \label{fig:diagrama-de-fases-sem-controle}
+    \centering
+    \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+	    \includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-sem-controle.png}
+        \caption{Partindo de condições iniciais aproximadamente iguais aos pontos de equilíbrio.}
+        \label{fig:diagrama-de-fases-sem-controle-ponto-de-equilibrio-1-e-2}
+        
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+	    \includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-sem-controle-zoom1.png}
+        \caption{Partindo de condições iniciais na vizinhança do ponto de equilíbrio 1.}
+        \label{fig:diagrama-de-fases-sem-controle-ponto-de-equilibrio-1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.32\textwidth}
+        \centering
+	    \includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-sem-controle-zoom2.png}
+        \caption{Partindo de condições iniciais na vizinhança do ponto de equilíbrio 2.}
+        \label{fig:diagrama-de-fases-sem-controle-ponto-de-equilibrio-2}
+    \end{subfigure}
+\end{figure}
+
+\subsection{Conclusões}
+(Concluir em que medida os resultados apresentam relação com a motivação.
+Permitem ilustratar ou concluir algo sobre a motivação? )
