@@ -133,18 +133,18 @@ function [U, Y, E] = simulate_sys(sim_time, dt, p, delay, c, f, r,
                                   anti_windup_tol = inf)
     if length(pole(f)) > 0
         f = ss(f);
-        f.a = dt*f.a;
+        f.a = eye(size(f.a)) + dt*f.a;
         f.b = dt*f.b;
         xf = [zeros(size(f.a,1),1)];
     end
 
     p = ss(p);
-    p.a = dt*p.a;
+    p.a = eye(size(p.a)) + dt*p.a;
     p.b = dt*p.b;
     
     kc = get(c, 'num'){1};
     c = ss(c);
-    c.a = dt*c.a;
+    c.a = eye(size(p.a)) + dt*c.a;
     c.b = dt*c.b;
 
     ld = round(delay/dt);
