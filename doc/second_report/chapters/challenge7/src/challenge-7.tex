@@ -1,13 +1,46 @@
 \newcommand{\mat}[1]{\MakeUppercase{\mathbf{#1}}}
 \newcommand{\ssvec}[1]{\MakeLowercase{\mathbf{#1}}}
 \newcommand{\ssveceq}[1]{\MakeLowercase{\mathbf{\bar{#1}}}}
+\newcommand{\peqone}{\ensuremath{[1 \thickspace 0]^\top}}
+\newcommand{\peqtwo}{\ensuremath{[4 \thickspace 0]^\top}}
+\newcommand{\inicond}{\ensuremath{\ssvec{x}(0) = [-5 \thickspace -5]}}
 
 \section{Desafio VII - Controle de Sistema Não-Linear} 
 
 \subsection{Motivação}
-(Explicar o problema que motiva o desafio, relevância, possíveis aplicações...) 
+Embora muitos processos e fenômenos físicos reais podem ser modelados por
+modelos lineares com uma boa proximidade da representação real, há problemas no
+universo da engenharia que aproximações lineares não fornecem bons resultados,
+ou até mesmo problemas em que é necessário utilizar o modelo não linear. Tanques
+de fluídos é um ótimo exemplo de um sistema com não linearidades, mas que a
+aproximação por um modelo linear através de uma linearização em torno de um
+ponto de equilíbrios trás bons resultados. Entretanto, em situações como o uso
+de drones operando em alta velocidade em ambientes desconhecidos, o que decorre
+em manobras complexas, torna-se necessário usar o controle com o modelo não
+linear para que ele possa desviar de obstáculos desconhecidos de forma rápida e
+eficiente.
+
+Por isso, o conhecimento de sistemas e controle não linear é mais um elemento
+que deve fazer parte do "canivete" de engenheiros e engenheiras de controle.
+Desta forma, é fundamental que tais profissionais tenham um conhecimento teórico
+inicial sobre mais este novo mundo dentro da engenharia de controle.
 
 \subsection{Simulações realizadas}
+
+Para o conhecimento dos fenômenos e ferramentas para o controle de sistema não
+lineares, foi realizada simulações para analisar o comportamento do oscilador de
+Van Der Pol descrito pelo modelo em espaço de estados
+\ref{eq:modelo-do-oscilador-de-van-der-pol}. A partir deste modelo foi possível
+realizar:
+
+\begin{itemize}
+    \item a linearização em torno de dois pontos de equilíbrio;
+    \item o projeto de controladores LQR utilizando os modelos linearizados; e,
+    por fim
+    \item a análise do comportamento do sistema através de diagramas de fases
+    obtido com o auxílio do Pplane e respostas temporais a partir da aproximação
+    adiante de Euler.
+\end{itemize}
 
 \begin{subequations}
     \label{eq:modelo-do-oscilador-de-van-der-pol}
@@ -28,10 +61,8 @@
 \end{subequations}
 
 Por simplicidade na representação do Modelo de Van der Pol, o argumento de tempo
-será omitido ao longo desta seção, salve necessidade de explicitar o argumento
-de tempo para melhor compreensão.
-
-(Explicar quais simulações foram realizadas de maneira descritiva e sequêncial.) 
+será omitido ao longo desta seção, salve exceções em que há necessidade de
+explicitar o argumento de tempo para melhor compreensão do leitor.
 
 \subsection{Resultados obtidos}
 
@@ -39,7 +70,7 @@ Como o modelo do oscilador de Van der Pol dado em espaço de estados pela Equaç
 \ref{eq:modelo-do-oscilador-de-van-der-pol} é não linear, torna-se necessário
 fazer a linearização em torno de um ponto de equilíbrio. Considerando $\ssvec{z}
 = \ssvec{x} - \ssveceq{x}$, $v = u - \bar{u}$ e $w = y - h(\ssveceq{x},
-\bar{u})$ como novas variáveis do espaço de e reescrevendo
+\bar{u})$ como novas variáveis do espaço de estados e reescrevendo
 \ref{eq:modelo-do-oscilador-de-van-der-pol} como 
 
 \begin{subequations}
@@ -54,8 +85,8 @@ fazer a linearização em torno de um ponto de equilíbrio. Considerando $\ssvec
         \end{bmatrix}
         =
         \begin{bmatrix}
-            f_1(\ssvec{x}, u) \\
-            f_2(\ssvec{x}, u) \\
+            f_1(x_1, x_2, u) \\
+            f_2(x_1, x_2, u) \\
         \end{bmatrix}
         =
         \begin{bmatrix}
@@ -68,7 +99,7 @@ fazer a linearização em torno de um ponto de equilíbrio. Considerando $\ssvec
     \end{equation}
 \end{subequations} o modelo não linear do Oscilador de Van der Pol pode ser
 convertido para o modelo linear em torno do ponto de equilíbrio através de uma
-linearização jacobiana em que
+linearização jacobiana \cite{Astrom2008} em que
 
 \begin{subequations}
     \label{eq:modelo-linearizado-em-torno-do-equilibrio}
@@ -228,28 +259,29 @@ que partindo de um ponto nas proximidades deste ponto de equilíbrio ou com
 pequenas variações do sinal de controle em torno de $\bar{u} = 1$, fará tanto os
 estados quanto a saída oscilarem. Esta oscilação no diagrama de fases é
 representada por uma trajetória circular em torno do ponto de equilíbrio,
-chamada de círculo limite, como pode ser observado no diagrama de fases (Figura
-\ref{fig:diagrama-de-fases-para-circulo-limite}) obtido no software Pplane
-\textbf{CITAR!}. Por outro lado, para o ponto de equilíbrio $[4 \thickspace
-0]^\top$ nas duas situações, o sistema converge para o ponto de equilíbrio.
+chamada de círculo limite, como pode ser observado no diagrama de fases da
+Figura \ref{fig:diagrama-de-fases-para-circulo-limite} obtido no software
+Pplane\footnote{https://www.cs.unm.edu/~joel/dfield/}. Por outro lado, para o
+ponto de equilíbrio $[4 \thickspace 0]^\top$ nas duas situações, o sistema
+converge para o ponto de equilíbrio.
 
-\begin{figure}[h]
+\begin{figure}[]
 	\centering
 	\caption{Diagrama de fases com trajetória circular (círculo limite) nas
-    mediações do ponto de equilíbrio $[1 \thickspace 0]^\top$.}
+    mediações do ponto de equilíbrio $[1 \thickspace 0]^\top$ para $\bar{u}=1$.}
 	\label{fig:diagrama-de-fases-para-circulo-limite}
 	\includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-com-circulo-limite.png}
 \end{figure}
 
-Com os modelos linearizados foi obtido o vetor linha de ganhos $\mat{K}$ tal que
-a ação de controle $v = \mat{k}\ssvec{z}(t)$ minimiza o custo do controlador
+Com os modelos linearizados foi obtido a matriz de ganhos $\mat{K}$ tal que
+a ação de controle $v(t) = \mat{k}\ssvec{z}(t)$ minimiza o custo do controlador
 LQR $J$ dado por
 
 \begin{equation}
     \label{eq:custo-do-controlador-lqr}
     J = \int_{t=0}^{\infty }\ssvec{z}(t)^\top \mat{Q} \ssvec{z}(t) + v(t)^\top R v(t)
 \end{equation} com $\mat{Q} = \mat{I}$ e $R = 0,1$. Com isso, através da função
-\textit{lqr} do Octave resultou ganhos $\mat{K}_1$ e $\mat{K}_2$, conforme
+\textit{lqr} do Octave foram obtidos os ganhos $\mat{K}_1$ e $\mat{K}_2$, conforme
 Equação \ref{eq:ganhos-do-controlador-lqr}, relacionados respectivamente as
 matrizes $\mat{A}_1$ e $\mat{A}_2$ (Equação \ref{eq:matrizes-a-linearizadas}).
 
@@ -264,7 +296,7 @@ matrizes $\mat{A}_1$ e $\mat{A}_2$ (Equação \ref{eq:matrizes-a-linearizadas}).
 \end{subequations}
 
 Com isso, definindo $\mat{k} = [k_1 \thickspace k_2]$ e retornando a ação de
-controle para as variáveis de estados originais, isto é
+controle para as variáveis de estados originais, isto é,
 
 \begin{equation}
     \label{eq:acao-de-controle-do-sistema-linear}
@@ -287,9 +319,9 @@ controle para as variáveis de estados originais, isto é
     \end{bmatrix}.
 \end{equation}
 
-Para análise do comportamento do sistema, foram gerados, com auxílio do software
-Pplane com o parâmetro \textit{Solution Direction} igual \textit{Forward},
-diagramas de fase com o considerando três cenários:
+Para análise do comportamento do sistema com o modelo acima, foram gerados, com
+auxílio do software Pplane com o parâmetro \textit{Solution Direction} igual
+\textit{Forward}, diagramas de fase considerando três cenários:
 
 \begin{itemize}
     \item i) Modelo do oscilador com $u(t) = 0$;
@@ -300,30 +332,33 @@ diagramas de fase com o considerando três cenários:
 \end{itemize}
 
 O diagrama de fases do cenário (i) é exibido na Figura
-\ref{fig:diagrama-de-fases-sem-controle}. Percebe-se na Figura
-\ref{fig:diagrama-de-fases-sem-controle-ponto-de-equilibrio-1-e-2} que definindo
-a condição inicial aproximadamente os pontos de equilíbrios \peq1
+\ref{fig:diagrama-de-fases-sem-controle}. Percebe-se que definindo a condição
+inicial aproximadamente iguais aos pontos de equilíbrios \peqone and \peqtwo, os
+estados convergem para oscilação, criando uma órbita em formato de losango com
+arestas arredondadas. O mesmo acontece quando são escolhidas condições iniciais
+nas vizinhanças do ponto de equilíbrio, como pode ser visto na Figura
+\ref{fig:diagrama-de-fases-sem-controle-com-zoom}, que devido ao foco no entorno
+dos pontos de equilíbrio, a órbita não é exibida.
 
-\begin{figure}[ht]
-    \caption{Diagrama de fases do modelo do oscilador com $u(t) = 0$.}
+\begin{figure}[H]
+    \caption{Visão expandida do diagrama de fases do modelo do oscilador com $u(t) = 0$.}
     \label{fig:diagrama-de-fases-sem-controle}
     \centering
-    \begin{subfigure}[t]{0.32\textwidth}
-        \centering
-	    \includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-sem-controle.png}
-        \caption{Partindo de condições iniciais aproximadamente iguais aos pontos de equilíbrio.}
-        \label{fig:diagrama-de-fases-sem-controle-ponto-de-equilibrio-1-e-2}
-        
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.32\textwidth}
+    \includegraphics[width=0.8\textwidth]{chapters/challenge7/images/diagrama-de-fases-sem-controle.png}
+\end{figure}
+
+\begin{figure}[H]
+    \caption{Visão delimitada do diagrama de fases do modelo do oscilador com $u(t) = 0$.}
+    \label{fig:diagrama-de-fases-sem-controle-com-zoom}
+    \centering
+    \begin{subfigure}[t]{0.48\textwidth}
         \centering
 	    \includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-sem-controle-zoom1.png}
         \caption{Partindo de condições iniciais na vizinhança do ponto de equilíbrio 1.}
         \label{fig:diagrama-de-fases-sem-controle-ponto-de-equilibrio-1}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.32\textwidth}
+    \begin{subfigure}[t]{0.48\textwidth}
         \centering
 	    \includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-sem-controle-zoom2.png}
         \caption{Partindo de condições iniciais na vizinhança do ponto de equilíbrio 2.}
@@ -331,6 +366,138 @@ a condição inicial aproximadamente os pontos de equilíbrios \peq1
     \end{subfigure}
 \end{figure}
 
+Para o cenário (ii), foi obtido o diagrama de fases conforme Figura
+\ref{fig:diagrama-de-fases-com-controle-na-vizinhanca-do-peq-1}. Percebe-se que
+considerando condições iniciais na vizinhança do ponto de equilíbrio \peqone, os
+estados do sistema convergem para o equilíbrio. O mesmo se observa para o ponto
+de equilíbrio \peqtwo (cenário (iii)), como demonstra o diagrama de fases na Figura
+\ref{fig:diagrama-de-fases-com-controle-na-vizinhanca-do-peq-2}
+
+\begin{figure}[H]
+    \caption{Diagrama de fases na vizinhança do ponto de equilíbrio \peqone com
+    controle LQR.}
+    \label{fig:diagrama-de-fases-com-controle-na-vizinhanca-do-peq-1}
+    \centering
+    \includegraphics[width=0.7\textwidth]{chapters/challenge7/images/diagrama-de-fases-com-controle-peq1.png}
+\end{figure}
+
+\begin{figure}[H]
+    \caption{Diagrama de fases na vizinhança do ponto de equilíbrio \peqtwo com
+    controle LQR.}
+    \label{fig:diagrama-de-fases-com-controle-na-vizinhanca-do-peq-2}
+    \centering
+    \includegraphics[width=0.7\textwidth]{chapters/challenge7/images/diagrama-de-fases-com-controle-peq2.png}
+\end{figure}
+
+Foi realizada também a simulação para analisar o comportamento do oscilador
+fazendo o controle do sistema não linear com o controlador obtido através da
+linearização. Na Figura \ref{fig:diagrama-de-fases-com-controle} é mostrado o
+diagrama de fases considerando a condição inicial $\ssvec{x}(0) = [-5
+\thickspace -5]$. Nota-se que os estados convergiram para os pontos de
+equilíbrio. Entretanto, é notório o comportamento não linear dos estados na
+trajetória que os leva até o estado de equilíbrio, comportamento não observado
+nas Figuras \ref{fig:diagrama-de-fases-com-controle-na-vizinhanca-do-peq-1} e
+\ref{fig:diagrama-de-fases-com-controle-na-vizinhanca-do-peq-2}, por terem
+condições iniciais definidas nas vizinhança do ponto de equilíbrio. 
+
+\begin{figure}[H]
+    \caption{Diagrama de fases considerando a condição inicial $[-5 \thickspace -5]^\top$ e
+    com o controlador LQR.}
+    \label{fig:diagrama-de-fases-com-controle}
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+	    \includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-resultado-2-questao-5.png}
+        \caption{Sistema controlado com controlador projetado para o ponto de equilíbrio \peqone.}
+        \label{fig:diagrama-de-fases-com-controle-ponto-de-equilibrio-1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+	    \includegraphics[width=\textwidth]{chapters/challenge7/images/diagrama-de-fases-resultado-3-questao-5.png}
+        \caption{Sistema controlado com controlador projetado para o ponto de equilíbrio \peqtwo.}
+        \label{fig:diagrama-de-fases-com-controle-ponto-de-equilibrio-2}
+    \end{subfigure}
+\end{figure}
+
+Com a mesma condição inicial \inicond, foram geradas os sinais do oscilador
+considerando os três cenários descritos anteriormente. Para o cenário (i) com
+$u(t) = 0$, Figura \ref{fig:sinais-do-scilador-sem-controle}, observa-se o
+comportamento oscilatório dos estados e consequentemente saída, o que está de
+acordo com a trajetória exibida na Figura
+\ref{fig:diagrama-de-fases-sem-controle}. Para o cenário (ii), a resposta obtida
+é ilustrada na Figura \ref{fig:sinais-do-scilador-com-controle-e-peq1}.
+Percebe-se na figura que o estado $x_2(t)$ tem uma alta variação de amplitude
+nos instantes iniciais da trajetória enquanto o estado $x_1(t)$ varia
+lentamente. Isto está condizente com o diagrama de fases (Figura
+\ref{fig:diagrama-de-fases-com-controle-ponto-de-equilibrio-1}) em que
+constata-se que o gradiente de velocidade está aproximadamente perpendicular ao
+eixo do estado $x_1(t)$ no início da trajetória. A partir do estado $[-4
+\thickspace 2]$ nota-se uma suavidade na trajetória dos estados até o ponto de
+equilíbrio, o que é refletido nas respostas temporal considerando $t > 1,7s$.
+
+\begin{figure}[H]
+    \caption{Sinais do oscilador com condição inicial $\ssvec{x}(0) = [-5
+    \thickspace -5]$ e sinal de controle $u(t)=0$.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:sinais-do-scilador-sem-controle}
+    \begin{minipage}{\linewidth}
+        \input{chapters/challenge7/images/resultado-3-questao-5.tex}
+    \end{minipage}
+    \vspace{-10pt}
+\end{figure}
+
+\begin{figure}[H]
+    \caption{Sinais do oscilador com condição inicial $\ssvec{x}(0) = [-5
+    \thickspace -5]$ e com controlador LQR projetado com o ponto de equilíbrio \peqone.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:sinais-do-scilador-com-controle-e-peq1}
+    \begin{minipage}{\linewidth}
+        \input{chapters/challenge7/images/resultado-1-questao-5.tex}
+    \end{minipage}
+    \vspace{-10pt}
+\end{figure}
+
+Analisando agora o cenário (iii) através da Figura
+\ref{fig:sinais-do-scilador-com-controle-e-peq2}, percebe-se que o comportamento
+dos estados no início da trajetória é similar ao do cenário (ii). Todavia, como
+o ponto de equilíbrio \peqtwo está mais distante do ponto de partida \inicond,
+comportamentos adicionais surgem na trajetória dos estados. Repara-se que após a
+trajetória ser predominantemente influenciada pelo estado $x_2$, há um
+comportamento que se assemelha a uma reta, o que também é observado nas resposta
+em função do tempo analisando o período $0,4s \leq t \leq 1,35s$. Após isto há
+uma concavidade com $\dot{x}_1$ aproximadamente constante e logo após os
+estados convergem para o equilíbrio \peqtwo com uma mudança abrupta de $x_2$
+e pequena variação de $x_1$, o que também se observa na evolução temporal.
+Vale salientar o alto valor do sinal de controle no início da trajetória. Isto
+acontece pois ao analisar a Equação \ref{eq:acao-de-controle-do-sistema-linear},
+a parcela $k_1(x_1 - \bar{x}_1)$ terá um alto valor devido a grande distância de
+$x_1(0)$ para $\bar{x}_1(0)$. Considerando uma situação real, isto trás luz ao
+fato que este controlador pode não ser adequado para o controle do oscilador
+partindo da condição inicial em questão, pois devido ao seu alto valor na
+partida, há uma grande possibilidade de saturação do sinal, podendo levar o
+sistema a um comportamento não previsto devido a inserção de mais uma não
+linearidade.
+
+\begin{figure}[H]
+    \caption{Sinais do oscilador com condição inicial $\ssvec{x}(0) = [-5
+    \thickspace -5]$ e com controlador LQR projetado com o ponto de equilíbrio \peqtwo.}
+    \vspace{-10pt}
+    \hspace{-30pt}
+    \label{fig:sinais-do-scilador-com-controle-e-peq2}
+    \begin{minipage}{\linewidth}
+        \input{chapters/challenge7/images/resultado-2-questao-5.tex}
+    \end{minipage}
+    \vspace{-10pt}
+\end{figure}
+
 \subsection{Conclusões}
-(Concluir em que medida os resultados apresentam relação com a motivação.
-Permitem ilustratar ou concluir algo sobre a motivação? )
+Em suma, os resultados alcançados conseguiram mostrar como modelos não lineares
+se comportam e como eles podem ser modificados através de uma linearização em
+torno do ponto de equilíbrio para que então técnicas de controle de sistemas não
+lineares possam ser utilizadas. Mostraram também a importância de mais uma
+ferramenta que usada para analisar sistemas modelados em espaços de estados, que
+foi o uso do diagrama de fases para ter \textit{insights} do comportamento do
+sistema dado uma condição inicial conhecida.
