@@ -52,15 +52,6 @@ function plot_mimo_response_and_control_signals (sim_time, figure_num = 1,
     legend('off');
 end
 
-function set_figure_size(figure_num)
-    fig_handle = figure(figure_num);
-    set(fig_handle, 'units', 'points')
-    fig_pos_vec = get(fig_handle, 'position');
-    fig_pos_vec(3) = 400;
-    fig_pos_vec(4) = 250;
-    set(fig_handle, 'position', fig_pos_vec)
-endfunction
-
 function set_mimo_signals_graph_legend(figure_num, x_pos, legend_str)
     set_figure_size(figure_num)
 

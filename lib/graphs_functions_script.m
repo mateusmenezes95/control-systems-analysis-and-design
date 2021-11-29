@@ -226,4 +226,13 @@ function plot_phase_peak(sys, w, gain_subplot = [2 1 1], phase_subplot = [2 2 2]
                      '', 'k', '--', '.')
 endfunction
 
+function set_figure_size(figure_num)
+    fig_handle = figure(figure_num);
+    set(fig_handle, 'units', 'points')
+    fig_pos_vec = get(fig_handle, 'position');
+    fig_pos_vec(3) = 400;
+    fig_pos_vec(4) = 250;
+    set(fig_handle, 'position', fig_pos_vec)
+endfunction
+
 printf("Loaded successfuly graphs plot functions \n");
